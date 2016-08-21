@@ -1,0 +1,14 @@
+              /* **************************************** */
+              /* เวลาส่งจุดสุดท้าย (DateTime) แสดงเฉพาะเวลา */
+              /* **************************************** */
+              if (!$tmpMaximumDeliveryDateTime) {
+                  $tmpMaximumDeliveryDateTime = $mydata["array"][$i]['DeliveryDateTime'];
+              }
+              $tmpDeliveryDateTime = $mydata["array"][$i]['DeliveryDateTime'];
+              if ($tmpDeliveryDateTime) {
+                  $tmpMaximumDeliveryDateTime = calculateMaximumDeliveryTime($tmpDeliveryDateTime, $tmpMaximumDeliveryDateTime);
+                  $tmpMaximumDelivery = new DateTime($tmpMaximumDeliveryDateTime);
+                  $tmpMaximumDeliveryTime = $tmpMaximumDelivery->format('H:i:s');
+                  /* Edit last record */
+                  $reports[count($reports)-1]["maximum_delivery_time"] = $tmpMaximumDeliveryTime;
+              }

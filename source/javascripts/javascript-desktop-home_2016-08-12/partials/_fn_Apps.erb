@@ -1,0 +1,60 @@
+// Apps
+Apps: function () {
+	// console.log('Apps');
+
+
+
+	$('body').on('click', '#dailyKPIOperationContentID', function () {
+		// console.log("dailyKPIOperation_btnFullScreen");
+        // console.log($("#tabContentID").height());
+        // $('#dailyKPIOperationContentID > .dataTables_scrollBody').css('height', ($("#tabContentID").height()));
+        // $('#dailyKPIOperationContentID > .dataTables_scrollBody').css('max-height', ($("#tabContentID").height() - 10));
+        // dailyKpiOperationDatatable.scrollY = $("#tabContentID").height();
+
+        chartDropPerformance.redraw();
+        chartDropPerformance.reflow();
+	});
+
+	$('body').on('click', '#canvas-fullscreen-percentEPOD', function () {
+		// console.log("canvas-fullscreen-percentEPOD");
+
+        chartDropPerformance.redraw();
+        chartDropPerformance.reflow();
+	});
+
+
+        smoothScroll.init({
+                selector: '[data-scroll]', // Selector for links (must be a valid CSS selector)
+                selectorHeader: '[data-scroll-header]', // Selector for fixed headers (must be a valid CSS selector)
+                speed: 500, // Integer. How fast to complete the scroll in milliseconds
+                easing: 'easeInOutCubic', // Easing pattern to use
+                offset: 80, // Integer. How far to offset the scrolling anchor location in pixels
+                updateURL: true, // Boolean. If true, update the URL hash on scroll
+                callback: function ( anchor, toggle ) {} // Function to run after scrolling
+        });
+
+
+
+        $('body').on('click', '#btnSearchInfo', function () {
+                // console.log("btnSearchInfo");
+
+                var optionSelected = $('#station_selected_id').find("option:selected");
+                var valueSelected  = optionSelected.val();
+                var textSelected   = optionSelected.text();
+
+                var dateSelected = $('#dateSelected').val();
+
+                // console.log(valueSelected);
+                // console.log(textSelected);
+                // console.log(dateSelected);
+
+                dailyKpiOperationDatatable.clear().draw();
+                dailyKpiOperationDatatable.ajax.reload();
+                fn.ChartDropPerformance(dateSelected, dateSelected, textSelected);
+                fn.ChartBoxSentPerformance(dateSelected, dateSelected, textSelected);
+                fn.ChartPercentEPOD(dateSelected, dateSelected, textSelected);
+
+        });
+
+
+}

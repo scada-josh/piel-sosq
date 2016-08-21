@@ -1,0 +1,93 @@
+    /**
+     *
+     * @apiName GetVehicleLeaderKpiByMonthly
+     * @apiGroup KPI Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /kpiManager/getVehicleLeaderKpiByMonthly/ Get Vehicle Leader KPI By Monthly
+     * @apiDescription คำอธิบาย : ในส่วนนี้ทำหน้าที่เรียกข้อมูล KPI ของหัวหน้าสาย แสดงผลแบบรายเดือนและช่วงวันที่กำหนด
+     *
+     */
+
+    function getVehicleLeaderKpiByMonthly($app, $client_mis) {
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+        /* ************************* */
+        $headers = $app->request->headers;
+        $ContetnType = $app->request->headers->get('Content-Type');
+
+        /**
+        * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+        * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+        */
+
+        if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8") ) {
+
+            $request = $app->request();
+            $result = json_decode($request->getBody());
+
+            /* receive request */
+            $postStartDate = $result->startDate;              /* รูปแบบ เดือน/วัน/ปี */
+            $postEndDate = $result->endDate;               /* รูปแบบ เดือน/วัน/ปี */
+            $postSiteName = $result->siteName;
+
+            <% if config[:phase_environment] == "Development" %>
+            $app->log->debug(date("Y-m-d H:i:s")." : "."startDate : ".$postStartDate);
+            $app->log->debug(date("Y-m-d H:i:s")." : "."endDate : ".$postEndDate);
+            $app->log->debug(date("Y-m-d H:i:s")." : "."siteName : ".$postSiteName);
+            <% end %>
+
+        } else if (($ContetnType == "application/x-www-form-urlencoded") || ($ContetnType == "application/x-www-form-urlencoded; charset=UTF-8")){
+
+            /* receive request */                                                                                 
+            $postStartDate = $app->request()->post('startDate');    /* รูปแบบ เดือน/วัน/ปี */
+            $postEndDate = $app->request()->post('endDate');        /* รูปแบบ เดือน/วัน/ปี */
+            $postSiteName = $app->request()->post('siteName');
+
+            <% if config[:phase_environment] == "Development" %>
+            $app->log->debug(date("Y-m-d H:i:s")." : "."startDate : ".$postStartDate);
+            $app->log->debug(date("Y-m-d H:i:s")." : "."endDate : ".$postEndDate);
+            $app->log->debug(date("Y-m-d H:i:s")." : "."siteName : ".$postSiteName);
+            <% end %>
+        } 
+
+
+
+        // $postStartDate = "2016-07-24";    /* รูปแบบ เดือน/วัน/ปี */
+        // $postEndDate = "2016-07-30";        /* รูปแบบ เดือน/วัน/ปี */
+        // $postSiteName = "29";
+
+
+        <% if config[:phase_environment] == "Development" %>
+
+            /*  Partial : Localhost */
+            <%= partial "/KpiManager/getVehicleLeaderKpiByMonthly/_development" %>
+
+        <% elsif config[:phase_environment] == "Test" %>
+
+            /*  Partial : Localhost */
+            <%= partial "/KpiManager/getVehicleLeaderKpiByMonthly/_development" %>
+
+        <% elsif config[:phase_environment] == "Production" %>
+
+            /*  Partial : Production */
+            <%= partial "/KpiManager/getVehicleLeaderKpiByMonthly/_production" %>
+
+        <% end %>
+
+
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        // $reportResult = array("msg" => "สวัสดี");
+
+ 
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+
+    };

@@ -1,0 +1,65 @@
+    $("#ionRangeByQuater").ionRangeSlider({
+      type: "double",
+      values: ["Q1","Q2","Q3","Q4"],
+      grid: true,
+      onStart: function (data) {
+        // console.log(data);
+
+        var start_quater_val = data.from_value;
+        var end_quater_val = data.to_value;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+
+        var start_date_of_quater = moment().year(valueSelected).quarters(data.from + 1).startOf('quarter');
+        var end_date_of_quater = moment().year(valueSelected).quarters(data.to + 1).endOf("quarter");
+        // console.log(start_month.format('DD/MM/YYYY'));
+        // console.log(end_month.format('DD/MM/YYYY'));
+        // fn.ShowRangeDate(start_quater, end_quater);
+        fn.ShowRangeQuater(start_date_of_quater, end_date_of_quater, start_quater_val, end_quater_val, valueSelected);
+      },
+      onChange: function (data) {
+        // console.log(data);
+      },
+      onFinish: function (data) {
+        // console.log(data);
+
+        var start_quater_val = data.from_value;
+        var end_quater_val = data.to_value;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+
+        var start_date_of_quater = moment().year(valueSelected).quarters(data.from + 1).startOf('quarter');
+        var end_date_of_quater = moment().year(valueSelected).quarters(data.to + 1).endOf("quarter");
+        // console.log(start_month.format('DD/MM/YYYY'));
+        // console.log(end_month.format('DD/MM/YYYY'));
+        // fn.ShowRangeDate(start_quater, end_quater);
+        fn.ShowRangeQuater(start_date_of_quater, end_date_of_quater, start_quater_val, end_quater_val, valueSelected);
+
+      },
+      onUpdate: function (data) {
+        // console.log(data);
+        var start_quater_val = data.from_value;
+        var end_quater_val = data.to_value;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+
+        var start_date_of_quater = moment().year(valueSelected).quarters(data.from + 1).startOf('quarter');
+        var end_date_of_quater = moment().year(valueSelected).quarters(data.to + 1).endOf("quarter");
+        // console.log(start_month.format('DD/MM/YYYY'));
+        // console.log(end_month.format('DD/MM/YYYY'));
+        // fn.ShowRangeDate(start_quater, end_quater);
+        fn.ShowRangeQuater(start_date_of_quater, end_date_of_quater, start_quater_val, end_quater_val, valueSelected);
+      }
+    });
+
+  // Saving it's instance to variable
+  fn.objIonRangeByQuater = $("#ionRangeByQuater").data("ionRangeSlider");

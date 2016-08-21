@@ -1,0 +1,195 @@
+            "footerCallback": function ( row, data, start, end, display ) {
+
+                var api = this.api(), data, total, pageTotal;
+
+                    // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                    i : 0;
+                };
+
+                // console.log(data.length);
+                var rowCount;
+                if (end) {
+                    rowCount = end;
+                } else {
+                    rowCount = 1;
+                }
+                // rowCount = row;
+                
+                // console.log(rowCount);
+                // console.log(row);
+                // console.log(data);
+                // console.log(start);
+                // console.log(end);
+                // console.log(display);
+
+                for (var i=2; i < (dataSet.length*2 + 4); i++ ) {
+                    // Total over all pages
+                    total = api.column(i).data().reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+
+                        // Total over this page
+                    pageTotal = api.column( i, { page: 'current'} ).data().reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+
+
+                    var pageAverage = pageTotal/rowCount;
+
+                        // Update footer
+                    $( api.column( i ).footer() ).html(
+                        // '$'+pageTotal +' ( $'+ total +' total)'
+
+                        numeral(pageAverage).format('0,0.00') + '<br/><small>(' + numeral(pageTotal).format('0,0.00') + ')</small>'
+                    );
+                }
+
+                var tmpApiPageCurrent = api.column( i, { page: 'current'} );
+                    // console.log(tmpApiPageCurrent);
+                var tmpArrVehicle_License = api.column( 1, { page: 'current'} ).data();
+                    // console.log(tmpArrVehicle_License);
+
+                arrAverageDrop_EPOD = [];
+                arrAverageDrop_NonEPOD = [];
+                arrAverageBox_EPOD = [];
+                arrAverageBox_NonEPOD = [];
+
+                for (var i=2; i < (dataSet.length*2 + 2); i++ ) {
+
+                    if (i%2) {
+                        // console.log("Drop");
+                        // console.log(api.column( i, { page: 'current'} ).data());
+                        var tmpArrDropColumn = api.column( i, { page: 'current'} ).data();
+
+                            var sum_drop_epod = 0;
+                            var sum_drop_non_epod = 0;
+                            $.each( tmpArrDropColumn, function( _i, _val ) {
+                                // console.log(tmpArrVehicle_License[_i]);
+
+                                var a = api.column( _i, { page: 'current'} ).data();
+
+                                if (objDeliveryType[tmpArrVehicle_License[_i]] == "EPOD") {
+                                    // console.log("EPOD");
+                                    // var a = api.column( _i, { page: 'current'} ).data();
+                                    // console.log(a);
+                                    
+                                    $.each(tmpArrDropColumn, function(_k, _k_val){
+
+                                        // var arrSplitData = _k_val.toString().split('#');
+                                        // var _val = parseInt(arrSplitData[0]);
+                                        // var _deliveryType = arrSplitData[1];
+                                        // _k_val = _val;
+
+                                        _k_val = 1;
+
+                                        sum_drop_epod = sum_drop_epod + _k_val;
+                                        // console.log(_k_val);
+                                        // arrAverageDrop_EPOD.push(_k_val);
+                                    });
+
+
+                                    // arrAverageDrop_EPOD.push(sum);
+                                    // var sum = a.reduce(function(a, b) { return a + b; }, 0);
+                                    // arrAverageDrop_EPOD.push(sum);
+                                } else {
+                                    // console.log("Non-EPOD");
+
+                                    $.each(tmpArrDropColumn, function(_k, _k_val){
+                                        // var arrSplitData = _k_val.toString().split('#');
+                                        // var _val = parseInt(arrSplitData[0]);
+                                        // var _deliveryType = arrSplitData[1];
+                                        // _k_val = _val;
+
+                                        _k_val = 1;
+
+                                        sum_drop_non_epod = sum_drop_non_epod + _k_val;
+                                        // console.log(_k_val);
+                                        // arrAverageDrop_EPOD.push(_k_val);
+                                    });
+                                }
+
+
+                            });
+
+                            arrAverageDrop_EPOD.push(sum_drop_epod);
+                            arrAverageDrop_NonEPOD.push(sum_drop_non_epod);
+
+                    } else {
+                        // console.log("Box");
+                        // console.log(api.column( i, { page: 'current'} ).data());
+                        var tmpArrBoxColumn = api.column( i, { page: 'current'} ).data();
+
+                            var sum_box_epod = 0;
+                            var sum_box_non_epod = 0;
+                            $.each( tmpArrBoxColumn, function( _i, _val ) {
+                                // console.log(tmpArrVehicle_License[_i]);
+
+                                var a = api.column( _i, { page: 'current'} ).data();
+
+                                if (objDeliveryType[tmpArrVehicle_License[_i]] == "EPOD") {
+                                    // console.log("EPOD");
+                                    $.each(tmpArrDropColumn, function(_k, _k_val){
+                                        // var arrSplitData = _k_val.toString().split('#');
+                                        // var _val = parseInt(arrSplitData[0]);
+                                        // var _deliveryType = arrSplitData[1];
+                                        // _k_val = _val;
+
+                                        _k_val = 1;
+
+                                        sum_box_epod = sum_box_epod + _k_val;
+                                        // console.log(_k_val);
+                                        // arrAverageDrop_EPOD.push(_k_val);
+                                    });
+
+                                } else {
+                                    // console.log("Non-EPOD");
+                                    $.each(tmpArrDropColumn, function(_k, _k_val){
+                                        // var arrSplitData = _k_val.toString().split('#');
+                                        // var _val = parseInt(arrSplitData[0]);
+                                        // var _deliveryType = arrSplitData[1];
+                                        // _k_val = _val;
+
+                                        _k_val = 1;
+
+                                        sum_box_non_epod = sum_box_non_epod + _k_val;
+                                        // console.log(_k_val);
+                                        // arrAverageDrop_EPOD.push(_k_val);
+                                    });
+                                }
+                            });
+
+                        arrAverageBox_EPOD.push(sum_box_epod);
+                        arrAverageBox_NonEPOD.push(sum_box_non_epod);
+                    }
+                    
+                }
+
+
+
+
+                // console.log(data);
+                // console.log(objDeliveryType);
+
+                // $.each( data, function( _i, _val ) {
+                //     // console.log(_val[1]);
+                //     // console.log(objDeliveryType[_val[1]]);
+
+                //     if (objDeliveryType[_val[1]] == "EPOD") {
+                //         console.log("EPOD");
+                //     } else {
+                //         console.log("Non-EPOD");
+                //     }
+
+                // });
+
+                  fn.SparklineBarAverageBoxEpod(arrAverageBox_EPOD);
+                  fn.SparklineBarAverageDropEpod(arrAverageDrop_EPOD);
+
+                  fn.SparklineBarAverageBoxNonEpod(arrAverageBox_NonEPOD);
+                  fn.SparklineBarAverageDropNonEpod(arrAverageDrop_NonEPOD);
+
+            },

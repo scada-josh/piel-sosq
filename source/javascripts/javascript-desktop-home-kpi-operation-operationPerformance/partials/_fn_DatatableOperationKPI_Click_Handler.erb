@@ -1,0 +1,94 @@
+DatatableOperationKPI_Click_Handler: function () {
+	// console.log("DatatableOperationKPI_Click_Handler");
+
+          $('#datatableOperationKPI tbody').on( 'click', 'td', function () {
+              // alert( 'Clicked on cell in visible column: '+datatableOperationKPI.cell( this ).index().columnVisible );
+
+              var data = datatableOperationKPI.row($(this).closest('tr')).data();
+              // console.log(data);
+
+              var rowIdx = datatableOperationKPI.cell( this ).index().row;
+              console.log(rowIdx);
+
+              var columnIdx = datatableOperationKPI.cell( this ).index().column;
+              console.log(columnIdx);
+
+              var col_offset = 3;
+
+              if (dataCollections) {
+                if (columnIdx >= 3) {
+                  // console.log(dataCollections);
+                  // console.log(dataCollections['"' + rowIdx.toString() + columnIdx.toString() + '"']);
+                  var tmpObj = dataCollections['"' + rowIdx.toString() + (columnIdx - col_offset).toString() + '"'];
+                  var myJobDate = tmpObj.job_date;
+                  console.log(myJobDate);
+                  var myVehicleLicence = tmpObj.vehicle_licence;
+                  console.log(myVehicleLicence);
+                  var my_job_no = tmpObj.job_no;
+                  var my_departure_time = tmpObj.departure_time;
+                  var my_first_delivery_place_time = tmpObj.first_delivery_place_time;
+                  var my_drop_all = tmpObj.drop_all;
+                  var my_size_S = tmpObj.size_S;
+                  var my_size_A = tmpObj.size_A;
+                  var my_size_B = tmpObj.size_B;
+                  var my_size_C = tmpObj.size_C;
+                  var my_size_Other = tmpObj.size_Other;
+                  var my_box_all = tmpObj.box_all;
+                  var my_driver_wages = tmpObj.driver_wages;
+
+                  toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right",
+                    "preventDuplicates": false,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                  }
+                  
+
+
+                    var tmpMsg = "<ul class='list-unstyled'>";
+                        tmpMsg += "<li><strong>Job No :</strong> <button type='button' class='btn btn-circle btn-success' id='show-job-no-id'><b>" + my_job_no + "</b></button></a></li>";
+                        tmpMsg += "<li><i class='fa fa-clock-o'></i> <strong>เวลาออกศูนย์ :</strong> " + my_departure_time + "</li>";
+                        tmpMsg += "<li><i class='fa fa-clock-o'></i> <strong>ส่งจุดแรก :</strong> " + my_first_delivery_place_time + "</li>";
+                        tmpMsg += "<li><i class='fa fa-map-marker'></i> <strong>จำนวน Drop :</strong> " + my_drop_all + "</li>";
+                        tmpMsg += "<li><i class='fa fa-cube'></i><strong> Size S :</strong> " + my_size_S + "</li>";
+                        tmpMsg += "<li><i class='fa fa-cube'></i><strong> Size A :</strong> " + my_size_A + "</li>";
+                        tmpMsg += "<li><i class='fa fa-cube'></i><strong> Size B :</strong> " + my_size_B + "</li>";
+                        tmpMsg += "<li><i class='fa fa-cube'></i><strong> Size C :</strong> " + my_size_C + "</li>";
+                        tmpMsg += "<li><i class='fa fa-cube'></i><strong> Size N/A :</strong> " + my_size_Other + "</li>";
+                        tmpMsg += "<li><i class='fa fa-cubes'></i><strong> กล่องทั้งหมด :</strong> " + my_box_all + "</li>";
+                        tmpMsg += "<li><i class='fa fa-bitcoin'></i><strong> ค่าจ้าง พขร. :</strong> " + my_driver_wages + "</li>";
+                        tmpMsg += "</ul>";
+
+                  // var tmpMsg = "Job No. : <button type='button' class='btn btn-link'>" + myJobNo + "</button>";
+                  toastr["success"](tmpMsg, "<h3>Information : </h3>");
+                  // toastr.info('Date : ' + myJobDate);
+
+   
+                  $("#show-job-no-id").on('click', function() {
+                    // alert(1);
+                    fn.ShowJobNoDetail(my_job_no);
+                  });
+
+                  // $("#show-job-no-id").on('click', fn.ShowJobNoDetail(my_job_no));
+
+                }
+              }
+              
+
+              // console.log( 'You clicked on ' + data.id+'\'s row' );
+              // console.log( 'You clicked on job date :  ' + data.job_date );
+              // console.log( 'You clicked on job no :  ' + data.job_no );
+          });
+
+  
+},

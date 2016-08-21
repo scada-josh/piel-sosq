@@ -1,0 +1,572 @@
+<?php
+ 
+    date_default_timezone_set("Asia/Bangkok");
+ 
+    require_once '../../../packages/autoload.php';
+ 
+    // Create and configure Slim app
+    /* Slim framework 2.x */
+    $app = new \Slim\Slim();
+ 
+
+      /* NuSOAP */
+    $client = new nusoap_client("http://58.137.5.126/epodws/service.asmx?wsdl", true);
+    // $client->soap_defencoding = 'UTF-8';
+
+
+    /* forceEndpoint Partial : Localhost (Internet) */
+        $endpoint = "http://58.137.5.126/epodws/service.asmx?wsdl";
+    $client->forceEndpoint = $endpoint;
+
+
+    $client->soap_defencoding = 'UTF-8';
+    $client->decode_utf8 = false; // แก้ปัญหาตัวอักษรภาษาไทยแสดง ???????? (web service unicode characters dispaly as question marks)
+    $client->encode_utf8 = true;
+
+
+
+    /* Test Manager */
+        $app->get('/hello/:name', function ($name) use ($app) {
+ 
+        // $return_m = array("msg" => "สวัสดี");
+        $return_m = array("msg" => "สวัสดี, $name");
+ 
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($return_m);
+    });
+
+    /* KPI manager */
+    $app->post('/kpiManager/getOperationKPI/',function() use ($app, $client) { getOperationKPI($app, $client); });
+
+ 
+    // Run app
+    $app->run();
+
+    /* Test Manager Partial */
+
+
+    /* KPI Manager Partial */
+        /**
+     *
+     * @apiName GetOperationKPI
+     * @apiGroup KPI Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /kpiManager/getOperationKPI/ Call WebService getOperationKPI
+     * @apiDescription คำอธิบาย : ในส่วนนี้จะเรียก WebService getOperationKPI
+     *
+     */
+
+    function getOperationKPI($app, $client) {
+
+        /* ************************* */
+        /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+        /* ************************* */
+        $headers = $app->request->headers;
+        $ContetnType = $app->request->headers->get('Content-Type');
+
+        /**
+        * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+        * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+        */
+        if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8")) {
+
+            $request = $app->request();
+            $result = json_decode($request->getBody());
+
+            /* receive request */
+            $postStationID = $result->stationID;
+
+
+        } else if ($ContetnType == "application/x-www-form-urlencoded"){
+
+            //$userID = $app->request()->params('userID_param');
+            //$userID = $app->request()->post('userID_param');
+
+        }
+
+
+
+        $error = $client->getError();
+        if ($error) {
+            echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
+        }
+
+        /* ************************* */
+        /* เริ่มกระบวนการเชื่อมต่อ Web Service */
+        /* ************************* */
+        $postStartDate = "05/30/2016";              /* รูปแบบ เดือน/วัน/ปี */
+        $postEndDate = "05/30/2016";                /* รูปแบบ เดือน/วัน/ปี */
+        $postSiteName = "bc";
+
+        $result = $client->call('getOperationKPI', array("startDate" => $postStartDate,
+                                                         "endDate" => $postEndDate,
+                                                         "siteName" => $postSiteName));
+        $mydata = json_decode($result["getOperationKPIResult"],true);
+
+        $reports = array();
+        $reports_details = array();
+
+        /* initial variable Partial */
+                /* initial variable Partial */
+        $tmpJobDate = "";
+        $tmpJobNo = "";
+        $tmpVehicleLicence = "";
+        $tmpDropAll = 0;
+        $tmpDropSuccess = 0;
+
+        $tmpBoxAmount = 0;
+        $tmpBoxAll = 0;
+        $tmpBoxSuccess = 0;
+
+        $tmpBill = "";
+        $tmpBillCount = 0;
+
+        $tmpBillAndUserUpdate = "";
+        $tmpBillClosedWithEPODCount = 0;
+
+        $tmpBillClosedAfter6pmCount = 0;
+        
+        $j = 0;
+        $k = 0;
+
+        for ($i=0; $i < count($mydata["array"]); $i++) { 
+
+            if (!$tmpJobNo) {
+                $tmpJobDate = $mydata["array"][$i]['JobDate'];
+                $tmpJobNo = $mydata["array"][$i]['JobNo'];
+                $tmpVehicleLicence = $mydata["array"][$i]['VehicleLicence'];
+                // $tmpBill = $mydata["array"][$i]['DocNo'];
+            }
+
+                        if ($i == count($mydata["array"])-1) {
+
+                $k++;
+
+                /* summary data for current JobNo Partial */
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpDropAll++;
+                }
+
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tmpDropSuccess++;
+                    }
+                }
+
+                $tmpBoxAmount = $mydata["array"][$i]['amount'];
+                $tmpBoxAll = $tmpBoxAll + (int)str_replace(' ', '', $tmpBoxAmount);
+
+                if ($mydata["array"][$i]['DeliveryDateTime']) {
+                    $tmpBoxSuccess = $tmpBoxSuccess + (int)str_replace(' ', '', $tmpBoxAmount);
+                }
+
+                /* Count Bill or Doc No. which closed by EPOD */
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                        $tmpBillClosedWithEPODCount++;
+                    }
+
+                    $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+
+                } else {
+
+                    // $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+
+                    if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                        if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                            $tmpBillClosedWithEPODCount++;
+                        }
+                    }
+                }
+
+
+
+                // if ($tmpBill == $mydata["array"][$i]['DocNo']) {
+                //     // if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                //         $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+                //     // }
+                // } else {
+                //     $tmpBillAndUserUpdate = "";
+                // }
+
+
+                /* Count Bill or Doc No. */
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpBillCount++;
+                    $tmpBill = $mydata["array"][$i]['DocNo'];
+                }
+                // $tmpBill = $mydata["array"][$i]['DocNo'];
+
+
+
+
+
+                /* prepare data for current JobNo : bill closed after 6pm Partial */
+                                /* Count Bill is closed after 6 PM, EPOD only */
+                $current_job_date_time_formattedDate = "";
+                $current_job_date_time_unixTimestamp = "";
+                $death_line_date_time_formattedDate = "";
+                $death_line_date_time_unixTimestamp = "";
+                $delivery_date_time_formattedDate = "";
+                $delivery_date_time_unixTimestamp = "";
+                if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+
+                    if ($mydata["array"][$i]['JobDate']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_jobDate = new DateTime($mydata["array"][$i]['JobDate'], new DateTimeZone($tz));
+                        $current_job_date_time_formattedDate = $d_jobDate->format('Y-m-d H:i:s'); 
+                        $current_job_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60;
+                        $death_line_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60 + 18*60*60;
+                        $dt_death_line = new DateTime("@$death_line_date_time_unixTimestamp");  // convert UNIX timestamp to PHP DateTime
+                        $death_line_date_time_formattedDate = $dt_death_line->format('Y-m-d H:i:s');
+                    } 
+
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_deliveryDate = new DateTime($mydata["array"][$i]['DeliveryDateTime'], new DateTimeZone($tz));
+                        $delivery_date_time_formattedDate = $d_deliveryDate->format('Y-m-d H:i:s'); 
+                        $delivery_date_time_unixTimestamp = $d_deliveryDate->getTimestamp() + 7*60*60;
+                    } 
+                }
+
+
+                $reports_details[] = array(
+                    "id" => $k,
+                    "job_date" => $tmpJobDate,
+                    "job_no" => $tmpJobNo,
+                    "job_remark" => $mydata["array"][$i]['JobRemark'],
+                    "supervisor" => $mydata["array"][$i]['Supervisor'],
+                    "vehicle_licence" => $tmpVehicleLicence,
+                    "vehicle_type" => $mydata["array"][$i]['VehicleType'],
+                    "driver_name" => $mydata["array"][$i]['DriverName'],
+                    "delivery_date_time" => $mydata["array"][$i]['DeliveryDateTime'],
+                    "amount" => $mydata["array"][$i]['amount'],
+                    "doc_no" => $mydata["array"][$i]['DocNo'],
+                    "user_update" => $mydata["array"][$i]['UserUpdate'],
+                    "current_job_date_time_formatted" => $current_job_date_time_formattedDate,
+                    "current_job_date_time_unix" => $current_job_date_time_unixTimestamp,
+                    "death_line_date_time_formatted" => $death_line_date_time_formattedDate,
+                    "death_line_date_time_unix" => $death_line_date_time_unixTimestamp,
+                    "delivery_date_time_formatted" => $delivery_date_time_formattedDate,
+                    "delivery_date_time_unix" => $delivery_date_time_unixTimestamp
+                );
+
+
+
+
+                // $tmpJobNo = "";
+                $mydata["array"][$i]['JobNo'] = "";
+            }
+
+            if ($tmpJobNo != $mydata["array"][$i]['JobNo']) {
+
+                $j++;
+
+                $reports[] = array(
+                        "id" => $j,
+                        "job_date" => $tmpJobDate,
+                        "job_no" => $tmpJobNo,
+                        "section" => $mydata["array"][$i]['section'],
+                        "supervisor" => $mydata["array"][$i]['Supervisor'],
+                        "vehicle_licence" => $tmpVehicleLicence,
+                        "vehicle_type" => $mydata["array"][$i]['VehicleType'],
+                        "driver_name" => $mydata["array"][$i]['DriverName'],
+                        "drop_all" => $tmpDropAll,
+                        "drop_success" => $tmpDropSuccess,
+                        "box_all" => $tmpBoxAll,
+                        "box_success" => $tmpBoxSuccess,
+                        "bill_count" => $tmpBillCount,
+                        "bill_closed_with_epod_count" => $tmpBillClosedWithEPODCount,
+                        "bill_closed_after_6pm_count" => $tmpBillClosedAfter6pmCount,
+                        "details" => $reports_details
+                    );
+
+                /* prepare data for new JobNo Partial */
+                                /* prepare data for new JobNo Partial */
+                $k = 1;
+
+                $tmpJobDate = $mydata["array"][$i]['JobDate'];
+                $tmpJobNo = $mydata["array"][$i]['JobNo'];
+                $tmpVehicleLicence = $mydata["array"][$i]['VehicleLicence'];
+
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpDropAll = 1;
+                }
+
+                $tmpDropSuccess = 0;
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tmpDropSuccess++;
+                    }
+                }
+
+                $tmpBoxAll = 0;
+                $tmpBoxAmount = $mydata["array"][$i]['amount'];
+                $tmpBoxAll = $tmpBoxAll + (int)str_replace(' ', '', $tmpBoxAmount);
+
+                $tmpBoxSuccess = 0;
+                if ($mydata["array"][$i]['DeliveryDateTime']) {
+                    $tmpBoxSuccess = $tmpBoxSuccess + (int)str_replace(' ', '', $tmpBoxAmount);
+                }
+
+
+                /* prepare data for new JobNo : bill closed after 6pm Partial */
+                                /* Count Bill is closed after 6 PM, EPOD only */
+                $tmpBillClosedAfter6pmCount = 0;
+                $current_job_date_time_formattedDate = "";
+                $current_job_date_time_unixTimestamp = "";
+                $death_line_date_time_formattedDate = "";
+                $death_line_date_time_unixTimestamp = "";
+                $delivery_date_time_formattedDate = "";
+                $delivery_date_time_unixTimestamp = "";
+                if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+
+                    if ($mydata["array"][$i]['JobDate']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_jobDate = new DateTime($mydata["array"][$i]['JobDate'], new DateTimeZone($tz));
+                        $current_job_date_time_formattedDate = $d_jobDate->format('Y-m-d H:i:s'); 
+                        $current_job_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60;
+                        $death_line_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60 + 18*60*60;
+                        $dt_death_line = new DateTime("@$death_line_date_time_unixTimestamp");  // convert UNIX timestamp to PHP DateTime
+                        $death_line_date_time_formattedDate = $dt_death_line->format('Y-m-d H:i:s');
+                    } 
+
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_deliveryDate = new DateTime($mydata["array"][$i]['DeliveryDateTime'], new DateTimeZone($tz));
+                        $delivery_date_time_formattedDate = $d_deliveryDate->format('Y-m-d H:i:s'); 
+                        $delivery_date_time_unixTimestamp = $d_deliveryDate->getTimestamp() + 7*60*60;
+                    } 
+
+                    if ($delivery_date_time_unixTimestamp > $death_line_date_time_unixTimestamp) {
+
+                        if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                            if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                                $tmpBillClosedAfter6pmCount++;
+                            }
+
+                            // $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+
+                        } else {
+
+                            if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                                if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                                    $tmpBillClosedAfter6pmCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                
+                /* Count Bill or Doc No. which closed by EPOD */
+                $tmpBillClosedWithEPODCount = 0;
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                        if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                            $tmpBillClosedWithEPODCount++;
+                        }
+
+                        $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+                        
+                } else {
+
+                    if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                        if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                            $tmpBillClosedWithEPODCount++;
+                        }
+                    }
+                }
+
+                /* Count Bill or Doc No. */
+                $tmpBillCount = 0;
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpBillCount++;
+                    $tmpBill = $mydata["array"][$i]['DocNo'];
+                }
+
+
+
+
+                $reports_details = array();
+                $reports_details[] = array(
+                    "id" => $k,
+                    "job_date" => $tmpJobDate,
+                    "job_no" => $tmpJobNo,
+                    "job_remark" => $mydata["array"][$i]['JobRemark'],
+                    "supervisor" => $mydata["array"][$i]['Supervisor'],
+                    "vehicle_licence" => $tmpVehicleLicence,
+                    "vehicle_type" => $mydata["array"][$i]['VehicleType'],
+                    "driver_name" => $mydata["array"][$i]['DriverName'],
+                    "delivery_date_time" => $mydata["array"][$i]['DeliveryDateTime'],
+                    "amount" => $mydata["array"][$i]['amount'],
+                    "doc_no" => $mydata["array"][$i]['DocNo'],
+                    "user_update" => $mydata["array"][$i]['UserUpdate'],
+                    "current_job_date_time_formatted" => $current_job_date_time_formattedDate,
+                    "current_job_date_time_unix" => $current_job_date_time_unixTimestamp,
+                    "death_line_date_time_formatted" => $death_line_date_time_formattedDate,
+                    "death_line_date_time_unix" => $death_line_date_time_unixTimestamp,
+                    "delivery_date_time_formatted" => $delivery_date_time_formattedDate,
+                    "delivery_date_time_unix" => $delivery_date_time_unixTimestamp
+                );
+                
+
+
+            } else {
+
+                /* summary data for current JobNo Partial */
+                
+                $k++;
+
+                /* summary data for current JobNo Partial */
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpDropAll++;
+                }
+
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tmpDropSuccess++;
+                    }
+                }
+
+                $tmpBoxAmount = $mydata["array"][$i]['amount'];
+                $tmpBoxAll = $tmpBoxAll + (int)str_replace(' ', '', $tmpBoxAmount);
+
+                if ($mydata["array"][$i]['DeliveryDateTime']) {
+                    $tmpBoxSuccess = $tmpBoxSuccess + (int)str_replace(' ', '', $tmpBoxAmount);
+                }
+
+
+
+
+                /* prepare data for current JobNo : bill closed after 6pm Partial */
+                                /* Count Bill is closed after 6 PM, EPOD only */
+                $current_job_date_time_formattedDate = "";
+                $current_job_date_time_unixTimestamp = "";
+                $death_line_date_time_formattedDate = "";
+                $death_line_date_time_unixTimestamp = "";
+                $delivery_date_time_formattedDate = "";
+                $delivery_date_time_unixTimestamp = "";
+                if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+
+                    if ($mydata["array"][$i]['JobDate']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_jobDate = new DateTime($mydata["array"][$i]['JobDate'], new DateTimeZone($tz));
+                        $current_job_date_time_formattedDate = $d_jobDate->format('Y-m-d H:i:s'); 
+                        $current_job_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60;
+                        $death_line_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60 + 18*60*60;
+                        $dt_death_line = new DateTime("@$death_line_date_time_unixTimestamp");  // convert UNIX timestamp to PHP DateTime
+                        $death_line_date_time_formattedDate = $dt_death_line->format('Y-m-d H:i:s');
+                    } 
+
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_deliveryDate = new DateTime($mydata["array"][$i]['DeliveryDateTime'], new DateTimeZone($tz));
+                        $delivery_date_time_formattedDate = $d_deliveryDate->format('Y-m-d H:i:s'); 
+                        $delivery_date_time_unixTimestamp = $d_deliveryDate->getTimestamp() + 7*60*60;
+                    } 
+
+
+                    if ($delivery_date_time_unixTimestamp > $death_line_date_time_unixTimestamp) {
+
+                        if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                            if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                                $tmpBillClosedAfter6pmCount++;
+                            }
+
+                            // $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+
+                        } else {
+
+                            if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                                if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                                    $tmpBillClosedAfter6pmCount++;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+
+
+
+
+
+                /* Count Bill or Doc No. which closed by EPOD */
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                        $tmpBillClosedWithEPODCount++;
+                    }
+
+                    $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+
+                } else {
+
+                    // $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+
+                    if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                        if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                            $tmpBillClosedWithEPODCount++;
+                        }
+                    }
+                }
+
+
+                /* Count Bill or Doc No. */
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpBillCount++;
+                    $tmpBill = $mydata["array"][$i]['DocNo'];
+                }
+
+
+
+
+                
+
+                $reports_details[] = array(
+                    "id" => $k,
+                    "job_date" => $tmpJobDate,
+                    "job_no" => $tmpJobNo,
+                    "job_remark" => $mydata["array"][$i]['JobRemark'],
+                    "supervisor" => $mydata["array"][$i]['Supervisor'],
+                    "vehicle_licence" => $tmpVehicleLicence,
+                    "vehicle_type" => $mydata["array"][$i]['VehicleType'],
+                    "driver_name" => $mydata["array"][$i]['DriverName'],
+                    "delivery_date_time" => $mydata["array"][$i]['DeliveryDateTime'],
+                    "amount" => $mydata["array"][$i]['amount'],
+                    "doc_no" => $mydata["array"][$i]['DocNo'],
+                    "user_update" => $mydata["array"][$i]['UserUpdate'],
+                    "current_job_date_time_formatted" => $current_job_date_time_formattedDate,
+                    "current_job_date_time_unix" => $current_job_date_time_unixTimestamp,
+                    "death_line_date_time_formatted" => $death_line_date_time_formattedDate,
+                    "death_line_date_time_unix" => $death_line_date_time_unixTimestamp,
+                    "delivery_date_time_formatted" => $delivery_date_time_formattedDate,
+                    "delivery_date_time_unix" => $delivery_date_time_unixTimestamp
+                );
+                
+
+            }
+
+        }
+
+        $rowCount = count($mydata["array"]);
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        $resultText = "success";
+
+        $reportResult = array("result" =>  $resultText, 
+                              "start_date" => $postStartDate,
+                              "end_date" => $postEndDate,
+                              "site_name" => $postSiteName,
+                              "ws_records_count" => $rowCount, 
+                              "info_records_count" => $j, 
+                              "rows" => $reports);
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+    };
+ 
+?>

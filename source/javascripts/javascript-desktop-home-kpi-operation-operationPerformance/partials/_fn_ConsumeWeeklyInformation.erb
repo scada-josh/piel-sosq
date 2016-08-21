@@ -1,0 +1,106 @@
+ConsumeWeeklyInformation: function () {
+	// console.log("ConsumeWeeklyInformation");
+
+          if ((fn.last_weekly_to - fn.last_weekly_from) > 4) {
+
+              toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": "toast-top-full-width",
+                "onclick": null,
+                "showDuration": "1000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+              }
+
+              var tmpMsg = "ช่วงวันที่คุณเลือกเกิน 4 Weeks ระบบไม่สามารถแสดงผลได้";
+              toastr["warning"](tmpMsg, "<h3>Warning</h3>");
+
+              return false;
+          } 
+
+
+
+
+          if ($.fn.DataTable.isDataTable('#datatableOperationKPI_Weekly') ) {
+              $('#datatableOperationKPI_Weekly').empty();
+              $('#datatableOperationKPI_Weekly').dataTable().fnDestroy();
+              $('#datatableOperationKPI_Weekly > thead > tr').remove();
+              $('#datatableOperationKPI_Weekly > tfoot > tr').remove();
+              // $('#datatableOperationKPI_Weekly').deleteTFoot();
+          }
+
+          
+	        if (fn.paramStartDate) {
+	          // paramStartDate = fn.paramStartDate.format('DD/MM/YYYY');
+	          paramStartDate = fn.paramStartDate.format('YYYY-MM-DD');
+	        }
+
+	        if (fn.paramEndDate) {
+	          // paramEndDate = fn.paramEndDate.format('DD/MM/YYYY');
+	          paramEndDate = fn.paramEndDate.format('YYYY-MM-DD');
+	        }
+	        
+	        var tmpData = {
+	        	"startDate" : paramStartDate, 
+	        	"endDate" : paramEndDate, 
+	        	"siteID" : fn.paramSiteID
+	        }
+
+          if (!fn.paramSiteName) {
+
+            toastr.options = {
+              "closeButton": true,
+              "debug": false,
+              "newestOnTop": true,
+              "progressBar": true,
+              "positionClass": "toast-top-center",
+              "preventDuplicates": false,
+              "showDuration": "300",
+              "hideDuration": "1000",
+              "timeOut": "5000",
+              "extendedTimeOut": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+            }
+
+            var tmpMsg = "กรุณาเลือกศูนย์";
+            toastr["warning"](tmpMsg, "<h3>Warning</h3>");
+
+            return false;
+          } 
+
+  
+          $.ajax({
+            "url": "../../../../../api/restful-api/kpiManager/getOperationKpiSummaryInfoByWeekly/", 
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": JSON.stringify(tmpData),
+            "success": function(result){
+                // console.log(result);
+
+                var resultDataTableWeeklyHeaderTemplate = Handlebars.compile($("#datatable-weekly-header-template").html());
+                var context_weekly = fn.DatatableOperationKPI_Weekly_ConvertToContext(result);
+                // console.log(context_weekly);
+
+                $('#datatableOperationKPI_Weekly').html(resultDataTableWeeklyHeaderTemplate(context_weekly)).promise().done(function(){
+                  fn.DatatableOperationKPI_Weekly();
+                  // fn.DatatableOperationKPI_Click_Handler();
+                });
+
+            },
+            "error": function(jqXHR, textStatus, errorThrown){
+              console.log('textStatus: ' + textStatus);
+            }
+          });
+
+
+},

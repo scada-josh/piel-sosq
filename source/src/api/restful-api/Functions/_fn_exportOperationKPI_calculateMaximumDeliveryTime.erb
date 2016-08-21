@@ -1,0 +1,32 @@
+        function calculateMaximumDeliveryTime($current_delivery_datetime, $existing_maximum_datetime) {
+
+
+        	$current_dt = strtotime($current_delivery_datetime);
+        	$existing_dt = strtotime($existing_maximum_datetime);
+
+
+        	if ($current_dt > $existing_dt) {
+        		$result_calculateMaximumDeliveryTime = $current_delivery_datetime;
+        	} else {
+        		$result_calculateMaximumDeliveryTime = $existing_maximum_datetime;
+        	}
+
+
+
+        	// if ($current_delivery_datetime && $existing_maximum_datetime) {
+
+        	// 	$tmpStart = new DateTime($start_datetime);
+        	// 	$tmpEnd   = new DateTime($end_datetime);
+
+        	// 	$tmpInterval = $tmpStart->diff($tmpEnd);
+
+	        //     $result_calculateMaximumDeliveryTime = $tmpInterval->format('%H:%i:%s');
+
+	        // } else if(!$current_delivery_datetime && $existing_maximum_datetime){
+	        // 	$result_calculateMaximumDeliveryTime = "N/A";
+	        // } else {
+	        // 	$result_calculateMaximumDeliveryTime = "N/A";
+	        // }
+
+	        return $result_calculateMaximumDeliveryTime;
+	    }

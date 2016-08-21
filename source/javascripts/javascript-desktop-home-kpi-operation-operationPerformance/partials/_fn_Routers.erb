@@ -1,0 +1,27 @@
+        Routers: function (canvasID) {
+            // console.log('Routers');
+
+
+            if (canvasID != "daily") {
+
+                // console.log(canvasID);
+
+                $("#infomation-portlet > .canvas-information:visible").hide("slide", { direction: "left" }, 800, function(){
+
+                    $('#canvas-information-' + canvasID).fadeIn(300);
+                    
+                });
+                
+            } else {
+
+                // console.log("daily");
+
+                $("#infomation-portlet > .canvas-information:visible").fadeOut(300, function(){
+                    $('#canvas-information-' + canvasID).show("slide", { direction: "left" }, 800, function(){});
+
+                    $('#canvas-information-daily').fadeIn(300);
+
+                });
+
+            }
+        },

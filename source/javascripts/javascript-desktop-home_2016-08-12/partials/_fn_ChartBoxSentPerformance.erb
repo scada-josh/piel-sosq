@@ -1,0 +1,145 @@
+ChartBoxSentPerformance: function (paramStartDate, paramEndDate, paramSiteName) {
+	// console.log('ChartDropPerformance');
+
+    chartBoxSentPerformance = new Highcharts.Chart({
+              chart: {
+                renderTo: 'chartBoxSentPerformance',
+                //showAxes: true
+                borderWidth:1,
+                // type: 'spline',
+                zoomType: 'xy'
+              },
+              title: {
+                text: 'BOX SENT PERFORMANCE'
+              },
+              subtitle: {
+                text: '-'
+              },
+              xAxis: {
+                title: {
+                  text: 'ทะเบียนรถ'
+                },
+                categories: [],
+                //#######################
+                lineWidth: 2,
+                lineColor: '#82A7CD',
+
+                tickWidth: 2,
+                tickColor: '#82A7CD',
+
+                tickmarkPlacement: 'on'
+
+
+              },
+              yAxis: {
+                title: {
+                  text: 'จำนวนกล่องที่ส่งได้'
+                },
+
+                //#######################
+                lineWidth: 2,
+                lineColor: '#82A7CD',
+
+                tickWidth: 2,
+                tickColor: '#82A7CD',
+
+                //########################
+                tickInterval: 20,
+                minorTickInterval: 10,
+
+                minorGridLineColort: '#ADADAD',
+                minorGridLineDashStyle: 'dashdot',
+
+                //##########################
+                plotLines: [
+                {
+                  color: 'red',
+                  width: 2,
+                  value: 35,
+                  dashStyle: 'longdashdot',
+                  zIndex: 4,
+                  label: {
+                    text: 'เป้าหมาย (Target) : 35 กล่อง',
+                    style: {
+                        // color: 'red',
+                        // fontWeight: 'bold',
+                        zIndex: 60001
+                    },
+                    align: 'right',
+                    x: -10,
+                    y: -10
+                  }
+                }],
+
+                //##########################
+                plotBands: [{
+                  color: '#FCFFC5',
+                  from: 0,
+                  to: 35
+                }]
+
+              },credits: {
+                enabled: false
+              }
+    });
+
+    
+
+    $.ajax({
+        url: "../../api/restful-api/kpiManager/getOperationKPI/",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({"startDate" : paramStartDate, 
+                                         "endDate" : paramEndDate, 
+                                         "siteName" : paramSiteName
+                                       }),
+        success: function(result){
+            // console.log(result);
+
+            chartBoxSentPerformance.showLoading("Loading data...");
+
+            // Remove all the chart existing series
+            while(chartBoxSentPerformance.series.length) {
+              chartBoxSentPerformance.series[0].remove()
+            }
+
+            var tmpDataSerie = [];
+            $.each(result.rows, function(idx, data) {
+                // console.log(data.vehicle_licence + ", " + data.drop_success);
+                // var tmpDataSerie = [];
+                tmpDataSerie.push([data.vehicle_licence, data.box_success]);
+            });
+
+
+
+            chartBoxSentPerformanceSeries = {
+                  name: "ส่งได้ (Drop)",
+                  type: 'column',
+                  data: tmpDataSerie
+            }
+
+            // console.log(chartBoxSentPerformanceSeries);
+
+
+            chartBoxSentPerformance.hideLoading();
+            chartBoxSentPerformance.addSeries(chartBoxSentPerformanceSeries);
+
+            
+            
+            chartBoxSentPerformance.setTitle(null, { text: result.start_date});
+
+
+        },
+      error: function() {
+         alert("error");
+      }
+    });
+
+
+    
+    $( window ).resize(function() {
+        chartBoxSentPerformance.redraw();
+        chartBoxSentPerformance.reflow();
+    });
+},

@@ -1,0 +1,31 @@
+                /* **** Sub Menu - 04 *** */
+                $reports_sub_menu_04 = array();
+                                                                                  
+                $results_sub_menu_level_04_title = $db->menu_tb->select('DISTINCT sub_menu_level_04_title')->where("main_menu_title = ? and sub_menu_level_03_title = ?", $result["main_menu_title"], $result_sub_menu_level_03_title["sub_menu_level_03_title"]);
+
+                
+
+                foreach ($results_sub_menu_level_04_title as $result_sub_menu_level_04_title) {
+                    $result_sub_menu_level_04_leaf = $db->menu_tb->where("main_menu_title = ? and sub_menu_level_04_title = ?", $result["main_menu_title"], $result_sub_menu_level_04_title["sub_menu_level_04_title"])->fetch();
+
+                    // $app->log->debug(date("Y-m-d H:i:s")." : "."results_sub_menu_level_04_title : ".$results_sub_menu_level_04_title);
+
+                    if ($result_sub_menu_level_04_title["sub_menu_level_04_title"]) {
+
+                        if ($result_sub_menu_level_04_leaf["sub_menu_level_04_leaf"] == "FALSE") {
+                            $reports_sub_menu_04[] = array(
+                                "sub_menu_level_04_title" => $result_sub_menu_level_04_title["sub_menu_level_04_title"],
+                                "sub_menu_level_04_url" =>  $result_sub_menu_level_04_leaf["sub_menu_level_04_url"],
+                                "sub_menu_level_04_leaf" =>  $result_sub_menu_level_04_leaf["sub_menu_level_04_leaf"]
+                            );
+                        } else {
+                            $reports_sub_menu_04[] = array(
+                                "sub_menu_level_04_title" => $result_sub_menu_level_04_title["sub_menu_level_04_title"],
+                                "sub_menu_level_04_url" =>  $result_sub_menu_level_04_leaf["sub_menu_level_04_url"],
+                                "sub_menu_level_04_leaf" =>  $result_sub_menu_level_04_leaf["sub_menu_level_04_leaf"],
+                                // "sub_menu_level_05" => ""
+                                );
+                        }
+                    }
+
+                }

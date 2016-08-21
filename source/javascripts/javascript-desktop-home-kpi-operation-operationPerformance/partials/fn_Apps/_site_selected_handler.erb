@@ -1,0 +1,31 @@
+  $("#center_selected_id").change(function() {
+
+        var centerOptionSelected = $('#center_selected_id').find("option:selected");
+        var centerValueSelected  = centerOptionSelected.val();
+        var centerTextSelected   = centerOptionSelected.text();
+
+        // fn.paramSiteName = centerTextSelected;
+        fn.paramSiteID = centerValueSelected;
+        fn.paramSiteName = centerTextSelected;
+        // console.log(fn.paramStartDate);
+        // console.log(fn.paramEndDate);
+        // if (fn.paramStartDate) {
+        //   fn.paramStartDate = fn.paramStartDate.format('MM/DD/YYYY');
+        // }
+
+        // if (fn.paramEndDate) {
+        //   fn.paramEndDate = fn.paramEndDate.format('MM/DD/YYYY');
+        // }
+        
+        if (fn.paramStartDate && fn.paramEndDate) {
+          fn.HeaderFilter(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+          // fn.DatatableOperationKPI_FF();
+        }
+        
+
+        // console.log('Dropdown selected');
+        // console.log("site name : " + fn.paramSiteName);
+        // console.log("start date : " + fn.paramStartDate);
+        // console.log("end date : " + fn.paramEndDate);
+
+  });

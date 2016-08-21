@@ -1,0 +1,338 @@
+    /**
+     *
+     * @apiName ExportOperationKPI
+     * @apiGroup KPI Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /kpiManager/exportOperationKPI/ Export operation KPI
+     * @apiDescription คำอธิบาย : ในส่วนนี้ทำหน้าที่ Export ข้อมูลที่ได้รับจาก Web Service - getOperationKPI ให้อยู่ในรูปแบบไฟล์ Excel
+     *
+     *
+     *
+     * @apiParam {String} startDate = "06/28/2016" คำอธิบาย วันเริ่มต้น รูปแบบคือ เดือน/วัน/ปี
+     * @apiParam {String} endDate = "06/29/2016" คำอธิบาย วันสิ้นสุด รูปแบบคือ เดือน/วัน/ปี
+     * @apiParam {String} siteName = "bc" คำอธิบาย รหัสศูนย์
+     *
+     * @apiParamExample {json} Request-Example (ตัวอย่าง Payload, Content-Type: application/json):
+     *
+     *  {
+     *    "startDate": "06/28/2016",
+     *    "endDate": "06/29/2016",
+     *    "siteName": "bc"
+     *  }
+     *
+     *
+     * @apiSampleRequest /kpiManager/exportOperationKPI/
+     *
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} id แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} job_no แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} section แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} supervisor แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} vehicle_licence แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} driver_name แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} route_code แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} fingerscan_datetime แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} start_datetime แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} shipout_time แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} first_sent_datetime แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} time_between_start_to_first_entry_point แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} maximum_delivery_time แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} total_time_delivery แสดงข้อความทักทายผู้ใช้งาน
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} job_cost ค่าจ้างพนักงานขับรถ (พขร)
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} drop_all เงื่อนไข : <br/>1. วนลูปนับจำนวนบิล "DocNo" หรือจำนวน Drop นั่นเอง
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} drop_success เงื่อนไข : <br/>1. วนลูปนับจำนวนบิล "DocNo" หรือจำนวน Drop นั่นเอง <br/>2. และมีค่าฟิลด์ “DeliveryDateTime” ไม่เป็น null
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} box_all เงื่อนไข : <br/>1.วนลูปนับจำนวนกล่อง จากฟิลด์ "amount" ที่มีบิล "DocNo" ไม่ซ้ำ
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} box_success เงื่อนไข : <br/>1.วนลูปนับจำนวนกล่อง จากฟิลด์ "amount" ที่มีบิล "DocNo" ไม่ซ้ำ <br/>2. และ่ค่าฟิลด์ “DeliveryDateTime” ไม่เป็น null
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} bill_count เงื่อนไข : <br/>1.วนลูปนับจำนวนบิล "DocNo" ที่ไม่ซ้ำ
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} bill_closed_with_epod_count เงื่อนไข : <br/>1.วนลูปนับจำนวนบิล "DocNo" ที่ไม่ซ้ำ <br/>2. ถ้าฟิลด์ "UserUpdate" มีคำว่า <i>mb</i> แสดงว่า ปิดด้วย EPOD <br/>หมายเหตุ :  % E-POD = จำนวน ปิดด้วย E-POD (บิล) / จำนวนบิล
+     * @apiSuccess (คำอธิบายผลลัพธ์ (กรณีส่งค่ากลับสำเร็จ Success 200)) {String} bill_closed_after_6pm_count วนลูปนับจำนวนบิล "DocNo" ที่ไม่ซ้ำกัน และ่ตรวจสอบเวลา จากฟิลด์ “DeliveryDateTime” ที่มีค่ามากกว่า 18:00 น.
+     *
+     * @apiSuccessExample Example data on success:
+     *  {
+     *    "result": "success",
+     *    "rows": [
+     *      {
+     *        "id": 1,
+     *        "job_no": "JHO160628060",
+     *        "section": "BC",
+     *        "supervisor": "นายปรัชญา  ทองวิเศษ",
+     *        "vehicle_licence": "ฒภ-1267",
+     *        "vehicle_type": "Pick up",
+     *        "driver_name": "นายจตุเมธ  โพธิ์งาม",
+     *        "route_code": "B12",
+     *        "fingerscan_datetime": "",
+     *        "start_datetime": "2016-06-28T05:54:34.077",
+     *        "shipout_time": "",
+     *        "first_sent_datetime": "2016-06-28T08:36:00",
+     *        "time_between_start_to_first_entry_point": "02:41:26",
+     *        "maximum_delivery_time": "19:48:00",
+     *        "total_time_delivery": "13:53:26",
+     *        "job_cost": 1485,
+     *        "drop_all": 0,
+     *        "drop_success": 0,
+     *        "box_all": 0,
+     *        "box_success": 0,
+     *        "bill_count": 0,
+     *        "bill_closed_with_epod_count": 0,
+     *        "bill_closed_after_6pm_count": 0
+     *      }
+     *    ]
+     *  }
+     *
+     * @apiError (คำอธิบายผลลัพธ์ (กรณีเกิด Error 4xx)) UserNotFound The <code>id</code> of the User was not found.
+     * @apiErrorExample {json} Error-Response:
+     *     HTTP/1.1 404 Not Found
+     *     {
+     *       "error": "UserNotFound"
+     *     }
+     */
+
+    function exportOperationKPI($app, $client, $objPHPExcel) {
+
+        /* ************************* */
+        /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+        /* ************************* */
+        $headers = $app->request->headers;
+        $ContetnType = $app->request->headers->get('Content-Type');
+
+        /**
+        * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+        * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+        */
+
+        if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8") ) {
+
+            $request = $app->request();
+            $result = json_decode($request->getBody());
+
+            /* receive request */
+            $postStartDate = $result->startDate;              /* รูปแบบ เดือน/วัน/ปี */
+            $postEndDate = $result->endDate;               /* รูปแบบ เดือน/วัน/ปี */
+            $postSiteName = $result->siteName;
+
+        } else if (($ContetnType == "application/x-www-form-urlencoded") || ($ContetnType == "application/x-www-form-urlencoded; charset=UTF-8")){
+
+
+        } 
+
+
+        $error = $client->getError();
+        if ($error) {
+            echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
+        }
+
+        /* ************************* */
+        /* เริ่มกระบวนการเชื่อมต่อ Web Service */
+        /* ************************* */
+
+        $result = $client->call('getOperationKPI', array("startDate" => $postStartDate,
+                                                         "endDate" => $postEndDate,
+                                                         "siteName" => $postSiteName));
+        $mydata = json_decode($result["getOperationKPIResult"],true);
+
+        $reports = array();
+        // $reports = $mydata;
+
+        /* initial variable Partial */
+        $tmpJobNo = "";
+        $j = 1;             // id
+        $row_excel = 1;
+        $headers = array( "JobDate",
+                          "JobNo",
+                          "VehicleLicence",
+                          "VehicleType",
+                          "section",
+                          "Supervisor",
+                          "DriverName",
+                          "StartTime",
+                          "JobRemark",
+                          "jobcost",
+                          "cm_call",
+                          "DocNo",
+                          "DocSeq",
+                          "destination",
+                          "district",
+                          "province",
+                          "RouteCode",
+                          "size",
+                          "amount",
+                          "DeliveryDateTime",
+                          "SaveDateTime",
+                          "UserUpdate",
+                          "ReasonCode",
+                          "podimage_path",
+                          "DocRemark");
+        $tmpFirstSentDatetime = "";
+        $tmpTimeBetweenStartToFirstEntryPoint = "N/A";
+        $tmpMaximumDeliveryDateTime = "";
+        $tmpMaximumDeliveryTime = "";
+        $tmpTotalTimeDelivery = "";
+        $tmpJobCost = "";
+        $tmpDropAll = 0;
+        $tmpDropSuccess = 0;
+        $tmpBillCount = 0;
+        $tmpBoxAll = 0;
+        $tmpBoxSuccess = 0;
+        $tmpBillClosedWithEpodCount = 0;
+        $tmpBillClosedAfter6pmCount = 0;
+        $percentage_drop = "";
+        $percentage_box = "";
+        $percentage_epod = "";
+        $target_result = "";
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการสร้าง Excel file */
+        /* ************************* */
+
+        for ($i=0; $i < count($mydata["array"]); $i++) { 
+
+          if (!$tmpJobNo) {
+
+              $tmpJobNo = $mydata["array"][$i]['JobNo'];
+              $tmpJobDate = $mydata["array"][$i]['JobDate'];
+              $tmpSection = $mydata["array"][$i]['section'];
+              $tmpSupervisor = $mydata["array"][$i]['Supervisor'];
+              $tmpVehicleLicence = $mydata["array"][$i]['VehicleLicence'];
+              $tmpVehicleType = $mydata["array"][$i]['VehicleType'];
+              $tmpDriverName = $mydata["array"][$i]['DriverName'];
+              $tmpRouteCode = $mydata["array"][$i]['RouteCode'];
+              $tmpFingerScanDateTime = "";
+              $tmpStartDateTime = $mydata["array"][$i]['StartTime'];
+              $tmpShipoutTime = calculateShipoutTime($tmpStartDateTime, $tmpFingerScanDateTime);
+              $tmpDeliveryDateTime = $mydata["array"][$i]['DeliveryDateTime'];
+              $tmpFirstSentDatetime = $tmpDeliveryDateTime;
+              $tmpMaximumDeliveryDateTime = $tmpDeliveryDateTime;
+              $tmpJobCost = $mydata["array"][$i]['jobcost'];
+              $tmpAmount = $mydata["array"][$i]['amount'];
+              $tmpUserUpdate = $mydata["array"][$i]['UserUpdate'];
+
+              $tmpDocNo = $mydata["array"][$i]['DocNo'];
+              if ($tmpDocNo) {
+                $tmpBillCount++;
+                $tmpDropAll++;
+                if ($tmpDeliveryDateTime) {
+                    $tmpDropSuccess++;
+                }
+              }
+
+              if ($tmpAmount) {
+                $tmpBoxAll = $tmpBoxAll + $tmpAmount;
+                if ($tmpDeliveryDateTime) {
+                    $tmpBoxSuccess = $tmpBoxSuccess + $tmpAmount;
+                }
+              }
+
+              if ($tmpUserUpdate) {
+                if (strpos($tmpUserUpdate, 'mb') !== false) {
+                  $tmpBillClosedWithEpodCount++;
+                }
+              }
+
+              <%= partial "/KpiManager/exportOperationKPI/_create_worksheet_init" %>
+              <%= partial "/KpiManager/exportOperationKPI/_create_header_init" %>
+              <%= partial "/KpiManager/exportOperationKPI/_return_info_init" %>
+
+          } else if ($tmpJobNo != $mydata["array"][$i]['JobNo']) {
+
+              $tmpFirstSentDatetime = "";
+              $tmpMaximumDeliveryDateTime = "";
+              $tmpMaximumDeliveryTime = "";
+              $tmpTotalTimeDelivery = "";
+              $tmpJobCost = "";
+              $tmpDropAll = 0;
+              $tmpDropSuccess = 0;
+              $tmpBillCount = 0;
+              $tmpBoxAll = 0;
+              $tmpBoxSuccess = 0;
+              $tmpBillClosedWithEpodCount = 0;
+              $tmpBillClosedAfter6pmCount = 0;
+              $percentage_drop = "";
+              $percentage_box = "";
+              $percentage_epod = "";
+              $target_result = "";
+
+              $j++;
+              $tmpJobNo = $mydata["array"][$i]['JobNo'];
+              $tmpJobDate = $mydata["array"][$i]['JobDate'];
+              $tmpSection = $mydata["array"][$i]['section'];
+              $tmpSupervisor = $mydata["array"][$i]['Supervisor'];
+              $tmpVehicleLicence = $mydata["array"][$i]['VehicleLicence'];
+              $tmpVehicleType = $mydata["array"][$i]['VehicleType'];
+              $tmpDriverName = $mydata["array"][$i]['DriverName'];
+              $tmpRouteCode = $mydata["array"][$i]['RouteCode'];
+              $tmpFingerScanDateTime = "";
+              $tmpStartDateTime = $mydata["array"][$i]['StartTime'];
+              $tmpShipoutTime = calculateShipoutTime($tmpStartDateTime, $tmpFingerScanDateTime);
+              $tmpDeliveryDateTime = $mydata["array"][$i]['DeliveryDateTime'];
+              $tmpFirstSentDatetime = $tmpDeliveryDateTime;
+              $tmpMaximumDeliveryDateTime = $tmpDeliveryDateTime;
+              $tmpJobCost = $mydata["array"][$i]['jobcost'];
+              $tmpAmount = $mydata["array"][$i]['amount'];
+              $tmpUserUpdate = $mydata["array"][$i]['UserUpdate'];
+
+              $tmpDocNo = $mydata["array"][$i]['DocNo'];
+              if ($tmpDocNo) {
+                $tmpBillCount++;
+                $tmpDropAll++;
+                if ($tmpDeliveryDateTime) {
+                    $tmpDropSuccess++;
+                }
+              }
+
+              if ($tmpAmount) {
+                $tmpBoxAll = $tmpBoxAll + $tmpAmount;
+                if ($tmpDeliveryDateTime) {
+                    $tmpBoxSuccess = $tmpBoxSuccess + $tmpAmount;
+                }
+              }
+
+              if ($tmpUserUpdate) {
+                if (strpos($tmpUserUpdate, 'mb') !== false) {
+                  $tmpBillClosedWithEpodCount++;
+                }
+              }
+
+
+              <%= partial "/KpiManager/exportOperationKPI/_create_worksheet" %>
+              <%= partial "/KpiManager/exportOperationKPI/_create_header" %>
+              <%= partial "/KpiManager/exportOperationKPI/_return_info" %>
+              $row_excel = 1;
+          } else {
+
+              <%= partial "/KpiManager/exportOperationKPI/_firstSentDatetime" %>
+              <%= partial "/KpiManager/exportOperationKPI/_timeBetweenStartToFirstEntryPoint" %>
+              <%= partial "/KpiManager/exportOperationKPI/_maximumDeliveryTime" %>
+              <%= partial "/KpiManager/exportOperationKPI/_totalTimeDelivery" %>
+              <%= partial "/KpiManager/exportOperationKPI/_dropAll_dropSuccess_billCount_billClosedWithEpodCount" %>
+              <%= partial "/KpiManager/exportOperationKPI/_boxAll_boxSuccess" %>
+
+
+
+          }
+
+          $row_excel++;
+
+          <%= partial "/KpiManager/exportOperationKPI/_insert_data_to_active_worksheet" %>
+        }
+
+
+        <%= partial "/KpiManager/exportOperationKPI/_insert_summary_data_to_first_worksheet" %>
+
+
+        <%= partial "/KpiManager/exportOperationKPI/_create_excel_file" %>
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        $resultText = "success";
+
+        $reportResult = array("result" =>  $resultText,
+                              "rows" => $reports,
+                              "content-type" => $ContetnType);
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+
+    };

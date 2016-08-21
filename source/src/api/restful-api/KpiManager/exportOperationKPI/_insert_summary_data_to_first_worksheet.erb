@@ -1,0 +1,106 @@
+
+        $headers_result = array(
+            'job_date' => 'วันที่สั่งงาน',
+            'job_no' => 'เลขที่ใบสั่งงาน',
+            'section' => 'หน่วยงาน',
+            'supervisor' => 'หัวหน้าสายงาน',
+            'vehicle_licence' => 'ทะเบียนรถ',
+            'vehicle_type' => 'ประเภทรถ',
+            'driver_name' => 'พนักงานขับรถ',
+            'route_code' => 'Route code',
+            'fingerscan_datetime' => 'เวลาเข้างาน (DateTime)',
+            'start_datetime' => 'เวลาออกศูนย์ (DateTime)',
+            'shipout_time' => 'เวลาขึ้นสินค้า (ชั่วโมง นาที)',
+            'first_sent_datetime' => 'เวลาส่งจุดแรก (DateTime)',
+            'time_between_start_to_first_entry_point' => 'เวลาที่เข้าพื้นที่จุดแรก (ชั่วโมง นาที)',
+            'maximum_delivery_time' => 'เวลาส่งจุดสุดท้าย (DateTime)',
+            'total_time_delivery' => 'รวมเวลาที่ใช้จัดส่ง (ชั่วโมง นาที)',
+            'job_cost' => 'ค่าจ้าง พขร.',
+            'drop_all' => 'จำนวน (Drop)',
+            'drop_success' => 'ส่งได้ (Drop)',
+            '% ส่งได้ (Drop)' => '% ส่งได้ (Drop)',
+            'box_all' => 'กล่องทั้งหมด',
+            'box_success' => 'ส่งได้ (กล่อง)',
+            '% ส่งได้ (กล่อง)' => '% ส่งได้ (กล่อง)',
+            'bill_count' => 'จำนวนบิล',
+            'bill_closed_with_epod_count' => 'ปิดด้วย E-POD (บิล)',
+            '% E-POD' => '% E-POD',
+            'bill_closed_after_6pm_count' => 'จำนวนบิลปิดหลัง 18:00 น.',
+            'ได้ตาม Target' => 'ได้ตาม Target',
+            '-' => '-');
+
+        $m = 0;
+
+
+        /* กำหนดให้เป็น ActiveWorkSheet */
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        // this cycle echoes all associative array
+        // key where value equals "apple"
+        while ($header_name = current($headers_result)) {
+              
+            $col = $m;
+            $row = 1;
+            $value = $header_name;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            $col = $m;
+            $row = 2;
+            $value = key($headers_result);
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            $m++;
+
+            next($headers_result);
+        }
+
+
+
+        $headers_arr= array('id', 'job_no', 'section', 'supervisor', 'vehicle_licence', 'vehicle_type', 'driver_name', 'route_code', 
+                            'fingerscan_datetime', 'start_datetime', 'shipout_time', 'first_sent_datetime', 
+                            'time_between_start_to_first_entry_point', 'maximum_delivery_time', 'total_time_delivery', 'job_cost',
+                            'drop_all', 'drop_success', 'percentage_drop', 'box_all', 'box_success', 'percentage_box', 'bill_count', 'bill_closed_with_epod_count', 'percentage_epod', 'bill_closed_after_6pm_count', 'target_result');
+
+
+
+        $start_row = 3;
+        for ($i = 0; $i < count($reports); $i++) {
+
+            for ($j = 0; $j < count($headers_arr); $j++) {
+                $col = $j;
+                $row = $start_row + $i;
+                $value = $reports[$i][$headers_arr[$j]];
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+            }
+
+            // $col = 0;
+            // $row = $start_row + $i;
+            // $value = $reports[$i]["id"];
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            // $col = 1;
+            // $row = $start_row + $i;
+            // $value = $reports[$i]["job_no"];
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            // $col = 2;
+            // $row = $start_row + $i;
+            // $value = $reports[$i]["section"];
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            // $col = 3;
+            // $row = $start_row + $i;
+            // $value = $reports[$i]["supervisor"];
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+            
+        }
+
+
+
+
+
+
+        /* Set Title */
+        // Rename worksheet
+        $objPHPExcel->getActiveSheet()->setTitle('Summary');

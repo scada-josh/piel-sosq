@@ -1,0 +1,59 @@
+    function datatableOperationKPIRender(result) {
+        // console.log(result);
+
+        // valJSONColTable = [];
+
+        for (var i=0; i < result.rows.length; i++ ) {
+
+            var tmpDataSet = [];
+
+            var tmpDropCount = 0;
+            var dropAverage = 0;
+
+            var tmpBoxCount = 0;
+            var boxAverage = 0;
+
+            tmpDataSet.push(result.rows[i].id);
+            // tmpDataSet.push(result.rows[i].vehicle_type);
+            tmpDataSet.push(result.rows[i].vehicle_licence);
+
+            objVehicleType[result.rows[i].vehicle_licence] = result.rows[i].vehicle_type;
+
+            for (var j=0; j < result.rows[i].details.length; j++ ) {
+
+                tmpDataSet.push(result.rows[i].details[j].drop_success);
+                tmpDataSet.push(result.rows[i].details[j].box_success);
+
+                tmpDropCount = tmpDropCount + parseInt(result.rows[i].details[j].drop_success);
+                tmpBoxCount = tmpBoxCount + parseInt(result.rows[i].details[j].box_success);
+            }
+
+            // Average column
+            tmpDataSet.push(numeral(tmpDropCount/j).format('0.00'));
+            tmpDataSet.push(numeral(tmpBoxCount/j).format('0.00'));
+
+            // var tmpDate = {};
+            // tmpDate["mDate"] = "2016-06-01";
+            // tmpDataSet.push(tmpDate);
+
+            dataSet.push(tmpDataSet);
+
+        }
+
+        // $('#datatableOperationKPI').dataTable(dataSet);
+        datatableOperationKPI.clear().draw();
+        datatableOperationKPI.rows.add(dataSet); // Add new data
+        datatableOperationKPI.columns.adjust().draw(); // Redraw the DataTable
+        $('.dataTables_processing', $('#datatableOperationKPI').closest('.dataTables_wrapper')).hide();
+
+   
+
+
+
+        // $('#datatableOperationKPI').dataTable(dataSet);
+        datatableOperationKPI.clear().draw();
+        datatableOperationKPI.rows.add(dataSet); // Add new data
+        datatableOperationKPI.columns.adjust().draw(); // Redraw the DataTable
+        $('.dataTables_processing', $('#datatableOperationKPI').closest('.dataTables_wrapper')).hide();
+
+    }

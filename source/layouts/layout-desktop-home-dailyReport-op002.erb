@@ -1,0 +1,37 @@
+<?php
+session_start(); //start session.
+?>
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+    <head>
+        <meta charset="utf-8" />
+        <title><%= current_page.data.title %></title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <%= stylesheet_link_tag "stylesheet-desktop-home-dailyReport-op002" %>
+
+    <body class="page-container-bg-solid page-md page-header-top-fixed">
+                 
+
+        <%= yield %>
+
+        <!--[if lt IE 9]>
+        <%= javascript_include_tag  "javascript-if-it-IE-9" %>
+        <![endif]-->
+
+        <%= javascript_include_tag  "javascript-desktop-home-dailyReport-op002" %>
+
+    </body>
+
+    <%= partial "layouts/common/_menu_template" %>
+</html>

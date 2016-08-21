@@ -1,0 +1,12 @@
+              /* ************************** */
+              /* เริ่มกระบวนการ นับจำนวน Box  */
+              /* *************************** */
+              if ($tmpAmount) {
+                $tmpBoxAll = $tmpBoxAll + $tmpAmount;
+                if ($tmpDeliveryDateTime) {
+                    $tmpBoxSuccess = $tmpBoxSuccess + $tmpAmount;
+                }
+              }
+              /* Edit last record */
+              $reports[count($reports)-1]["box_all"] = $tmpBoxAll;
+              $reports[count($reports)-1]["box_success"] = $tmpBoxSuccess;

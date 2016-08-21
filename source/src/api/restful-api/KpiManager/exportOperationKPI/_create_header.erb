@@ -1,0 +1,8 @@
+              
+
+              for ($k=0; $k < count($headers); $k++) { 
+                $col = $k;
+                $row = 1;
+                $value = $headers[$k];
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+              }

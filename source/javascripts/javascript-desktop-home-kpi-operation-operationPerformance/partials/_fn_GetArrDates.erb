@@ -1,0 +1,15 @@
+GetArrDates: function (startDate, stopDate) {
+	// console.log("GetArrDates");
+
+    var dateArray = [];
+    var currentDate = moment(startDate);
+    while (currentDate <= stopDate) {
+        // dateArray.push( moment(currentDate).format('YYYY-MM-DD') );
+        dateArray.push( moment(currentDate).format('DD/MM/YYYY') )
+        // dateArray.push( moment(currentDate));
+        currentDate = moment(currentDate).add(1, 'days');
+    }
+    return dateArray;
+
+  
+},

@@ -1,0 +1,21 @@
+HeaderFilterDaily: function (paramSiteName, paramStartDate, paramEndDate) {
+	// console.log("HeaderFilter");
+
+	if (paramSiteName) {
+	  	$("#site-name-label-" + fn.strFilterType).html(paramSiteName);
+	} else {
+		$("#site-name-label-" + fn.strFilterType).html("-");
+	}
+
+
+	if (fn.strFilterType == "daily") {
+		if (fn.paramStartDate) {
+			paramStartDate = fn.paramStartDate.format('DD/MM/YYYY');
+		}
+		if (fn.paramEndDate) {
+			paramEndDate = fn.paramEndDate.format('DD/MM/YYYY');
+		}
+		$("#date-range-selected-label-" + fn.strFilterType).html(paramStartDate + " - " + paramEndDate);
+	} 
+  
+},

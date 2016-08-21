@@ -1,0 +1,167 @@
+            "aoColumnDefs": [
+                    // {
+                    //     'bSortable': true,
+                    //     "bAutoWidth": true,
+                    //     'aTargets': [0]
+                    // },
+                    {
+                        'sWidth': '100px',
+                        'bSortable': true,
+                        'aTargets': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+                    },{
+                        "render": function ( data, type, row ) {
+                            return row.job_date.substr(0,10);
+                    	},
+                        "data": "job_date",
+                        "targets": 0
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.job_no;
+                    	},
+                        "targets": 1
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.section;
+                    	},
+                        "targets": 2
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.vehicle_licence;
+                    	},
+                        "targets": 3
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.vehicle_type;
+                    	},
+                        "targets": 4
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.supervisor;
+                    	},
+                        "targets": 5
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.driver_name;
+                    	},
+                        "targets": 6
+                	},{
+                        "render": function ( data, type, row ) {
+                            return "-";
+                    	},
+                        "targets": 7
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.drop_all;
+                    	},
+                        "data": null,
+                        "targets": 8
+                	},{
+                        "render": function ( data, type, row ) {
+                            return row.drop_success;
+                    	},
+                        "data": "drop_success",
+                        "targets": 9
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            var tmpPercentDrop = ((row.drop_success)*100)/row.drop_all;
+                            
+                            return numeral(tmpPercentDrop).format('0,0.00') + "&nbsp;%"
+                            // return ((row.drop_success)*100)/row.drop_all;
+                    	},
+                        "data": function(data, type, row) {
+                            return data["drop_success"]*100/data["drop_all"]
+                        },
+                        "targets": 10
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            return row.box_all;
+                    	},
+                        "targets": 11
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            return row.box_success;
+                    	},
+                        "data": "box_success",
+                        "targets": 12
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            var tmpPercentBoxSuccess = ((row.box_success)*100)/row.box_all;
+                            return numeral(tmpPercentBoxSuccess).format('0,0.00') + "&nbsp;%"
+                            
+                            // return ((row.box_success)*100)/row.box_all;
+                    	},
+                        "targets": 13
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            return row.bill_count;
+                    	},
+                        "data": "bill_count",
+                        "targets": 14
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            return row.bill_closed_with_epod_count;
+                    	},
+                        "data": "bill_closed_with_epod_count",
+                        "targets": 15
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            var tmpPercentEPOD = ((row.bill_closed_with_epod_count)*100)/row.bill_count;
+                            
+                            return numeral(tmpPercentEPOD).format('0,0.00') + "&nbsp;%"
+
+                            // return ((row.bill_closed_with_epod_count)*100)/row.bill_count;
+                    	},
+                        "data": function(data, type, row) {
+                            return data["bill_closed_with_epod_count"]*100/data["bill_count"]
+                        },
+                        "targets": 16
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            return row.bill_closed_after_6pm_count;
+                    	},
+                        "data": "bill_closed_after_6pm_count",
+                        "targets": 17
+                	},{
+                        "render": function ( data, type, row ) {
+
+                            var result;
+                            var tmpPercentEPOD = ((row.bill_closed_with_epod_count)*100)/row.bill_count;
+                            var tmpDropSuccess = row.drop_success;
+                            var tmpBoxSuccess = row.box_success;
+
+
+                            if ((tmpPercentEPOD >= 99) && (tmpDropSuccess >= 28) && (tmpBoxSuccess >= 35)) {
+                                result = "Yes";
+                            } else {
+                                result = "No";
+                            }
+
+                            return result;
+                    	},
+                        "data": function(data, type, row) {
+
+                            var resultData;
+                            var tmpDataPercentEPOD = data["bill_closed_with_epod_count"]*100/data["bill_count"];
+                            var tmpDataDropSuccess = data["drop_success"];
+                            var tmpDataBoxSuccess = data["box_success"];
+
+                            if ((tmpDataPercentEPOD >= 99) && (tmpDataDropSuccess >= 28) && (tmpDataBoxSuccess >= 35)) {
+                                resultData = 1;
+                            } else {
+                                resultData = 0;
+                            }
+
+                            return resultData;
+                        },
+                        "targets": 18
+                	}
+                       
+            ],

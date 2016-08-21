@@ -1,0 +1,26 @@
+          for ($k=0; $k < count($headers); $k++) { 
+            $col = $k;
+            $row = $row_excel;
+            $value = $mydata["array"][$i][$headers[$k]];
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+          }
+
+          // $col = 0;
+          // $row = $row_excel;
+          // $value = $mydata["array"][$i]['JobDate'];
+          // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+          // $col = 1;
+          // $row = $row_excel;
+          // $value = $tmpJobNo;
+          // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+          // $col = 2;
+          // $row = $row_excel;
+          // $value = $mydata["array"][$i]['VehicleLicence'];
+          // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+          // $col = 3;
+          // $row = $row_excel;
+          // $value = $mydata["array"][$i]['DocNo'];
+          // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);

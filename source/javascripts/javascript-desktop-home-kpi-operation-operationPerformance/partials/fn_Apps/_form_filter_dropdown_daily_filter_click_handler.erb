@@ -1,0 +1,19 @@
+	$('#dropdown_daily_filter_id').on('click', function() {
+      	// console.log('dropdown_daily_filter_id');
+
+            if (fn.strFilterType != "daily") {
+            	fn.Routers("daily");
+                  fn.strFilterType = "daily";
+                  fn.HeaderFilter(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+            }
+
+      	$("#filter-type-label").html("Daily");
+
+      	$("#form_layout_year_select_id").hide(1000);
+      	$("#form_layout_week_select_id").hide(1000);
+      	$("#form_layout_month_select_id").hide(1000);
+      	$("#form_layout_quater_id").hide(1000);
+      	$("#form_layout_halfYear_id").hide(1000);
+
+
+	});

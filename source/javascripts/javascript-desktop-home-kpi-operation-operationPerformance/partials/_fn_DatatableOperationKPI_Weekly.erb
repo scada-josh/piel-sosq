@@ -1,0 +1,75 @@
+DatatableOperationKPI_Weekly: function () {
+	// console.log('DatatableOperationKPI');
+    var dataSet = [];
+
+    <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/fn_DatatableOperationKPI_Weekly/_fn_datatableOperationKPI_Weekly_Render" %>
+
+
+    //------------------------ datatableOperationKPI_Weekly -----------------------//
+    if (jQuery().dataTable) {
+
+        datatableOperationKPI_Weekly = $('#datatableOperationKPI_Weekly').DataTable( {
+            "processing": true,
+            "bDestroy": true,
+            "bAutoWidth": false,
+            "ajax": {
+                "url": "../../../../../api/restful-api/kpiManager/getOperationKpiSummaryInfoByWeekly/",
+                "type": "POST",
+                "data": function ( d ) {
+
+                        if (fn.paramStartDate) {
+                          // paramStartDate = fn.paramStartDate.format('DD/MM/YYYY');
+                          paramStartDate = fn.paramStartDate.format('YYYY-MM-DD');
+                        } else {
+                          console.log('fn.paramStartDate is ' + fn.paramStartDate);
+                        }
+
+                        if (fn.paramEndDate) {
+                          // paramEndDate = fn.paramEndDate.format('DD/MM/YYYY');
+                          paramEndDate = fn.paramEndDate.format('YYYY-MM-DD');
+                        } else {
+                          console.log('fn.paramEndDate is ' + fn.paramEndDate);
+                        }
+                        
+
+                        d.startDate = paramStartDate;
+                        d.endDate = paramEndDate;
+                        d.siteID = fn.paramSiteID;
+                        return d;
+                },
+                "dataSrc": "rows",
+                "success": function(data) {
+                        // alert(data);
+                        // console.log('success');
+                        // console.log(data);
+                        datatableOperationKPI_Weekly_Render(data);
+                },
+                "error": function(jqXHR, textStatus, errorThrown){
+                    console.log(jqXHR);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log('init error: ' + textStatus);
+                }
+            },
+            "deferRender":    true,
+            "scrollX":        true,
+            "scrollY":        '40vh',
+            "scrollCollapse": true,
+            "paging":         false,
+            "aaData": dataSet,
+            "aoColumnDefs": [
+            {
+                'bSortable': true,
+                "bAutoWidth": true,
+                'aTargets': [0]
+            }
+            ],
+            "order" : [] //disable default sorting, eg sorting on 1st column
+        });
+
+
+        datatableOperationKPI_Weekly.columns.adjust().draw();
+
+    }
+    
+},

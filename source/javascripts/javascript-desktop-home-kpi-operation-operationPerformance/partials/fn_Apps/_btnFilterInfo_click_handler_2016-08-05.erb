@@ -1,0 +1,234 @@
+  $('#btnFilterInfo').on('click', function() {
+        // console.log('btnFilterInfo');
+        // alert('btnFilterInfo');
+
+
+          // if ($.fn.DataTable.isDataTable('#datatableOperationKPI') ) {
+          //     $('#datatableOperationKPI').empty();
+          //     $('#datatableOperationKPI').dataTable().fnDestroy();
+          //     $('#datatableOperationKPI > thead > tr').remove();
+          // }
+
+          if ($.fn.DataTable.isDataTable('#datatableOperationKPI') ) {
+              $('#datatableOperationKPI').empty();
+              $('#datatableOperationKPI').dataTable().fnDestroy();
+              $('#datatableOperationKPI > thead > tr').remove();
+              $('#datatableOperationKPI > tfoot > tr').remove();
+              // $('#datatableOperationKPI').deleteTFoot();
+          }
+
+
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/fn_Apps/btnFilterInfo_click_handler/_prepare_ajax_param" %>
+
+          $.ajax({
+            "url": "../../../../../api/restful-api/kpiManager/getOperationKpiSummary/", 
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": JSON.stringify(tmpData),
+            "success": function(result){
+                // console.log(result);
+
+
+                arrAverageBox_EPOD = [];
+                arrAverageDrop_EPOD = [];
+                arrAverageBox_NonEPOD = [];
+                arrAverageDrop_NonEPOD = [];
+
+                $("#epod-average-box-id").html(numeral(result.epod_average_box).format('0,0.00'));
+                $("#epod-average-drop-id").html(numeral(result.epod_average_drop).format('0,0.00'));
+                $("#non-epod-average-box-id").html(numeral(result.non_epod_average_box).format('0,0.00'));
+                $("#non-epod-average-drop-id").html(numeral(result.non_epod_average_drop).format('0,0.00'));
+
+
+                var resultDataTableHeaderTemplate = Handlebars.compile($("#dataTable-header-Template").html());
+                
+
+
+
+                    // var resultStartDate = new Date(result.startDate).format('YYYY-MM-DD') ;
+                    // var resultEndDate = new Date(result.endDate).format('YYYY-MM-DD') ;
+
+                    var resultStartDate = moment(result.startDate, "DD/MM/YYYY").format('YYYY-MM-DD');
+                    var resultEndDate = moment(result.endDate, "DD/MM/YYYY").format('YYYY-MM-DD');
+
+                    // console.log(resultStartDate);
+                    // console.log(resultEndDate);
+
+                var arrDates = fn.GetArrDates(new Date(resultStartDate), new Date(resultEndDate));
+                    // console.log("arrDates");
+                    // console.log(arrDates);
+                var context = fn.DatatableOperationKPI_ConvertToContext(arrDates);
+                    // console.log('context');
+                    // console.log(context);
+
+                  //   var context = {
+                  //     headers: [ 
+                  //     { dateHeader: 'ลำดับ' },
+                  //     { dateHeader: 'ทะเบียนรถ' },
+                  //     { dateHeader: '23/07/2016' },
+                  //     { dateHeader: '24/07/2016' },
+                  //     { dateHeader: '25/07/2016' },
+                  //     { dateHeader: '26/07/2016' },
+                  //     { dateHeader: '27/07/2016' },
+                  //     { dateHeader: '28/07/2016' },
+                  //     { dateHeader: '29/07/2016' },
+                  //     { dateHeader: 'Average' }
+                  //     ]
+                  // };
+                  
+                 // var context = {
+                 //      headers: [ 
+                 //        { dateHeader: 'ลำดับ' },
+                 //        { dateHeader: 'ทะเบียนรถ' },
+                 //        { dateHeader: '01/06/2016' },
+                 //        { dateHeader: '02/06/2016' },
+                 //        { dateHeader: '03/06/2016' },
+                 //        { dateHeader: '04/06/2016' },
+                 //        { dateHeader: '05/06/2016' },
+                 //        { dateHeader: '06/06/2016' },
+                 //        { dateHeader: '07/06/2016' },
+                 //        { dateHeader: '08/06/2016' },
+                 //        { dateHeader: '09/06/2016' },
+                 //        { dateHeader: '10/06/2016' },
+                 //        { dateHeader: '11/06/2016' },
+                 //        { dateHeader: '12/06/2016' },
+                 //        { dateHeader: '13/06/2016' },
+                 //        { dateHeader: '14/06/2016' },
+                 //        { dateHeader: '15/06/2016' },
+                 //        { dateHeader: '16/06/2016' },
+                 //        { dateHeader: '17/06/2016' },
+                 //        { dateHeader: '18/06/2016' },
+                 //        { dateHeader: '19/06/2016' },
+                 //        { dateHeader: '20/06/2016' },
+                 //        { dateHeader: '21/06/2016' },
+                 //        { dateHeader: '22/06/2016' },
+                 //        { dateHeader: '23/06/2016' },
+                 //        { dateHeader: '24/06/2016' },
+                 //        { dateHeader: '25/06/2016' },
+                 //        { dateHeader: '26/06/2016' },
+                 //        { dateHeader: '27/06/2016' },
+                 //        { dateHeader: '28/06/2016' },
+                 //        { dateHeader: '29/06/2016' },
+                 //        { dateHeader: '30/06/2016' },
+                 //        { dateHeader: 'Average' }
+                 //      ]
+                 //    };
+                // $("#datatableOperationKPI").html(resultDataTableHeaderTemplate(context));
+
+                var returnedData_delivery_type_epod = $.grep(result.rows[0].details, function (element, index) {
+                  return element.delivery_type == 'EPOD';
+                });
+                // console.log(returnedData_delivery_type_epod);
+
+                var returnedData_delivery_type_non_epod = $.grep(result.rows, function (element, index) {
+                  return element.delivery_type == 'Non-EPOD';
+                });
+
+
+               $.each(arrDates, function(_i, _val) {
+                    // console.log(moment(_val, "DD/MM/YYYY").format('YYYY-MM-DD'));
+                    var tmpDate = moment(_val, "DD/MM/YYYY").format('YYYY-MM-DD');
+
+                    /***** EPOD Average *****/
+                    var avgBoxEPOD = 0;
+                    var avgDropEPOD = 0;
+                    var countBoxEPOD = 0;
+                    var countDropEPOD = 0;
+
+                    $.each( returnedData_delivery_type_epod, function( i, val ) {
+                         var details = val.details;
+                         // console.log(details);
+
+                         $.each( details, function( _i_details, _val_details ) {
+                            // console.log(_val_details.job_date);
+                            if (_val_details.job_date == tmpDate) {
+                                countBoxEPOD = countBoxEPOD + _val_details.box_success;
+                                countDropEPOD = countDropEPOD + _val_details.drop_success;
+                                return true;
+                            }
+                         });
+
+                    });
+
+                    avgBoxEPOD = countBoxEPOD/returnedData_delivery_type_epod.length;
+                    avgDropEPOD = countDropEPOD/returnedData_delivery_type_epod.length;
+                    // avgBoxEPOD = countBoxEPOD;
+                    // avgDropEPOD = countDropEPOD;
+                    arrAverageBox_EPOD.push(avgBoxEPOD);
+                    arrAverageDrop_EPOD.push(avgDropEPOD);
+
+
+                    /***** Non-EPOD Average *****/
+                    var avgBoxNonEPOD = 0;
+                    var avgDropNonEPOD = 0;
+                    var countBoxNonEPOD = 0;
+                    var countDropNonEPOD = 0;
+
+                    $.each( returnedData_delivery_type_non_epod, function( i, val ) {
+                         var details = val.details;
+
+                         $.each( details, function( _i_details, _val_details ) {
+                            // console.log(_val_details.job_date);
+                            if (_val_details.job_date == tmpDate) {
+                                countBoxNonEPOD = countBoxNonEPOD + _val_details.box_success;
+                                countDropNonEPOD = countDropNonEPOD + _val_details.drop_success;
+                                return true;
+                            }
+                         });
+
+                    });
+
+                    avgBoxNonEPOD = countBoxNonEPOD/returnedData_delivery_type_non_epod.length;
+                    avgDropNonEPOD = countDropNonEPOD/returnedData_delivery_type_non_epod.length;
+                    // avgBoxNonEPOD = countBoxNonEPOD;
+                    // avgDropNonEPOD = countDropNonEPOD;
+                    arrAverageBox_NonEPOD.push(avgBoxNonEPOD);
+                    arrAverageDrop_NonEPOD.push(avgDropNonEPOD);
+
+               });
+
+               // console.log(arrAverageBox_EPOD);
+               // console.log(arrAverageDrop_EPOD);
+               // console.log(arrAverageBox_NonEPOD);
+               // console.log(arrAverageDrop_NonEPOD);
+
+
+
+                  // fn.arrAverageBox_EPOD = [12, 9, 10, 11, 10, 11, 12, 10, 13, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+                  // fn.arrAverageDrop_EPOD = [8, 9, 10, 13, 11, 10, 12, 10, 10, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+                  // fn.arrAverageBox_NonEPOD = [8, 9, 10, 14, 10, 12, 12, 10, 12, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+                  // fn.arrAverageDrop_NonEPOD = [8, 9, 10, 15, 10, 10, 12, 10, 10, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+
+
+                $('#datatableOperationKPI').html(resultDataTableHeaderTemplate(context)).promise().done(function(){
+                  fn.DatatableOperationKPI();
+                  fn.DatatableOperationKPI_Click_Handler();
+
+
+
+                  // fn.SparklineBarAverageBoxEpod(arrAverageBox_EPOD);
+                  // fn.SparklineBarAverageDropEpod(arrAverageDrop_EPOD);
+
+                  // fn.SparklineBarAverageBoxNonEpod(arrAverageBox_NonEPOD);
+                  // fn.SparklineBarAverageDropNonEpod(arrAverageDrop_NonEPOD);
+
+
+
+                });
+
+            },
+            "error": function(jqXHR, textStatus, errorThrown){
+              console.log('textStatus: ' + textStatus);
+              // console.log('ierrorThrown: ' + errorThrown);
+              // alert('textStatus: ' + textStatus);
+
+
+            }
+          });
+
+  
+    return false;
+
+
+  });

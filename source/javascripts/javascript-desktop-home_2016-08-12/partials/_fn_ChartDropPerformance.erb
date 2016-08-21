@@ -1,0 +1,189 @@
+ChartDropPerformance: function (paramStartDate, paramEndDate, paramSiteName) {
+	// console.log('ChartDropPerformance');
+
+    chartDropPerformance = new Highcharts.Chart({
+              chart: {
+                renderTo: 'chartDropPerformance',
+                //showAxes: true
+                borderWidth:1,
+                // type: 'spline',
+                zoomType: 'xy'
+              },
+              title: {
+                text: 'DROP PERFORMANCE'
+              },
+              subtitle: {
+                text: '-'
+              },
+              xAxis: {
+                title: {
+                  text: 'ทะเบียนรถ'
+                },
+                // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                categories: [],
+                //#######################
+                lineWidth: 2,
+                lineColor: '#82A7CD',
+
+                tickWidth: 2,
+                tickColor: '#82A7CD',
+
+                tickmarkPlacement: 'on'
+
+
+              },
+              yAxis: {
+                title: {
+                  text: 'จำนวน Drop ที่ส่งได้'
+                },
+
+                //#######################
+                lineWidth: 2,
+                lineColor: '#82A7CD',
+
+                tickWidth: 2,
+                tickColor: '#82A7CD',
+
+                //########################
+                tickInterval: 20,
+                minorTickInterval: 10,
+
+                minorGridLineColort: '#ADADAD',
+                minorGridLineDashStyle: 'dashdot',
+
+                //##########################
+                plotLines: [
+                // {
+                //   color: 'blue',
+                //   width: 2,
+                //   value: 12,
+                //   dashStyle: 'longdashdot',
+                //   label: {
+                //     text: 'เกณฑ์ขั้นต่ำ',
+                //     align: 'right',
+                //     x: -130
+                //   }
+                // }
+                ,{
+                  color: 'red',
+                  width: 2,
+                  value: 28,
+                  dashStyle: 'longdashdot',
+                   zIndex: 4,
+                  label: {
+                    text: 'เป้าหมาย (Target) : 28 Drop',
+                    style: {
+                        // color: 'red',
+                        // fontWeight: 'bold',
+                        zIndex: 60001
+                    },
+                    align: 'right',
+                    x: -10,
+                    y: -10
+                  }
+                }],
+
+                //##########################
+                plotBands: [{
+                  color: '#FCFFC5',
+                  from: 0,
+                  to: 28
+                }]
+
+              },
+              // series: [{
+              //   name: 'First-series',
+              //   data: [125, 23, 45, 56, 78.7, 45, 23, 56, 78, 90, 124, 35]
+              // }]
+              credits: {
+                enabled: false
+              }
+    },function(chart){
+        // chart.yAxis[0].plotLinesAndBands[0].label.toFront();
+        // console.log(chart.yAxis[0]);
+        // console.log(chart.yAxis[0]);
+    });
+
+    
+
+    $.ajax({
+        url: "../../api/restful-api/kpiManager/getOperationKPI/",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({"startDate" : paramStartDate, 
+                                         "endDate" : paramEndDate, 
+                                         "siteName" : paramSiteName
+                                       }),
+        success: function(result){
+            // console.log(result);
+
+            chartDropPerformance.showLoading("Loading data...");
+
+            // Remove all the chart existing series
+            while(chartDropPerformance.series.length) {
+              chartDropPerformance.series[0].remove()
+            }
+
+            // Construct series data and add the series
+            // var data = [];
+            // var data = [
+            // // { 
+            // //     "name": "ananta",
+            // //     "age": "15",
+            // //     "country": "Atlanta"
+            // // }
+            // ];
+
+            // data.push({"name": "Tony Montana", "age": "99"});
+            // data.push({"country": "IN"});
+            // data.push(["country", "country"]);
+            // console.log(data);
+
+            var tmpDataSerie = [];
+            $.each(result.rows, function(idx, data) {
+                // console.log(data.vehicle_licence + ", " + data.drop_success);
+                // var tmpDataSerie = [];
+                tmpDataSerie.push([data.vehicle_licence, data.drop_success]);
+            });
+
+
+
+            chartDropPerformanceSeries = {
+                  name: "ส่งได้ (Drop)",
+                  type: 'column',
+                  data: tmpDataSerie
+            }
+
+            // console.log(chartDropPerformanceSeries);
+
+
+            chartDropPerformance.hideLoading();
+            chartDropPerformance.addSeries(chartDropPerformanceSeries);
+
+            
+            
+            chartDropPerformance.setTitle(null, { text: result.start_date});
+
+
+        },
+      error: function() {
+         alert("error");
+      }
+    });
+
+
+
+
+
+
+
+
+
+    
+    $( window ).resize(function() {
+        chartDropPerformance.redraw();
+        chartDropPerformance.reflow();
+    });
+},

@@ -1,0 +1,6 @@
+              /* ****************************** */
+              /* รวมเวลาที่ใช้จัดส่ง (ชั่วโมง นาที) */
+              /* ****************************** */
+              $tmpTotalTimeDelivery = calculateTotalTimeDelivery($tmpStartDateTime, $tmpMaximumDeliveryDateTime);
+              /* Edit last record */
+              $reports[count($reports)-1]["total_time_delivery"] = $tmpTotalTimeDelivery;

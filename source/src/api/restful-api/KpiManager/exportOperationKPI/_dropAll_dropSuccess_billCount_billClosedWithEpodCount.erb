@@ -1,0 +1,29 @@
+              /* ******************************* */
+              /* เริ่มกระบวนการ นับจำนวน Drop All */
+              /* ******************************* */
+              // if (!$tmpDocNo) {
+              //     $tmpDocNo = $mydata["array"][$i]['DocNo'];
+              // }
+
+              $tmpDropAll++;
+              if ($tmpDeliveryDateTime) {
+                $tmpDropSuccess++;
+              }
+
+              if ($tmpDocNo != $mydata["array"][$i]['DocNo']) {
+                  $tmpBillCount++;
+
+                  $tmpUserUpdate = $mydata["array"][$i]['UserUpdate'];
+                  if ($tmpUserUpdate) {
+                    if (strpos($tmpUserUpdate, 'mb') !== false) {
+                      $tmpBillClosedWithEpodCount++;
+                    }
+                  }
+
+                $tmpDocNo = $mydata["array"][$i]['DocNo'];
+              }
+              /* Edit last record */
+              $reports[count($reports)-1]["drop_all"] = $tmpDropAll;
+              $reports[count($reports)-1]["drop_success"] = $tmpDropSuccess;
+              $reports[count($reports)-1]["bill_count"] = $tmpBillCount;
+              $reports[count($reports)-1]["bill_closed_with_epod_count"] = $tmpBillClosedWithEpodCount;

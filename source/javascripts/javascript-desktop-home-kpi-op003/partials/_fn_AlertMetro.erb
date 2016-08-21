@@ -1,0 +1,59 @@
+AlertMetro: function (action, msg, type) {
+
+	  // console.log('AlertMetro');
+   //  console.log(action);
+
+    var colorArr = [];
+    var iconStr;
+    var titleStr;
+
+
+    if (type == "info") {
+        colorArr.push("#00AB4E"); 
+        iconStr = "../../../../../images/MetroBanner/System/White/MB_0011_info3.png";
+        titleStr = "information";
+    } else if (type == "warning") {
+        colorArr.push("#FFDD00"); 
+        iconStr = "../../../../../images/MetroBanner/System/White/MB_0011_info3.png";
+        titleStr = "<font color='#0072BC'>แจ้งเตือน</font>";
+        msg = "<font color='#0072BC'>" + msg+ "</font>";
+    } else if (type == "danger") {
+        colorArr.push("#EC008C"); 
+        iconStr = "../../../../../images/MetroBanner/System/White/MB_0011_info3.png";
+        titleStr = "ข้อผิดพลาด";
+    } else {
+        colorArr.push("#0072BC"); 
+        iconStr = "../../../../../images/MetroBanner/System/White/MB_0011_info3.png";
+        titleStr = "information";
+    }
+
+
+
+  if (action == "open") {
+
+      $.MetroBanner(
+      {
+        pushbody: false,
+        title: titleStr,
+        timeout: 3,
+        content: msg,
+      // colorarray: ["#FFDD00","#0072BC","#EC008C","#00AB4E"],
+        colorarray: colorArr,
+        img: iconStr,
+        position: "bottom",
+        closeicon: false,
+      });
+
+  } else if (action == "close") {
+
+    $.MetroBannerCloseAll();
+
+  } else {
+    $.MetroBannerCloseAll();
+  }
+
+
+
+
+    
+},

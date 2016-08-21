@@ -1,0 +1,117 @@
+    function datatableOperationKPIRender(result) {
+        // console.log(result);
+
+        // valJSONColTable = [];
+
+        dataCollections = {};
+
+        var i = 0;
+        var j = 0;
+
+        for (var i=0; i < result.rows.length; i++ ) {
+
+            var tmpDataSet = [];
+
+            var tmpDropCount = 0;
+            var dropAverage = 0;
+
+            var tmpBoxCount = 0;
+            var boxAverage = 0;
+
+            var tmpDataSetObj = {};
+
+
+            // tmpDataSetObj['id'] = result.rows[i].id;
+            // tmpDataSetObj['vehicle_licence'] = result.rows[i].vehicle_licence;
+            tmpDataSet.push(result.rows[i].id);
+            tmpDataSet.push(result.rows[i].vehicle_licence);
+
+
+            objVehicleType[result.rows[i].vehicle_licence] = result.rows[i].vehicle_type;
+            objDeliveryType[result.rows[i].vehicle_licence] = result.rows[i].delivery_type;
+
+            var k = 0;
+            for (var j=0; j < result.rows[i].details.length; j++ ) {
+
+
+                var dataCollectionsObj_inner = {};
+                var strDate = result.rows[i].details[j].job_date;
+
+                // tmpDataSetObj[strDate + '_drop'] = result.rows[i].details[j].drop_success;
+                // tmpDataSetObj[strDate + '_box'] = result.rows[i].details[j].box_success;
+                tmpDataSet.push(result.rows[i].details[j].box_success);
+                tmpDataSet.push(result.rows[i].details[j].drop_success);
+
+                // tmpDataSetObj[strDate + '_job_no'] = result.rows[i].details[j].job_no;
+                // tmpDataSetObj[strDate + '_drop_all'] = result.rows[i].details[j].drop_all;
+                // tmpDataSetObj[strDate + '_box_all'] = result.rows[i].details[j].box_all;
+                // tmpDataSetObj[strDate + '_departure_time'] = result.rows[i].details[j].departure_time;
+                // tmpDataSetObj[strDate + '_first_delivery_place_time'] = result.rows[i].details[j].first_delivery_place_time;
+                // tmpDataSetObj[strDate + '_final_destination_time'] = result.rows[i].details[j].final_destination_time;
+                // tmpDataSetObj[strDate + '_size_A'] = result.rows[i].details[j].size_A;
+                // tmpDataSetObj[strDate + '_size_B'] = result.rows[i].details[j].size_B;
+                // tmpDataSetObj[strDate + '_size_C'] = result.rows[i].details[j].size_C;
+                // tmpDataSetObj[strDate + '_size_Other'] = result.rows[i].details[j].size_Other;
+                // tmpDataSetObj[strDate + '_driver_wages'] = result.rows[i].details[j].driver_wages;
+                // tmpDataSetObj[strDate + '_remark'] = result.rows[i].details[j].remark;
+
+                dataCollectionsObj_inner['id'] = result.rows[i].id;
+                dataCollectionsObj_inner['vehicle_licence'] = result.rows[i].vehicle_licence;
+                dataCollectionsObj_inner['vehicle_type'] = result.rows[i].vehicle_type;
+                dataCollectionsObj_inner['job_date'] = result.rows[i].details[j].job_date;
+                dataCollectionsObj_inner['job_no'] = result.rows[i].details[j].job_no;
+                dataCollectionsObj_inner['drop_all'] = result.rows[i].details[j].drop_all;
+                dataCollectionsObj_inner['drop_success'] = result.rows[i].details[j].drop_success;
+                dataCollectionsObj_inner['box_all'] = result.rows[i].details[j].box_all;
+                dataCollectionsObj_inner['box_success'] = result.rows[i].details[j].box_success;
+                dataCollectionsObj_inner['departure_time'] = result.rows[i].details[j].departure_time;
+                dataCollectionsObj_inner['first_delivery_place_time'] = result.rows[i].details[j].first_delivery_place_time;
+                dataCollectionsObj_inner['final_destination_time'] = result.rows[i].details[j].final_destination_time;
+                dataCollectionsObj_inner['size_A'] = result.rows[i].details[j].size_A;
+                dataCollectionsObj_inner['size_B'] = result.rows[i].details[j].size_B;
+                dataCollectionsObj_inner['size_C'] = result.rows[i].details[j].size_C;
+                dataCollectionsObj_inner['size_Other'] = result.rows[i].details[j].size_Other;
+                dataCollectionsObj_inner['driver_wages'] = result.rows[i].details[j].driver_wages;
+                dataCollectionsObj_inner['remark'] = result.rows[i].details[j].remark;
+
+                
+                dataCollections['"' + i.toString() + k.toString() +'"'] = dataCollectionsObj_inner;
+                k++;
+                dataCollections['"' + i.toString() + k.toString() +'"'] = dataCollectionsObj_inner;
+                k++;
+
+                // tmpDataSet.push(result.rows[i].details[j].drop_success);
+                // tmpDataSet.push(result.rows[i].details[j].box_success);
+
+                tmpDropCount = tmpDropCount + parseInt(result.rows[i].details[j].drop_success);
+                tmpBoxCount = tmpBoxCount + parseInt(result.rows[i].details[j].box_success);
+            }
+
+            // tmpDataSetObj['average_drop'] = numeral(tmpDropCount/j).format('0.00');
+            // tmpDataSetObj['average_box'] = numeral(tmpBoxCount/j).format('0.00');
+            tmpDataSet.push(numeral(tmpDropCount/j).format('0.00'));
+            tmpDataSet.push(numeral(tmpBoxCount/j).format('0.00'));
+
+            // Average column
+            // tmpDataSet.push(numeral(tmpDropCount/j).format('0.00'));
+            // tmpDataSet.push(numeral(tmpBoxCount/j).format('0.00'));
+
+            // var tmpDate = {};
+            // tmpDate["mDate"] = "2016-06-01";
+            // tmpDataSet.push(tmpDate);
+
+            dataSet.push(tmpDataSet);
+            // dataSet.push(tmpDataSetObj);
+
+        }
+
+
+
+
+        // $('#datatableOperationKPI').dataTable(dataSet);
+        datatableOperationKPI.clear().draw();
+        datatableOperationKPI.rows.add(dataSet); // Add new data
+        datatableOperationKPI.columns.adjust().draw(); // Redraw the DataTable
+        $('.dataTables_processing', $('#datatableOperationKPI').closest('.dataTables_wrapper')).hide();
+
+    }

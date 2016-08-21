@@ -1,0 +1,31 @@
+  $('#btnFilterInfo').on('click', function() {
+        // console.log('btnFilterInfo');
+        // alert('btnFilterInfo');
+
+        /* daily, weekly, monthly, quater, half-year */
+        if (fn.strFilterType == "daily") {
+            // console.log('daily');
+            fn.ConsumeDailyInformation();
+          
+        } else if(fn.strFilterType == "weekly") {
+            // console.log('weekly');
+            fn.ConsumeWeeklyInformation();
+
+        } else if(fn.strFilterType == "monthly") {
+            // console.log('monthly');
+            fn.ConsumeMonthlyInformation();
+
+        } else if(fn.strFilterType == "quater") {
+            // console.log('quater');
+            fn.ConsumeQuaterInformation();
+
+        } else if(fn.strFilterType == "half-year") {
+            // console.log('half-year');
+            fn.ConsumeHalfYearInformation();
+
+        } else {
+            console.log("strFilterType is empty, impossible.")
+        }
+
+        return false;
+  });

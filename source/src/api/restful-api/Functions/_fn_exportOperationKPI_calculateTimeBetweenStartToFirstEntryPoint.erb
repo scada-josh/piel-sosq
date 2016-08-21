@@ -1,0 +1,19 @@
+        function calculateTimeBetweenStartToFirstEntryPoint($start_datetime, $end_datetime) {
+
+        	if ($start_datetime && $end_datetime) {
+
+        		$tmpStart = new DateTime($start_datetime);
+        		$tmpEnd   = new DateTime($end_datetime);
+
+        		$tmpInterval = $tmpStart->diff($tmpEnd);
+
+	            $result_calculateTimeBetweenStartToFirstEntryPoint = $tmpInterval->format('%H:%i:%s');
+
+	        } else if(!$start_datetime && $end_datetime){
+	        	$result_calculateTimeBetweenStartToFirstEntryPoint = "N/A";
+	        } else {
+	        	$result_calculateTimeBetweenStartToFirstEntryPoint = "N/A";
+	        }
+
+	        return $result_calculateTimeBetweenStartToFirstEntryPoint;
+	    }

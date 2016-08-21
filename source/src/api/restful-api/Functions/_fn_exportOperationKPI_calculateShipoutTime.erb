@@ -1,0 +1,27 @@
+        function calculateShipoutTime($start_datetime, $fingerscan_datetime) {
+
+        	if ($start_datetime && $fingerscan_datetime) {
+
+        		$tmpStart = new DateTime($fingerscan_datetime);
+        		$tmpEnd = new DateTime($start_datetime);
+
+        		$tmpInterval = $tmpStart->diff($tmpEnd);
+
+	            // $tmpStart  = strtotime($fingerscan_datetime);
+	            // $tmpEnd = strtotime($start_datetime);
+
+	            // $tmpInterval = $tmpEnd - $tmpStart;
+
+	            $result_calculateShipoutTime = $tmpInterval->format('%h:%i:%s');;
+
+	        } else {
+
+	        	// $result_calculateShipoutTime = $start_datetime;
+	        	$result_calculateShipoutTime = "";
+
+	        }
+
+
+
+	        return $result_calculateShipoutTime;
+	    }

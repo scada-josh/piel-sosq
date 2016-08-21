@@ -1,0 +1,25 @@
+	$('#dropdown_monthly_filter_id').on('click', function() {
+      	// console.log('dropdown_monthly_filter_id');
+
+		if (fn.strFilterType != "monthly") {
+			fn.Routers("monthly");
+			fn.strFilterType = "monthly";
+			fn.HeaderFilterMonthly(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+
+	          // UPDATE - updates slider to any new values
+	          fn.objIonRangeByMonthly.update({
+	                  from: 0,
+	                  to: 11
+	          });
+	          // RESET - reset slider to it's first values
+	          // fn.objIonRangeByMonthly.reset();
+		}
+
+		$("#filter-type-label").html("Monthly");
+
+      	$("#form_layout_year_select_id").show(1000);
+      	$("#form_layout_week_select_id").hide(1000);
+      	$("#form_layout_month_select_id").show(1000);
+      	$("#form_layout_quater_id").hide(1000);
+      	$("#form_layout_halfYear_id").hide(1000);
+	});

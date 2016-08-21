@@ -1,0 +1,35 @@
+                var total_col12;
+                var pageTotal_col12;
+
+                // Total over all pages
+                if (api.column(12).data().length){
+                    total_col12 = api
+                        .column(12)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                } else {
+                    total_col12 = 0
+                }
+
+                total_col12 = numeral(total_col12).format('0,0');
+
+                 // Total over this page
+
+                 if (api.column(12).data().length){
+                    pageTotal_col12 = api
+                    .column( 12, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    },0 ) 
+                } else { 
+                    pageTotal_col12 = 0
+                };
+                pageTotal_col12 = numeral(pageTotal_col12).format('0,0');
+
+                // Update footer
+                $( api.column( 12 ).footer() ).html(
+                    pageTotal_col12
+                );

@@ -1,0 +1,32 @@
+    /**
+     *
+     * @apiName MemcachedTemplate
+     * @apiGroup Test Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {get} /testManager/memcachedTemplate/ Memcached client template
+     * @apiDescription คำอธิบาย : ในส่วนนี้เป็นเทมเพล็ตสำหรับการสร้าง GET - Memcached client Template
+     *
+     */
+
+    function memcachedTemplate($app, $memcachedClient) {
+
+        $resultSetMemcached = $memcachedClient->set('foobar', 42); // Return 1
+
+        if ($resultSetMemcached) {
+            $result = $memcachedClient->get('foobar');
+        } else {
+            $result = "Can not get value!!";
+        }
+        
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        $reportResult = array("msg" => $result);
+ 
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+
+    };

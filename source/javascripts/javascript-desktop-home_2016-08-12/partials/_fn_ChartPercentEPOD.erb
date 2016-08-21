@@ -1,0 +1,146 @@
+ChartPercentEPOD: function (paramStartDate, paramEndDate, paramSiteName) {
+	// console.log('ChartDropPerformance');
+
+    chartPercentEPOD = new Highcharts.Chart({
+              chart: {
+                renderTo: 'chartPercentEPOD',
+                //showAxes: true
+                borderWidth:1,
+                // type: 'spline',
+                zoomType: 'xy'
+              },
+              title: {
+                text: '% E-POD'
+              },
+              subtitle: {
+                text: '-'
+              },
+              xAxis: {
+                title: {
+                  text: 'ทะเบียนรถ'
+                },
+                categories: [],
+                //#######################
+                lineWidth: 2,
+                lineColor: '#82A7CD',
+
+                tickWidth: 2,
+                tickColor: '#82A7CD',
+
+                tickmarkPlacement: 'on'
+
+
+              },
+              yAxis: {
+                title: {
+                  text: '% E-POD'
+                },
+
+                //#######################
+                lineWidth: 2,
+                lineColor: '#82A7CD',
+
+                tickWidth: 2,
+                tickColor: '#82A7CD',
+
+                //########################
+                tickInterval: 20,
+                minorTickInterval: 10,
+
+                minorGridLineColort: '#ADADAD',
+                minorGridLineDashStyle: 'dashdot',
+
+                //##########################
+                plotLines: [
+                {
+                  color: 'red',
+                  width: 2,
+                  value: 99,
+                  dashStyle: 'longdashdot',
+                  zIndex: 4,
+                  label: {
+                    text: 'เป้าหมาย (Target) : 99 %',
+                    style: {
+                        // color: 'red',
+                        // fontWeight: 'bold',
+                        zIndex: 60001
+                    },
+                    align: 'right',
+                    x: -10,
+                    y: -10
+                  }
+                }],
+
+                //##########################
+                plotBands: [{
+                  color: '#FCFFC5',
+                  from: 0,
+                  to: 99
+                }]
+
+              },credits: {
+                enabled: false
+              }
+    });
+
+    
+
+    $.ajax({
+        url: "../../api/restful-api/kpiManager/getOperationKPI/",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({"startDate" : paramStartDate, 
+                                         "endDate" : paramEndDate, 
+                                         "siteName" : paramSiteName
+                                       }),
+        success: function(result){
+            // console.log(result);
+
+            chartPercentEPOD.showLoading("Loading data...");
+
+            // Remove all the chart existing series
+            while(chartPercentEPOD.series.length) {
+              chartPercentEPOD.series[0].remove()
+            }
+
+            var tmpDataSerie = [];
+            $.each(result.rows, function(idx, data) {
+                // console.log(data.vehicle_licence + ", " + data.drop_success);
+                // var tmpDataSerie = [];
+                tmpDataSerie.push([data.vehicle_licence, (data.bill_closed_with_epod_count*100)/data.bill_count]);
+            });
+
+
+
+            chartPercentEPODSeries = {
+                  name: "% E-POD",
+                  type: 'column',
+                  data: tmpDataSerie
+            }
+
+            // console.log(chartPercentEPODSeries);
+
+
+            chartPercentEPOD.hideLoading();
+            chartPercentEPOD.addSeries(chartPercentEPODSeries);
+
+            
+            
+            chartPercentEPOD.setTitle(null, { text: result.start_date});
+
+
+        },
+      error: function() {
+         alert("error");
+      }
+    });
+
+
+    
+    $( window ).resize(function() {
+        chartPercentEPOD.redraw();
+        chartPercentEPOD.reflow();
+    });
+},

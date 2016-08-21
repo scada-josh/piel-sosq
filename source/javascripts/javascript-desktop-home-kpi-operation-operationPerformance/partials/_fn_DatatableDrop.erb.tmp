@@ -1,0 +1,174 @@
+DatatableDrop: function () {
+	// console.log('DatatableDrop');
+    // console.log('DatatableBox');
+
+    // reference : http://stackoverflow.com/questions/28140671/datatables-with-dynamic-columns
+    // referenct : https://datatables.net/forums/discussion/29260/dynamic-column-headers-via-ajax
+    // var tmpData = {
+    //     "startDate" : ($('#dateSelected').val()) ? $('#dateSelected').val() : "06/16/2016", 
+    //     "endDate" : ($('#dateSelected').val()) ? $('#dateSelected').val() : "06/21/2016", 
+    //     "siteName" : ($('#station_selected_id').find("option:selected").text()) ? $('#station_selected_id').find("option:selected").text() : "bc"
+    // }
+
+    // $.ajax({
+    //     url: "../../../../../api/restful-api/kpiManager/boxOperationKPI/", 
+    //     "type": "POST",
+    //     "dataType": "json",
+    //     "contentType": "application/json",
+    //     "data": JSON.stringify(tmpData),
+    //     success: function(result){
+    //         dropDatatableRender(result);
+
+    //     }
+    // });
+
+    function generateJSONColTable() {
+
+        var valJSONColTable = [];
+        var tmpResult = [
+                            "Box",
+                            "16/06/2016",
+                            "17/06/2016",
+                            "18/06/2016",
+                            "19/06/2016",
+                            "20/06/2016",
+                            "21/06/2016",
+                            "Average"
+                        ];
+
+        var tmpJSONColTable = tmpResult;
+
+        for (var i=0; i < tmpJSONColTable.length; i++ ) {
+              valJSONColTable.push({
+                        "sTitle": tmpJSONColTable[i],
+                        "aTargets": [i]
+               });
+          
+        }
+
+      return valJSONColTable;
+    }
+
+
+
+    function dropDatatableRender(result) {
+
+
+    var datatableJSONColTable;
+
+        datatableJSONColTable = generateJSONColTable();
+
+
+        datatableDrop = $('#datatableDrop').dataTable({
+            "processing": true,
+            "ajax": {
+                "url": "../../../../../api/restful-api/kpiManager/boxOperationKPI/",
+                "type": "POST",
+                "dataType": "json",
+                "contentType": "application/json",
+                "data": function( d ) {
+                  return JSON.stringify({"startDate" : ($('#dateSelected').val()) ? $('#dateSelected').val() : "06/16/2016", 
+                                         "endDate" : ($('#dateSelected').val()) ? $('#dateSelected').val() : "06/21/2016", 
+                                         "siteName" : ($('#station_selected_id').find("option:selected").text()) ? $('#station_selected_id').find("option:selected").text() : "bc"
+                                       });
+                },
+                // "dataSrc": "rows",
+                "beforeSend" : function()    {           
+                    // console.log("beforeSend");
+                },
+                // "success": function(data) {
+
+                //     for (var i=0; i < data.columns.length; i++ ) {
+                //           aryJSONColTable.push({
+                //             "sTitle": data.columns[i],
+                //             "aTargets": [i]
+                //         });
+                //       }
+
+                //       console.log(aryJSONColTable);
+
+
+
+                //     // $('#datatableBox').dataTable({
+                //     //     "data": data.rows,
+                //     //     "columns": data.columns
+                //     // });
+
+                // },
+                "error": function(jqXHR, textStatus, errorThrown){
+                    // console.log('textStatus: ' + textStatus);
+                    // console.log('ierrorThrown: ' + errorThrown);
+                }
+            },
+            // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+            "language": {
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                },
+                "emptyTable": "No data available in table",
+                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "infoEmpty": "No entries found",
+                "infoFiltered": "(filtered1 from _MAX_ total entries)",
+                "lengthMenu": "_MENU_ entries",
+                "search": "Search:",
+                "zeroRecords": "No matching records found"
+            },
+            "aoColumnDefs":[
+                            {
+                                'bSortable': true,
+                                "bAutoWidth": true,
+                                'aTargets': [0]
+                            }
+            ],
+
+            // setup buttons extentension: http://datatables.net/extensions/buttons/
+            buttons: [
+                { extend: 'print', className: 'btn dark btn-outline' },
+                { extend: 'copy', className: 'btn red btn-outline' },
+                { extend: 'pdf', className: 'btn green btn-outline' },
+                { extend: 'excel', className: 'btn yellow btn-outline ' },
+                { extend: 'csv', className: 'btn purple btn-outline ' },
+                { extend: 'colvis', className: 'btn dark btn-outline', text: 'Columns'}
+            ],
+
+            // setup responsive extension: http://datatables.net/extensions/responsive/
+            responsive: {
+                details: {
+                   
+                }
+            },
+            // setup colreorder extension: http://datatables.net/extensions/colreorder/
+            colReorder: {
+                reorderCallback: function () {
+                    console.log( 'callback' );
+                }
+            },
+
+            "order": [
+                [0, 'asc']
+            ],
+            
+            "lengthMenu": [
+                [5, 10, 15, 20, -1],
+                [5, 10, 15, 20, "All"] // change per page values here
+            ],
+            // set the initial value
+            "pageLength": 10,
+
+            scroller:       true,
+            deferRender:    true,
+            scrollX:        true,
+            scrollY:        '50vh',
+            scrollCollapse: true,
+            
+            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+            "columns": datatableJSONColTable
+        });
+    
+
+
+    }
+
+    
+},

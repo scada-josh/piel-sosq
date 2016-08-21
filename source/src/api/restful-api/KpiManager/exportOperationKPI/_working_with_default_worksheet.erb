@@ -1,0 +1,8 @@
+        $col = 0;
+        $row = 1;
+        $value = "Josh-00";
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+		/* Set Title */
+		// Rename worksheet
+		$objPHPExcel->getActiveSheet()->setTitle('Hello Default Worksheet');

@@ -1,0 +1,13 @@
+              /* ****************************************** */
+              /* เริ่มกระบวนการ คำนวณเวลาส่งจุดแรก (DateTime) */
+              /* ****************************************** */
+              /* แก้ปัญหากรณี record แรก มีค่า null ทำให้ตัวแปร $tmpFirstSentDatetime ไม่มีค่า */
+              if (!$tmpFirstSentDatetime) {
+                  $tmpFirstSentDatetime = $mydata["array"][$i]['DeliveryDateTime'];
+              }
+              $tmpDeliveryDateTime = $mydata["array"][$i]['DeliveryDateTime'];
+              if ($tmpDeliveryDateTime) {
+                  $tmpFirstSentDatetime = calculateFirstSentDatetime($tmpDeliveryDateTime, $tmpFirstSentDatetime);
+                  /* Edit last record */
+                  $reports[count($reports)-1]["first_sent_datetime"] = $tmpFirstSentDatetime;
+              }

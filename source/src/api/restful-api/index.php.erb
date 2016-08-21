@@ -1,0 +1,202 @@
+---
+title: IEL - MIS - API
+layout: "layout-api"
+---
+<?php
+
+    date_default_timezone_set("Asia/Bangkok");
+ 
+    require_once '../../../packages/autoload.php';
+ 
+
+    // Create and configure Slim app
+
+    /* ****************** */
+    /* Slim framework 2.x */
+    /* ****************** */
+    $logWriter = new \Slim\LogWriter(fopen('./api-debug.log', 'a'));
+    $app = new \Slim\Slim(array('log.enabled' => true,
+                                'log.writer' => $logWriter,
+                                'debug' => true));
+    /* ********* */
+    /* Using JWT */
+    /* ********* */
+
+    /* Secret Key */
+    $key = "supersecretkeyyoushouldnotcommittogithub";
+    use \Firebase\JWT\JWT;
+    $app->add(new \Slim\Middleware\JwtAuthentication([
+         "secure" => false,
+        "relaxed" => ["localhost"],
+        "secret" => $key,
+        //"path"=> "/user",
+        "callback" => function ($options) use ($app) {
+            $app->jwt = $options["decoded"];
+        },
+        "rules" => [
+            new \Slim\Middleware\JwtAuthentication\RequestPathRule([
+                "path" => ["/permissionManager/checkJWT/"],
+                "passthrough" => ["/user"]
+            ]),
+            new \Slim\Middleware\JwtAuthentication\RequestMethodRule([
+                "passthrough" => ["OPTIONS"]
+            ])
+        ]
+    ]));
+
+    /* *************** */
+    /* Using Memcached */
+    /* *************** */
+    $memcachedClient = new \Blablacar\Memcached\Client();
+    $memcachedClient->addServer('127.0.0.1', 11211);
+    
+
+<% if config[:phase_environment] == "Development" %>
+
+    /* Connect Database Manager Partial : Localhost */
+    <%= partial "/ConnectDatabase/_connectMySQL_Localhost" %>
+
+<% elsif config[:phase_environment] == "Test" %>
+
+    /* Connect Database Manager Partial : Localhost */
+    <%= partial "/ConnectDatabase/_connectMySQL_Localhost" %>
+
+<% elsif config[:phase_environment] == "Production" %>
+
+    /* Connect Database Manager Partial : Production */
+    <%= partial "/ConnectDatabase/_connectMySQL_Production" %>
+
+<% end %>
+
+ 
+
+      /* NuSOAP */
+    $client = new nusoap_client("http://58.137.5.126/epodws/service.asmx?wsdl", true);
+    // $client->soap_defencoding = 'UTF-8';
+
+    $client_mis = new nusoap_client("http://58.137.5.126/iTMS_MIS_Portal/Service.asmx?wsdl", true);
+    // $client_mis->soap_defencoding = 'UTF-8';
+
+
+<% if config[:phase_environment] == "Development" %>
+
+    /* forceEndpoint Partial : Localhost (Internet) */
+    <%= partial "/phaseEnvironment-partials/_forceEndpointViaInternet" %>
+
+<% elsif config[:phase_environment] == "Test" %>
+
+    /* forceEndpoint Partial : Localhost (Intranet) */
+    <%= partial "/phaseEnvironment-partials/_forceEndpointViaIntranet" %>
+
+<% elsif config[:phase_environment] == "Production" %>
+
+    /* forceEndpoint Partial : Production (Intranet) */
+    <%= partial "/phaseEnvironment-partials/_forceEndpointViaIntranet" %>
+
+<% end %>
+
+    $client->soap_defencoding = 'UTF-8';
+    $client->decode_utf8 = false; // แก้ปัญหาตัวอักษรภาษาไทยแสดง ???????? (web service unicode characters dispaly as question marks)
+    $client->encode_utf8 = true;
+
+
+    $client_mis->soap_defencoding = 'UTF-8';
+    $client_mis->decode_utf8 = false; // แก้ปัญหาตัวอักษรภาษาไทยแสดง ???????? (web service unicode characters dispaly as question marks)
+    $client_mis->encode_utf8 = true;
+
+    /* PHP Excel : Create new PHPExcel object : http://phpexcel.codeplex.com */
+    $objPHPExcel = new \PHPExcel();
+
+
+
+    /* PHP Function */
+    <%= partial "/Functions/_fn_url" %>
+    <%= partial "/Functions/_fn_array_find_deep" %>
+    <%= partial "/Functions/_fn_createDateRangeArray" %>
+    <%= partial "/Functions/_fn_exportOperationKPI_calculateShipoutTime" %>
+    <%= partial "/Functions/_fn_exportOperationKPI_calculateFirstSentDatetime" %>
+    <%= partial "/Functions/_fn_exportOperationKPI_calculateTimeBetweenStartToFirstEntryPoint" %>
+    <%= partial "/Functions/_fn_exportOperationKPI_calculateMaximumDeliveryTime" %>
+    <%= partial "/Functions/_fn_exportOperationKPI_calculateTotalTimeDelivery" %>
+
+
+
+    /* Test Manager */
+    <%= partial "/TestManager/_hello" %>
+    $app->get('/testManager/getApiTemplate/',function() use ($app) { getApiTemplate($app); });
+    $app->post('/testManager/postApiTemplate/',function() use ($app) { postApiTemplate($app); });
+    $app->post('/testManager/exportExcelTemplate/',function() use ($app, $objPHPExcel) { exportExcelTemplate($app, $objPHPExcel); });
+    $app->get('/testManager/memcachedTemplate/',function() use ($app, $memcachedClient) { memcachedTemplate($app, $memcachedClient); });
+
+    /* KPI manager - Original */
+    $app->post('/kpiManager/getOperationKPI/',function() use ($app, $client) { getOperationKPI($app, $client); });
+    $app->post('/kpiManager/exportOperationKPI/',function() use ($app, $client, $objPHPExcel) { exportOperationKPI($app, $client, $objPHPExcel); });
+    $app->post('/kpiManager/boxOperationKPI/',function() use ($app, $client, $objPHPExcel) { boxOperationKPI($app, $client, $objPHPExcel); });
+    $app->post('/kpiManager/getOperationKpiSummary/',function() use ($app, $client_mis) { getOperationKpiSummary($app, $client_mis); });
+    $app->post('/kpiManager/getOperationKpiSummaryInfo/',function() use ($app, $client_mis) { getOperationKpiSummaryInfo($app, $client_mis); });
+    $app->post('/kpiManager/getOperationKpiSummaryInfoByWeekly/',function() use ($app, $client_mis) { getOperationKpiSummaryInfoByWeekly($app, $client_mis); });
+
+    /* Vehicle - KPI Manager Partial */
+    $app->post('/kpiManager/getVehicleKpiByDaily/',function() use ($app, $client_mis) { getVehicleKpiByDaily($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleKpiByWeekly/',function() use ($app, $client_mis) { getVehicleKpiByWeekly($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleKpiByMonthly/',function() use ($app, $client_mis) { getVehicleKpiByMonthly($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleKpiByQuarterly/',function() use ($app, $client_mis) { getVehicleKpiByQuarterly($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleKpiByHalfYear/',function() use ($app, $client_mis) { getVehicleKpiByHalfYear($app, $client_mis); });
+
+    /* Vehicle Leader - KPI Manager Partial */
+    $app->post('/kpiManager/getVehicleLeaderKpiByDaily/',function() use ($app, $client_mis) { getVehicleLeaderKpiByDaily($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleLeaderKpiByWeekly/',function() use ($app, $client_mis) { getVehicleLeaderKpiByWeekly($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleLeaderKpiByMonthly/',function() use ($app, $client_mis) { getVehicleLeaderKpiByMonthly($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleLeaderKpiByQuarterly/',function() use ($app, $client_mis) { getVehicleLeaderKpiByQuarterly($app, $client_mis); });
+    $app->post('/kpiManager/getVehicleLeaderKpiByHalfYear/',function() use ($app, $client_mis) { getVehicleLeaderKpiByHalfYear($app, $client_mis); });
+
+    /* Menu Manager */
+    $app->post('/menuManager/listMenu/',function() use ($app, $pdo, $db) { listMenu($app, $pdo, $db); });
+
+    /* Permission manager */
+    $app->post('/permissionManager/login/',function() use ($app, $client_mis, $key) { login($app, $client_mis, $key); });
+    $app->post('/permissionManager/checkJWT/',function() use ($app, $key) { checkJWT($app, $key); });
+    $app->get('/permissionManager/getJWT/',function() use ($app) { getJWT($app); });
+    $app->post('/permissionManager/logout/',function() use ($app) { logout($app); });
+ 
+    // Run app
+    $app->run();
+
+    /* Test Manager Partial */
+    <%= partial "/TestManager/_getApiTemplate" %>
+    <%= partial "/TestManager/_postApiTemplate" %>
+    <%= partial "/TestManager/_exportExcelTemplate" %>
+    <%= partial "/TestManager/_memcachedTemplate" %>
+
+    /* KPI Manager Partial */
+    <%= partial "/KpiManager/_getOperationKPI" %>
+    <%= partial "/KpiManager/_exportOperationKPI" %>
+    <%= partial "/KpiManager/_boxOperationKPI" %>
+    <%= partial "/KpiManager/_getOperationKpiSummary" %>
+    <%= partial "/KpiManager/_getOperationKpiSummaryInfo" %>
+    <%= partial "/KpiManager/_getOperationKpiSummaryInfoByWeekly" %>
+
+    /* Vehicle - KPI Manager Partial */
+    <%= partial "/KpiManager/_getVehicleKpiByDaily" %>
+    <%= partial "/KpiManager/_getVehicleKpiByWeekly" %>
+    <%= partial "/KpiManager/_getVehicleKpiByMonthly" %>
+    <%= partial "/KpiManager/_getVehicleKpiByQuarterly" %>
+    <%= partial "/KpiManager/_getVehicleKpiByHalfYear" %>
+
+    /* Vehicle Leader - KPI Manager Partial */
+    <%= partial "/KpiManager/_getVehicleLeaderKpiByDaily" %>
+    <%= partial "/KpiManager/_getVehicleLeaderKpiByWeekly" %>
+    <%= partial "/KpiManager/_getVehicleLeaderKpiByMonthly" %>
+    <%= partial "/KpiManager/_getVehicleLeaderKpiByQuarterly" %>
+    <%= partial "/KpiManager/_getVehicleLeaderKpiByHalfYear" %>
+
+    /* Menu Manager Partial */
+    <%= partial "/MenuManager/_listMenu" %>
+
+    /* Permission Manager Partial */
+    <%= partial "/PermissionManager/_login" %>
+    <%= partial "/PermissionManager/_checkJWT" %>
+    <%= partial "/PermissionManager/_getJWT" %>
+    <%= partial "/PermissionManager/_logout" %>
+ 
+?>

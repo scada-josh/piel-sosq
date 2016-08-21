@@ -1,0 +1,29 @@
+        if (fn.paramStartDate) {
+          // paramStartDate = fn.paramStartDate.format('DD/MM/YYYY');
+          paramStartDate = fn.paramStartDate.format('YYYY-MM-DD');
+        } else {
+          console.log('fn.paramStartDate is ' + fn.paramStartDate);
+        }
+
+        if (fn.paramEndDate) {
+          // paramEndDate = fn.paramEndDate.format('DD/MM/YYYY');
+          paramEndDate = fn.paramEndDate.format('YYYY-MM-DD');
+        } else {
+          console.log('fn.paramEndDate is ' + fn.paramEndDate);
+        }
+        
+
+          var tmpData = {
+              "startDate" : paramStartDate, 
+              "endDate" : paramEndDate, 
+              "siteName" : fn.paramSiteID
+          }
+
+          // console.log(tmpData);
+
+          if (!fn.paramSiteName) {
+            
+            // alert("กรุณาเลือกศูนย์");
+            return false;
+
+          } 

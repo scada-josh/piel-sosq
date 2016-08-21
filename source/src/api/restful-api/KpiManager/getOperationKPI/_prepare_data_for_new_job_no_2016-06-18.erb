@@ -1,0 +1,82 @@
+                /* prepare data for new JobNo Partial */
+                $k = 1;
+
+                $tmpJobDate = $mydata["array"][$i]['JobDate'];
+                $tmpJobNo = $mydata["array"][$i]['JobNo'];
+                $tmpVehicleLicence = $mydata["array"][$i]['VehicleLicence'];
+
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpDropAll = 1;
+                }
+
+                $tmpDropSuccess = 0;
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tmpDropSuccess++;
+                    }
+                }
+
+                $tmpBoxAll = 0;
+                $tmpBoxAmount = $mydata["array"][$i]['amount'];
+                $tmpBoxAll = $tmpBoxAll + (int)str_replace(' ', '', $tmpBoxAmount);
+
+                $tmpBoxSuccess = 0;
+                if ($mydata["array"][$i]['DeliveryDateTime']) {
+                    $tmpBoxSuccess = $tmpBoxSuccess + (int)str_replace(' ', '', $tmpBoxAmount);
+                }
+
+
+                /* prepare data for new JobNo : bill closed after 6pm Partial */
+                <%= partial "/KpiManager/getOperationKPI/_prepare_data_for_new_job_no_bill_closed_after_6pm" %>
+
+                
+                /* Count Bill or Doc No. which closed by EPOD */
+                $tmpBillClosedWithEPODCount = 0;
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                        if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                            $tmpBillClosedWithEPODCount++;
+                        }
+
+                        $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+                        
+                } else {
+
+                    if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                        if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                            $tmpBillClosedWithEPODCount++;
+                        }
+                    }
+                }
+
+                /* Count Bill or Doc No. */
+                $tmpBillCount = 0;
+                if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                    $tmpBillCount++;
+                    $tmpBill = $mydata["array"][$i]['DocNo'];
+                }
+
+
+
+
+                $reports_details = array();
+                $reports_details[] = array(
+                    "id" => $k,
+                    "job_date" => $tmpJobDate,
+                    "job_no" => $tmpJobNo,
+                    "job_remark" => $mydata["array"][$i]['JobRemark'],
+                    "supervisor" => $mydata["array"][$i]['Supervisor'],
+                    "vehicle_licence" => $tmpVehicleLicence,
+                    "vehicle_type" => $mydata["array"][$i]['VehicleType'],
+                    "driver_name" => $mydata["array"][$i]['DriverName'],
+                    "delivery_date_time" => $mydata["array"][$i]['DeliveryDateTime'],
+                    "amount" => $mydata["array"][$i]['amount'],
+                    "doc_no" => $mydata["array"][$i]['DocNo'],
+                    "user_update" => $mydata["array"][$i]['UserUpdate'],
+                    "current_job_date_time_formatted" => $current_job_date_time_formattedDate,
+                    "current_job_date_time_unix" => $current_job_date_time_unixTimestamp,
+                    "death_line_date_time_formatted" => $death_line_date_time_formattedDate,
+                    "death_line_date_time_unix" => $death_line_date_time_unixTimestamp,
+                    "delivery_date_time_formatted" => $delivery_date_time_formattedDate,
+                    "delivery_date_time_unix" => $delivery_date_time_unixTimestamp
+                );
+                

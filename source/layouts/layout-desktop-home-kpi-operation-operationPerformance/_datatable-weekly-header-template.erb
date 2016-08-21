@@ -1,0 +1,42 @@
+        <script id="datatable-weekly-header-template" type="text/x-handlebars-template">
+
+            <thead>
+                
+                <tr>
+                    {{#each headers}}
+                        {{#if_eq weeklyHeader 'ลำดับ'}}
+                            <th class="DatatableOperationKPI-common" rowspan="2">{{weeklyHeader}}</th>
+                        {{else if_eq weeklyHeader 'รถ'}}
+                            <th class="DatatableOperationKPI-common" rowspan="2">{{weeklyHeader}}</th>
+                        {{else if_eq weeklyHeader 'ทะเบียนรถ'}}
+                            <th class="DatatableOperationKPI-common" rowspan="2">{{weeklyHeader}}</th>
+                        {{else}}
+                            <th class="DatatableOperationKPI-common" colspan="2">{{weeklyHeader}}</th>
+                        {{/if_eq}}
+                    {{/each}}
+                </tr>
+                <tr>
+                    {{#each headers}}
+                        {{#if_eq weeklyHeader 'ลำดับ'}}
+                           <!--  <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'รถ'}}
+                            <!-- <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'ทะเบียนรถ'}}
+                            <!-- <th class="">{{weeklyHeader}}</th> -->
+                        {{else}}
+                            <th class="DatatableOperationKPI-common">Box</th>
+                            <th class="DatatableOperationKPI-common">Drop</th>
+                        {{/if_eq}}
+                    {{/each}}
+                </tr>
+                
+            </thead>
+            <tbody>
+            </tbody>
+
+
+
+
+        
+    </script>
+    

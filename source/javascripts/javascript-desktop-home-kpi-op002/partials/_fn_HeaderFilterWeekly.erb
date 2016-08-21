@@ -1,0 +1,15 @@
+HeaderFilterWeekly: function (paramSiteName, paramStartWeek, paramEndWeek, paramYear) {
+	// console.log("HeaderFilter");
+
+	if (paramSiteName) {
+	  	$("#site-name-label-" + fn.strFilterType).html(paramSiteName);
+	} else {
+		$("#site-name-label-" + fn.strFilterType).html("-");
+	}
+
+
+	if(fn.strFilterType == "weekly") {
+		$("#date-range-selected-label-" + fn.strFilterType).html("Week#" + paramStartWeek + "/" + paramYear + " - " + "Week#" + paramEndWeek + "/" + paramYear);
+	} 
+  
+},

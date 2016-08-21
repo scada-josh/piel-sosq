@@ -1,0 +1,18 @@
+SparklineBarAverageBoxNonEpod: function (arrDataSet) {
+	// console.log("SparklineBarAverageBoxNonEpod");
+
+	if (!jQuery().sparkline) {
+		return;
+	}
+	$("#sparkline_bar_averageBox_nonEpod").sparkline(arrDataSet, {
+		type: 'bar',
+		width: '100',
+		barWidth: 5,
+		height: '55',
+		barColor: '#f36a5b',
+		negBarColor: '#e02222'
+	});
+
+
+  
+},

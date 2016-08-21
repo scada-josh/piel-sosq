@@ -1,0 +1,32 @@
+                /* **** Sub Menu - 03 *** */
+                $reports_sub_menu_03 = array();
+                                                                                  
+                $results_sub_menu_level_03_title = $db->menu_tb->select('DISTINCT sub_menu_level_03_title')->where("main_menu_title = ? and sub_menu_level_02_title = ?", $result["main_menu_title"], $result_sub_menu_level_02_title["sub_menu_level_02_title"]);
+
+                
+
+                foreach ($results_sub_menu_level_03_title as $result_sub_menu_level_03_title) {
+                    $result_sub_menu_level_03_leaf = $db->menu_tb->where("main_menu_title = ? and sub_menu_level_03_title = ?", $result["main_menu_title"], $result_sub_menu_level_03_title["sub_menu_level_03_title"])->fetch();
+
+                    // $app->log->debug(date("Y-m-d H:i:s")." : "."results_sub_menu_level_03_title : ".$results_sub_menu_level_03_title);
+
+                    if ($result_sub_menu_level_03_title["sub_menu_level_03_title"]) {
+                        <%= partial "/MenuManager/partials/listMenu/_reports_sub_menu_04" %>
+
+                        if ($result_sub_menu_level_03_leaf["sub_menu_level_03_leaf"] == "FALSE") {
+                            $reports_sub_menu_03[] = array(
+                                "sub_menu_level_03_title" => $result_sub_menu_level_03_title["sub_menu_level_03_title"],
+                                "sub_menu_level_03_url" =>  $result_sub_menu_level_03_leaf["sub_menu_level_03_url"],
+                                "sub_menu_level_03_leaf" =>  $result_sub_menu_level_03_leaf["sub_menu_level_03_leaf"]
+                            );
+                        } else {
+                            $reports_sub_menu_03[] = array(
+                                "sub_menu_level_03_title" => $result_sub_menu_level_03_title["sub_menu_level_03_title"],
+                                "sub_menu_level_03_url" =>  $result_sub_menu_level_03_leaf["sub_menu_level_03_url"],
+                                "sub_menu_level_03_leaf" =>  $result_sub_menu_level_03_leaf["sub_menu_level_03_leaf"],
+                                "sub_menu_level_04" => $reports_sub_menu_04
+                                );
+                        }
+                    }
+
+                }

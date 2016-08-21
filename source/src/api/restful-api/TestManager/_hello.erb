@@ -1,0 +1,8 @@
+    $app->get('/hello/:name', function ($name) use ($app) {
+ 
+        // $return_m = array("msg" => "สวัสดี");
+        $return_m = array("msg" => "สวัสดี, $name");
+ 
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($return_m);
+    });

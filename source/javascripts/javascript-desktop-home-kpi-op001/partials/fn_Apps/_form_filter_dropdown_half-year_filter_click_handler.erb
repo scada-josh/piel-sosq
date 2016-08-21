@@ -1,0 +1,26 @@
+	$('#dropdown_half_year_filter_id').on('click', function() {
+      	// console.log('dropdown_half_year_filter_id');
+
+            if (fn.strFilterType != "half-year") {
+                  fn.Routers("half-year");
+                  fn.strFilterType = "half-year";
+                  fn.HeaderFilterHalfYear(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+
+                  // UPDATE - updates slider to any new values
+                  fn.objIonRangeByHalfYear.update({
+                        from: 0,
+                        to: 1
+                  });
+                  // RESET - reset slider to it's first values
+                  // fn.objIonRangeByHalfYear.reset();
+            }
+
+
+      	$("#filter-type-label").html("Half year");
+
+      	$("#form_layout_year_select_id").show(1000);
+      	$("#form_layout_week_select_id").hide(1000);
+      	$("#form_layout_month_select_id").hide(1000);
+      	$("#form_layout_quater_id").hide(1000);
+      	$("#form_layout_halfYear_id").show(1000);
+	});

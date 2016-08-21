@@ -1,0 +1,83 @@
+DatatableOperationKPI_ConvertToContext: function (arrDates) {
+	// console.log("DatatableOperationKPI_ConvertToContext");
+
+    // var context = {
+    //       headers: [ 
+    //         { dateHeader: 'ลำดับ' },
+    //         { dateHeader: 'ทะเบียนรถ' },
+    //         { dateHeader: '01/06/2016' },
+    //         { dateHeader: '02/06/2016' },
+    //         { dateHeader: '03/06/2016' },
+    //         { dateHeader: '04/06/2016' },
+    //         { dateHeader: '05/06/2016' },
+    //         { dateHeader: '06/06/2016' },
+    //         { dateHeader: '07/06/2016' },
+    //         { dateHeader: '08/06/2016' },
+    //         { dateHeader: '09/06/2016' },
+    //         { dateHeader: '10/06/2016' },
+    //         { dateHeader: '11/06/2016' },
+    //         { dateHeader: '12/06/2016' },
+    //         { dateHeader: '13/06/2016' },
+    //         { dateHeader: '14/06/2016' },
+    //         { dateHeader: '15/06/2016' },
+    //         { dateHeader: '16/06/2016' },
+    //         { dateHeader: '17/06/2016' },
+    //         { dateHeader: '18/06/2016' },
+    //         { dateHeader: '19/06/2016' },
+    //         { dateHeader: '20/06/2016' },
+    //         { dateHeader: '21/06/2016' },
+    //         { dateHeader: '22/06/2016' },
+    //         { dateHeader: '23/06/2016' },
+    //         { dateHeader: '24/06/2016' },
+    //         { dateHeader: '25/06/2016' },
+    //         { dateHeader: '26/06/2016' },
+    //         { dateHeader: '27/06/2016' },
+    //         { dateHeader: '28/06/2016' },
+    //         { dateHeader: '29/06/2016' },
+    //         { dateHeader: '30/06/2016' },
+    //         { dateHeader: 'Average' }
+    //       ]
+    //     };
+
+    var context = {};
+    var headers = [];
+    var objDateHeader = {};
+
+    objDateHeader["dateHeader"] = 'ลำดับ';
+    headers.push(objDateHeader);
+    
+    objDateHeader = {};
+    objDateHeader["dateHeader"] = 'รถ';
+    headers.push(objDateHeader);
+
+    objDateHeader = {};
+    objDateHeader["dateHeader"] = 'ทะเบียนรถ';
+    headers.push(objDateHeader);
+
+    // console.log(headers);
+
+
+
+	$.each( arrDates, function( i, val ) {
+		objDateHeader = {};
+		objDateHeader["dateHeader"] = val;
+		headers.push(objDateHeader);
+
+		if (i == arrDates.length -1) {
+			objDateHeader = {};
+			objDateHeader["dateHeader"] = 'Average';
+			headers.push(objDateHeader);
+		}
+	});
+
+	// objDateHeader["dateHeader"] = 'Average';
+	// headers.push(objDateHeader);
+
+    context["headers"] = headers;
+
+    // console.log(headers);
+    // console.log(context);
+
+    return context;
+  
+},

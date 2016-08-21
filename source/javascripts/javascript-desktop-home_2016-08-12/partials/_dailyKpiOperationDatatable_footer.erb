@@ -1,0 +1,25 @@
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api();
+                // var data;
+                var pageTotal, total;
+
+                // console.log(api.column().data());
+     
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+     
+
+<%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer_col09" %>                
+<%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer_col12" %>  
+<%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer_col14" %>  
+<%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer_col15" %>  
+<%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer_col16" %>  
+<%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer_col17" %>
+<%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer_col18" %>  
+
+            },

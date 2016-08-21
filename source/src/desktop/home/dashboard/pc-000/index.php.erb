@@ -1,0 +1,83 @@
+---
+title: "MIS - Dashboard - PC000"
+layout: "layout-desktop-home-dashboard-pc000"
+
+
+baseURL: "/iel-mis/build/src/desktop/home/dashboard/pc-000/"
+loginURL: "../../../Login/index.php"
+homeURL: "../../"
+imageURL: "../../../../../images"
+
+pageTitle: " Dashboard"
+pageSubTitle: "จัดซื้อ"
+
+
+
+---
+
+<div class="page-wrapper">
+    <div class="page-wrapper-row">
+        <div class="page-wrapper-top">
+
+            <!-- BEGIN HEADER -->
+            <div class="page-header">
+
+                <!-- BEGIN HEADER TOP -->
+                <%= partial partials_desktop_home + "/common-partials/_page-header-top" %>
+
+                <!-- BEGIN HEADER MENU -->
+                <%= partial partials_desktop_home + "/common-partials/_page-header-menu" %>
+
+            </div>
+            <!-- END HEADER -->
+
+        </div>
+    </div>
+
+    <div class="page-wrapper-row full-height">
+        <div class="page-wrapper-middle">
+
+            <!-- BEGIN CONTAINER -->
+            <div class="page-container">
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper">
+                    <!-- BEGIN CONTENT BODY -->
+
+                    <!-- BEGIN HEADER MENU -->
+                    <%= partial "partials/_page-head" %>
+
+                    <!-- BEGIN PAGE CONTENT BODY -->
+                    <div class="page-content">
+                        <div class="container-fluid">
+
+                            <!-- PAGE BREADCRUMBS -->
+                            <%= partial "partials/_page-breadcrumb" %>
+
+                            <!-- BEGIN PAGE CONTENT INNER -->
+                            <div class="page-content-inner">
+
+                                <%= partial partials_desktop_home + "/dashboard/pc-000/partials/_prototype_cover" %>
+
+
+                            </div>
+                            <!-- END PAGE CONTENT INNER -->
+                        </div>
+                    </div>
+                    <!-- END PAGE CONTENT BODY -->
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+            </div>
+            <!-- END CONTAINER -->
+
+        </div>
+    </div>
+
+    <div class="page-wrapper-row">
+        <div class="page-wrapper-bottom">
+            <!-- FOOTER -->
+
+            <%= partial partials_desktop_home + "/common-partials/_footer" %>
+        </div>
+    </div>
+</div>

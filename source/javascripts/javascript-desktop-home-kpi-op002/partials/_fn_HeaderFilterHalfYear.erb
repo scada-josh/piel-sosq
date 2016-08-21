@@ -1,0 +1,15 @@
+HeaderFilterHalfYear: function (paramSiteName, paramStartHalfYearVal, paramEndHalfYearVal, paramYear) {
+	// console.log("HeaderFilter");
+
+	if (paramSiteName) {
+	  	$("#site-name-label-" + fn.strFilterType).html(paramSiteName);
+	} else {
+		$("#site-name-label-" + fn.strFilterType).html("-");
+	}
+
+
+	if(fn.strFilterType == "half-year") {
+		$("#date-range-selected-label-" + fn.strFilterType).html(paramStartHalfYearVal + "/" + paramYear + " - " + paramEndHalfYearVal + "/" + paramYear);
+	} 
+  
+},

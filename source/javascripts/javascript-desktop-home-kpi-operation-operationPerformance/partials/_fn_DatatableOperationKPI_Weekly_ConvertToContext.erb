@@ -1,0 +1,73 @@
+DatatableOperationKPI_Weekly_ConvertToContext: function (data) {
+	// console.log("DatatableOperationKPI_Weekly_ConvertToContext");
+
+    // console.log(data);
+
+    // var context = {
+    //       headers: [ 
+    //         { weeklyHeader: 'ลำดับ' },
+    //         { weeklyHeader: 'รถ' },
+    //         { weeklyHeader: 'ทะเบียนรถ' },
+    //         { weeklyHeader: { weekNo : 'Week#52', yearNo : '2015'} },
+    //         { weeklyHeader: { weekNo : 'Week#01', yearNo : '2016'} },
+    //         { weeklyHeader: { weekNo : 'Week#02', yearNo : '2016'} },
+    //         { weeklyHeader: { weekNo : 'Week#03', yearNo : '2016'} },
+    //         { weeklyHeader: { weekNo : 'Week#04', yearNo : '2016'} },
+    //         { weeklyHeader: 'Average' }
+    //       ]
+    //     };
+
+    // var context = {
+    //       headers: [ 
+    //         { weeklyHeader: 'ลำดับ' },
+    //         { weeklyHeader: 'รถ' },
+    //         { weeklyHeader: 'ทะเบียนรถ' },
+    //         { weeklyHeader: 'Week#52/2015'},
+    //         { weeklyHeader: 'Week#01/2016'},
+    //         { weeklyHeader: 'Week#02/2016'},
+    //         { weeklyHeader: 'Week#03/2016'},
+    //         { weeklyHeader: 'Week#04/2016'},
+    //         { weeklyHeader: 'Average' }
+    //       ]
+    //     };
+
+
+    var context = {};
+    var headers = [];
+    var objDateHeader = {};
+
+    objDateHeader["weeklyHeader"] = 'ลำดับ';
+    headers.push(objDateHeader);
+    
+    objDateHeader = {};
+    objDateHeader["weeklyHeader"] = 'รถ';
+    headers.push(objDateHeader);
+
+    objDateHeader = {};
+    objDateHeader["weeklyHeader"] = 'ทะเบียนรถ';
+    headers.push(objDateHeader);
+
+    // console.log(headers);
+
+    var arrHeaders = data.rows[0].details;
+
+    $.each( arrHeaders, function( i, val ) {
+        objDateHeader = {};
+        objDateHeader["weeklyHeader"] = val.week_no + "/" + val.year_no;
+        headers.push(objDateHeader);
+
+        if (i == arrHeaders.length -1) {
+            objDateHeader = {};
+            objDateHeader["weeklyHeader"] = 'Average';
+            headers.push(objDateHeader);
+        }
+    });
+
+
+
+    context["headers"] = headers;
+
+
+    return context;
+  
+},

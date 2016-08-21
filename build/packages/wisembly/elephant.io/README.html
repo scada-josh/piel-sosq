@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Middleman</title>
+
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+
+    <link href="../../../stylesheets/site.css" rel="stylesheet" type="text/css" />
+    <script src="../../../javascripts/all.js" type="text/javascript"></script>
+  </head>
+
+  <body class="packages packages_wisembly packages_wisembly_elephant">
+    <h1 id="elephantio">Elephant.io</h1>
+<p><a href="https://travis-ci.org/Wisembly/elephant.io"><img alt="Build Status" src="https://travis-ci.org/Wisembly/elephant.io.svg?branch=master" /></a>
+<a href="https://packagist.org/packages/wisembly/elephant.io"><img alt="Latest Stable Version" src="https://poser.pugx.org/wisembly/elephant.io/v/stable.svg" /></a>
+<a href="https://packagist.org/packages/wisembly/elephant.io"><img alt="Total Downloads" src="https://poser.pugx.org/wisembly/elephant.io/downloads.svg" /></a> 
+<a href="https://packagist.org/packages/wisembly/elephant.io"><img alt="License" src="https://poser.pugx.org/wisembly/elephant.io/license.svg" /></a></p>
+
+<p><code>
+        ___     _,.--.,_         Elephant.io is a rough websocket client
+      .-~   ~--"~-.   ._ "-.     written in PHP. Its goal is to ease the
+     /      ./_    Y    "-. \    communications between your PHP Application and
+    Y       :~     !         Y   a real-time server.
+    lq p    |     /         .|
+ _   \. .-, l    /          |j   Requires PHP 5.4 and openssl, licensed under
+()\___) |/   \_/";          !    the MIT License.
+ \._____.-~\  .  ~\.      ./
+            Y_ Y_. "vr"~  T      Built-in Engines :
+            (  (    |L    j      - Socket.io 1.x
+            [nn[nn..][nn..]      - Socket.io 0.x (courtesy of @kbu1564)
+          ~~~~~~~~~~~~~~~~~~~
+</code></p>
+
+<p>The docs are not written yet, but you should check <a href="https://github.com/Wisembly/elephant.io/tree/master/example">the example directory</a>
+to have a basic knownledge on how this library is meant to work.</p>
+
+<h1 id="installation">Installation</h1>
+<p>You have multiple ways to install Elephant.io. If you are unsure what to do, go with
+<a href="#archive-release">the archive release</a>.</p>
+
+<p>Once the library is downloaded and extracted wherever you want it to be, it
+should be loaded through a <a href="http://www.php-fig.org/psr/psr-4/">PSR-4</a> autoload
+mecanism, with a <code>Wisembly\ElepehantIO</code> prefix. This is not necessary with the
+composer way, as it is handling this part by itself.</p>
+
+<h2 id="archive-release">Archive Release</h2>
+<ol>
+  <li>Download the most recent release from the <a href="https://github.com/Wisembly/elephant.io/releases">release page</a></li>
+  <li>Unpack the archive</li>
+  <li>Move the files somewhere in your project</li>
+</ol>
+
+<h2 id="development-version">Development version</h2>
+<ol>
+  <li>Install Git</li>
+  <li><code>git clone git://github.com/Wisembly/elephant.io.git</code></li>
+</ol>
+
+<h2 id="via-composer">Via Composer</h2>
+<ol>
+  <li>Install composer in your project: <code>curl -s http://getcomposer.org/installer | php</code></li>
+  <li>
+    <p>Create a <code>composer.json</code> file (or update it) in your project root:</p>
+
+    <p>```javascript</p>
+
+    <p>{
+     "require": {
+       "wisembly/elephant.io": "~3.0"
+     }
+   }
+ ```</p>
+  </li>
+  <li>Install via composer : <code>php composer.phar install</code></li>
+</ol>
+
+<h1 id="special-thanks">Special Thanks</h1>
+<p>Special thanks goes to Mark Karpeles who helped the project founder to understand the way websockets works.</p>
+
+  </body>
+</html>

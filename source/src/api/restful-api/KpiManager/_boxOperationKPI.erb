@@ -1,0 +1,359 @@
+    /**
+     *
+     * @apiName BoxOperationKPI
+     * @apiGroup KPI Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /kpiManager/boxOperationKPI/ Post API template
+     * @apiDescription คำอธิบาย : ในส่วนนี้เป็นเทมเพล็ตสำหรับการสร้าง POST - API Template
+     *
+     */
+
+    function boxOperationKPI($app, $client, $objPHPExcel) {
+
+        /* ************************* */
+        /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+        /* ************************* */
+        $headers = $app->request->headers;
+        $ContetnType = $app->request->headers->get('Content-Type');
+
+        /**
+        * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+        * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+        */
+
+        if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8") ) {
+
+            $request = $app->request();
+            $result = json_decode($request->getBody());
+
+            /* receive request */
+            $postStartDate = $result->startDate;              /* รูปแบบ เดือน/วัน/ปี */
+            $postEndDate = $result->endDate;               /* รูปแบบ เดือน/วัน/ปี */
+            $postSiteName = $result->siteName;
+
+            <% if config[:phase_environment] == "Development" %>
+            $app->log->debug(date("Y-m-d H:i:s")." : "."startDate : ".$postStartDate);
+            $app->log->debug(date("Y-m-d H:i:s")." : "."endDate : ".$postEndDate);
+            $app->log->debug(date("Y-m-d H:i:s")." : "."siteName : ".$postSiteName);
+            <% end %>
+
+        } else if (($ContetnType == "application/x-www-form-urlencoded") || ($ContetnType == "application/x-www-form-urlencoded; charset=UTF-8")){
+
+
+        } 
+
+
+        $error = $client->getError();
+        if ($error) {
+            echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
+        }
+
+        /* ************************* */
+        /* เริ่มกระบวนการเชื่อมต่อ Web Service */
+        /* ************************* */
+
+        // $postStartDate = "06/16/2016";              /* รูปแบบ เดือน/วัน/ปี */
+        // $postEndDate = "06/16/2016";               /* รูปแบบ เดือน/วัน/ปี */
+        // $postSiteName = "bc";
+        
+        $result = $client->call('getOperationKPI', array("startDate" => $postStartDate,
+                                                         "endDate" => $postEndDate,
+                                                         "siteName" => $postSiteName));
+        $mydata = json_decode($result["getOperationKPIResult"],true);
+
+
+        /* initial variable Partial */
+        $header_results = array();
+        $data_results = array();
+
+        $tmpJobDate = "";
+        $tmpVehicleLicence = "";
+        $tmpAmount = "";
+        
+
+        /* ************************* */
+        /* เริ่มกระบวนการสร้าง Excel file */
+        /* ************************* */
+
+         /* header result */
+        $header_results[0] = "Box";
+
+        // for ($i=0; $i < count($mydata["array"]); $i++) { 
+
+        //     if (!$tmpJobDate) {
+        //         $tmpJobDate = $mydata["array"][$i]['JobDate'];
+        //         $tmpVehicleLicence = $mydata["array"][$i]['VehicleLicence'];
+        //         array_push($header_results, date_format(date_create($tmpJobDate),"d/m/Y"));
+
+        //     } else if ($tmpJobDate != $mydata["array"][$i]['JobDate']) {
+        //         $tmpJobDate = "";
+        //         $tmpJobDate = $mydata["array"][$i]['JobDate'];
+        //         array_push($header_results, date_format(date_create($tmpJobDate),"d/m/Y"));
+
+        //     } else {
+
+        //         $tmpJobDate = $mydata["array"][$i]['JobDate'];
+        //     }
+        // }
+
+
+
+        // $period = createDateRangeArray('2016-06-16', '2016-06-21');
+        // MM/DD/YYYY
+        $periodStartDate = substr($postStartDate,3,2);
+        $periodStartMonth = substr($postStartDate,0,2);
+        $periodStartYear = substr($postStartDate,6,4);
+        $startDatePeriod = $periodStartYear."-".$periodStartMonth."-".$periodStartDate;
+
+        $periodEndDate = substr($postEndDate,3,2);
+        $periodEndMonth = substr($postEndDate,0,2);
+        $periodEndYear = substr($postEndDate,6,4);
+        $endDatePeriod = $periodEndYear."-".$periodEndMonth."-".$periodEndDate;
+
+        $period = createDateRangeArray($startDatePeriod, $endDatePeriod);
+
+        for ($i=0; $i < count($period); $i++) { 
+            $tmpDate = substr($period[$i],8,2);
+            $tmpMonth = substr($period[$i],5,2);
+            $tmpYear = substr($period[$i],0,4);
+            $tmpDateFormat = $tmpDate."/".$tmpMonth."/".$tmpYear;
+            array_push($header_results, $tmpDateFormat);
+        }
+
+        $header_results[count($header_results)] = "Average";
+
+
+        // $header_results = array("Box","16/06/2016","17/06/2016","18/06/2016","19/06/2016","20/06/2016","21/06/2016","Average");
+
+
+        /* initial variable Partial */
+        $tmpJobDate = "";
+        $tmpVehicleLicence = "";
+        $tmpVehicleLicenceArr = array();
+        $tmpSumAmountOfDay = 0;
+        $headerArrIndex = false;
+        $tmpAmount = "";
+
+
+
+
+        /* data result */
+        foreach ($mydata["array"] as $key => $row) {
+            $wek[$key]  = $row['VehicleLicence'];
+        }
+        array_multisort($wek, SORT_ASC, $mydata["array"]);
+
+
+        for ($j=0; $j < count($mydata["array"]); $j++) { 
+
+            if (!$tmpVehicleLicence) {
+
+                // foreach($header_results as $key => $value) {
+                //     $tmpVehicleLicenceArr[$key] = 0;
+                // }
+                $tmpVehicleLicenceArr = array_fill(0, count($header_results), 0);
+
+                $tmpJobDate = $mydata["array"][$j]['JobDate'];
+                $tmpVehicleLicence = $mydata["array"][$j]['VehicleLicence'];
+                $tmpAmount = $mydata["array"][$j]['amount'];
+
+                // array_push($tmpVehicleLicenceArr, $tmpVehicleLicence);
+                // array_push($tmpVehicleLicenceArr, $tmpAmount);
+                $tmpVehicleLicenceArr[0] = $tmpVehicleLicence;
+                // $tmpVehicleLicenceArr[1] = $tmpAmount;
+
+                $tmpJD = date_format(date_create($tmpJobDate),"d/m/Y");
+                $headerArrIndex = array_search($tmpJD,$header_results);
+                if ($headerArrIndex) {
+                   $tmpVehicleLicenceArr[$headerArrIndex] = $tmpAmount;
+                }
+                
+
+
+                // array_push($data_results, $tmpVehicleLicenceArr);
+                $data_results[count($data_results)] = $tmpVehicleLicenceArr;
+
+                $myfile = fopen("debugText.txt", "a") or die("Unable to open file!");
+                $strText1 = "########################################################"."\r\n";
+                fwrite($myfile, $strText1);
+                $strText2 = ($j+1).") ทะเบียนรถ : ".$tmpVehicleLicence."วันที่".$tmpJobDate .", amount : ".$tmpAmount."\r\n";
+                fwrite($myfile, $strText2);
+                fclose($myfile);
+
+            } else if ($tmpVehicleLicence != $mydata["array"][$j]['VehicleLicence']) {
+
+                $tmpJobDate = "";
+                $tmpVehicleLicence = "";
+                $tmpVehicleLicenceArr = array();
+                $tmpSumAmountOfDay = 0;
+                $headerArrIndex = false;
+                $tmpAmount = "";
+
+                // foreach($header_results as $key => $value) {
+                //     $tmpVehicleLicenceArr[$key] = 0;
+                // }
+                $tmpVehicleLicenceArr = array_fill(0, count($header_results), 0);
+
+                $tmpJobDate = $mydata["array"][$j]['JobDate'];
+                $tmpVehicleLicence = $mydata["array"][$j]['VehicleLicence'];
+                $tmpAmount = $mydata["array"][$j]['amount'];
+
+                // array_push($tmpVehicleLicenceArr, $tmpVehicleLicence);
+                // array_push($tmpVehicleLicenceArr, $tmpAmount);
+                $tmpVehicleLicenceArr[0] = $tmpVehicleLicence;
+
+                
+                $tmpJD = date_format(date_create($tmpJobDate),"d/m/Y");
+                $headerArrIndex = array_search($tmpJD,$header_results);
+                if ($headerArrIndex) {
+                   $tmpVehicleLicenceArr[$headerArrIndex] = $tmpAmount;
+                }
+
+                // array_push($data_results, $tmpVehicleLicenceArr);
+                $data_results[count($data_results)] = $tmpVehicleLicenceArr;
+
+
+                $myfile = fopen("debugText.txt", "a") or die("Unable to open file!");
+                $strText1 = "########################################################"."\r\n";
+                fwrite($myfile, $strText1);
+                $strText2 = ($j+1).") ทะเบียนรถ : ".$tmpVehicleLicence."วันที่".$tmpJobDate .", amount : ".$tmpAmount."\r\n";
+                fwrite($myfile, $strText2);
+                fclose($myfile);
+
+            } else {
+
+                        // $headerArrIndex = 0;
+                        // $dataArrIndex = 0;
+
+                        $tmpVehicleLicence = $mydata["array"][$j]['VehicleLicence'];
+                        $tmpJobDate = $mydata["array"][$j]['JobDate'];
+                        $tmpAmount = $mydata["array"][$j]['amount'];
+
+
+                        // if ($tmpVehicleLicence == "อ-5257") {
+                            $tmpJD = date_format(date_create($tmpJobDate),"d/m/Y");
+                            $headerArrIndex = array_search($tmpJD,$header_results);
+
+                            // $dataArrIndex = array_search($tmpVehicleLicence,$data_results);
+                            $dataArrIndex = array_find_deep($data_results,$tmpVehicleLicence);
+
+                            
+                            $tmpExistArr = array();
+                            $tmpNewArr = array();
+                            // $tmpValue = 0;
+
+                            $tmpExistArr = $data_results[$dataArrIndex];
+                            $tmpValue = $tmpExistArr[$headerArrIndex];
+                            // $tmpArr[$headerArrIndex] = $dataArrIndex.",".$headerArrIndex;
+                            $tmpNewArr = $tmpExistArr;
+                            $tmpNewArr[$headerArrIndex] = (int)$tmpValue + (int)$tmpAmount;
+                            $data_results[$dataArrIndex] = $tmpNewArr;
+
+                            $myfile = fopen("debugText.txt", "a") or die("Unable to open file!");
+                            // $strText1 = $j.") ทะเบียนรถ : ".$tmpVehicleLicence."วันที่".$tmpJD .", Existing amount : ".$tmpValue.", New amount : ".$tmpAmount.", Total : ".$tmpArr[$headerArrIndex].", header index : ".$headerArrIndex."\r\n";
+                            $strText1 = $j.") ทะเบียนรถ : ".$tmpVehicleLicence."วันที่".$tmpJobDate .", amount : ".$tmpAmount.", dataArrIndex : ".$dataArrIndex."\r\n";
+                            fwrite($myfile, $strText1);
+                            fclose($myfile);
+                        // }
+                    
+            }
+
+        }
+
+
+        for ($j=0; $j < count($mydata["array"]); $j++) { 
+
+            $tmpVehicleLicence = $mydata["array"][$j]['VehicleLicence'];
+            $tmpJobDate = $mydata["array"][$j]['JobDate'];
+            $tmpAmount = $mydata["array"][$j]['amount'];
+
+            $col = 0;
+            $row = $j+1;
+            $value = $tmpVehicleLicence;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            $col = 1;
+            $row = $j+1;
+            $value = $tmpJobDate;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            $col = 2;
+            $row = $j+1;
+            $value = $tmpAmount;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            $col = 3;
+            $row = $j+1;
+            $tmpJD = date_format(date_create($tmpJobDate),"d/m/Y");
+            $value = $tmpJD;
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            $col = 4;
+            $row = $j+1;
+            // $tmpJD = "16/06/2016";
+            $value = array_search($tmpJD,$header_results);
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+            $col = 5;
+            $row = $j+1;
+            // $tmpJD = "16/06/2016";
+            // $value = array_search($tmpVehicleLicence,$data_results[0]);
+            $value = array_find_deep($data_results,$tmpVehicleLicence);
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+        }
+
+
+        // Set document properties
+        $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+                                     ->setLastModifiedBy("Maarten Balliauw")
+                                     ->setTitle("Office 2007 XLSX Test Document")
+                                     ->setSubject("Office 2007 XLSX Test Document")
+                                     ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                                     ->setKeywords("office 2007 openxml php")
+                                     ->setCategory("Test result file");
+
+
+        // Redirect output to a client’s web browser (Excel5)
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="01simple.xls"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $date = new DateTime();
+        // $fileName = 'Quickload_for_MODBUS('.$paramFastToolsDestination.')'.'_'.date("Y-m-d").'_'.$date->getTimestamp().'.xls';
+        $fileName = 'Test.xls';
+        $filePath = '../../../files/'.$fileName;
+        $objWriter->save($filePath);
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+
+
+        // $header_results = array("Box", "06/06/2016", "06/07/2016", "06/08/2016", "06/09/2016", "06/10/2016", "Average");
+
+        // $data_results[] = array("กค-3395", "20", "34", "16", "45", "45", "45");
+        // $data_results[] = array("กค-3396", "21", "35", "17", "46", "45", "45");
+
+        // $app->log->debug('Request path: ' . $request->getPathInfo());
+        // $app->log->debug('Response status: ' . $response->getStatus());
+        
+
+        $reportResult = array("columns" =>  $header_results, 
+                              "rows" => $data_results,
+                              "filename" => $fileName,
+                              "path" => url()."/iel-mis/build/files/".$fileName);
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+    };

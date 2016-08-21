@@ -1,0 +1,28 @@
+	$('#dropdown_quater_filter_id').on('click', function() {
+      // console.log('dropdown_quater_filter_id');
+
+
+            if (fn.strFilterType != "quater") {
+                  fn.Routers("quater");
+                  fn.strFilterType = "quater";
+                  // fn.HeaderFilter(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+
+                // console.log(fn.objIonRangeByMonthly);
+                // UPDATE - updates slider to any new values
+                fn.objIonRangeByQuater.update({
+                        from: 0,
+                        to: 3
+                });
+                // RESET - reset slider to it's first values
+                // fn.objIonRangeByMonthly.reset();
+            }
+
+
+      	$("#filter-type-label").html("Quater");
+
+      	$("#form_layout_year_select_id").show(1000);
+      	$("#form_layout_week_select_id").hide(1000);
+      	$("#form_layout_month_select_id").hide(1000);
+      	$("#form_layout_quater_id").show(1000);
+      	$("#form_layout_halfYear_id").hide(1000);
+	});

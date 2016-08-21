@@ -1,0 +1,49 @@
+    if ($check_auth === false) {
+
+        /* ********************************* */
+        /* เริ่มกระบวนการ Generate Token JWT */
+        /* ********************************* */
+        $tokenId    = base64_encode(mcrypt_create_iv(32));
+        $issuedAt   = time();
+        $notBefore  = $issuedAt + 1;             //Adding 1 seconds
+        $expire     = $notBefore + (3600*3);     // Adding 3600*3 seconds (3 hours)
+        $serverName = gethostname();             // Retrieve the server name from config file
+        /*
+        * Create the token as an array
+        */
+        $data = [
+            'iat'  => $issuedAt,         // Issued at: time when the token was generated
+            'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
+            'iss'  => $serverName,       // Issuer
+            'nbf'  => $notBefore,        // Not before
+            'exp'  => $expire,           // Expire
+            // "users" => [
+            //     "user_id" => "1",
+            //     "user_name" => $postUserName
+            // ],
+            // "roles" => $tmpRole,
+            // "permissions" => $tmpPermissions,
+            // "information" => [              // Data related to the signer user
+            //     "branchCode" => $tmpBranch_code
+            // ]
+        ];
+
+        $jwt = JWT::encode($data, $key);  // default algorithm: 'HS256'
+        // $jwt = JWT::encode($data, $key, 'HS512');
+
+        /* ******************************* */
+        /* เริ่มกระบวนการสร้างตัวแปร SESSION */
+        /* ******************************* */
+        $_SESSION['jwt'] = $jwt;
+
+    } else {
+
+        $jwt = "";
+
+        /* ******************************* */
+        /* เริ่มกระบวนการทำงานกับตัวแปร SESSION */
+        /* ******************************* */
+        //$_SESSION = array();
+        //session_unregister("userName"); // ลบบางตัวที่ใช้งาน
+        session_destroy();                  // ลบทั้งหมด
+    }

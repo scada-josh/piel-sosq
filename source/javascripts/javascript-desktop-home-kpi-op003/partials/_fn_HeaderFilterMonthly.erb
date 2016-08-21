@@ -1,0 +1,15 @@
+HeaderFilterMonthly: function (paramSiteName, paramStartMonthVal, paramEndMonthVal, paramYear) {
+	// console.log("HeaderFilter");
+
+	if (paramSiteName) {
+	  	$("#site-name-label-" + fn.strFilterType).html(paramSiteName);
+	} else {
+		$("#site-name-label-" + fn.strFilterType).html("-");
+	}
+
+
+	if(fn.strFilterType == "monthly") {
+		$("#date-range-selected-label-" + fn.strFilterType).html(paramStartMonthVal + "/" + paramYear + " - " + paramEndMonthVal + "/" + paramYear);
+	} 
+  
+},

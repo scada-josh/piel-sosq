@@ -1,0 +1,179 @@
+DatatableDrop: function (myParamSiteName, myParamStartDate, myParamEndDate) {
+	// console.log('DatatableDrop');
+
+ //    console.log("site name : " + myParamSiteName);
+ //    console.log("start date : " + myParamStartDate);
+ //    console.log("end date : " + myParamEndDate);
+
+
+    
+    // $('#datatableDrop').empty();
+    // $('#datatableDrop > thead > tr').html('');
+    // $('#datatableDrop > thead > tr').remove();
+    // $('#datatables').html('<table class="table table-striped table-bordered table-hover" width="100%" id="datatableDrop"><thead><tr></tr></thead><tbody></tbody></table>')
+
+    if ($.fn.DataTable.isDataTable('#datatableDrop') ) {
+        $('#datatableDrop').empty();
+        $('#datatableDrop').dataTable().fnDestroy();
+        $('#datatableDrop > thead > tr').remove();
+    }
+
+    if (fn.paramStartDate) {
+        myParamStartDate = fn.paramStartDate.format('MM/DD/YYYY');
+    }
+
+    if (fn.paramEndDate) {
+        myParamEndDate = fn.paramEndDate.format('MM/DD/YYYY');
+    }
+
+    var tmpData = {
+        "startDate" : myParamStartDate, 
+        "endDate" : myParamEndDate, 
+        "siteName" : myParamSiteName
+    }
+
+    $.ajax({
+        "url": "../../../../../api/restful-api/kpiManager/boxOperationKPI/", 
+        "type": "POST",
+        "dataType": "json",
+        "contentType": "application/json",
+        "data": JSON.stringify(tmpData),
+        "success": function(result){
+            dropDatatableRender(result);
+            console.log(result);
+        },
+        "error": function(jqXHR, textStatus, errorThrown){
+            console.log('textStatus: ' + textStatus);
+            // console.log('ierrorThrown: ' + errorThrown);
+        }
+    });
+
+
+    function dropDatatableRender(result) {
+
+        var valJSONColTable = [];
+        var aryJSONColTable = [];
+
+        var aryColTableChecked = result.columns;
+        var valColTableChecked = result.rows;
+        // console.log(result.rows);
+
+        for (var i=0; i < aryColTableChecked.length; i++ ) {
+            
+              aryJSONColTable.push({
+                        "sTitle": aryColTableChecked[i],
+                        "aTargets": [i]
+               });
+
+             
+              valJSONColTable.push({
+                        "sTitle": valColTableChecked[i],
+                        "aTargets": [i],
+                        "mRender": function ( data, type, row ) {
+
+                            var tmpRender;
+
+                            if (data < 2) {
+                                tmpRender = "<b>" + data + "</b>";
+                            } else {
+                                tmpRender = data;
+                            }
+
+                            return tmpRender;
+                        },
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            if (sData > 35) { 
+                                $(nTd).css('background-color', '#00ab4e').css('color', '#000').css('font-weight', 'bold'); 
+                            } 
+                            // else if (sData == '45') { 
+                            //     $(nTd).css('background-color', '#BDE5F8').css('font-weight', 'bold').css('color', '#009'); 
+                            // } else { 
+                            //     $(nTd).css('font-weight', 'bold').css('background-color', '#FFBABA').css('color', '#D8000C'); 
+                            // }
+                        } 
+               });
+        }
+
+
+        datatableDrop = $('#datatableDrop').dataTable({
+            "processing": true,
+            // "destroy": true,
+            "ajax": {
+                "url": "../../../../../api/restful-api/kpiManager/boxOperationKPI/",
+                "type": "POST",
+                "dataType": "json",
+                "contentType": "application/json",
+                "data": function( d ) {
+
+                    var tmpData = {
+                        "startDate" : fn.paramStartDate.format('MM/DD/YYYY'), 
+                        "endDate" : fn.paramEndDate.format('MM/DD/YYYY'), 
+                        "siteName" : fn.paramSiteName
+                    }
+                    return JSON.stringify(tmpData);
+                },
+                "dataSrc": "rows",
+                "beforeSend" : function()    {           
+                    // console.log("beforeSend");
+                },
+                // "success": function(data) {
+                // },
+                "error": function(jqXHR, textStatus, errorThrown){
+                    console.log('textStatus: ' + textStatus);
+                }
+            },
+            // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+            "language": {
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                },
+                "emptyTable": "No data available in table",
+                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "infoEmpty": "No entries found",
+                "infoFiltered": "(filtered1 from _MAX_ total entries)",
+                "lengthMenu": "_MENU_ entries",
+                "search": "Search:",
+                // "zeroRecords": "No matching records found"
+                "zeroRecords": "..."
+            },
+            "aoColumnDefs": valJSONColTable,
+            // setup buttons extentension: http://datatables.net/extensions/buttons/
+            buttons: [
+                { extend: 'print', className: 'btn dark btn-outline' },
+                { extend: 'copy', className: 'btn red btn-outline' },
+                { extend: 'pdf', className: 'btn green btn-outline' },
+                { extend: 'excel', className: 'btn yellow btn-outline ' },
+                { extend: 'csv', className: 'btn purple btn-outline ' },
+                { extend: 'colvis', className: 'btn dark btn-outline', text: 'Columns'}
+            ],
+            "order": [
+                [0, 'asc']
+            ],
+            
+            "lengthMenu": [
+                [5, 10, 15, 20, -1],
+                [5, 10, 15, 20, "All"] // change per page values here
+            ],
+            // set the initial value
+            "pageLength": 10,
+            scroller:       true,
+            deferRender:    true,
+            scrollX:        true,
+            scrollY:        '23vh',
+            scrollCollapse: true,
+            "dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><'table-scrollable't><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>", // horizobtal scrollable datatable
+            "columns": aryJSONColTable
+
+            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js). 
+            // So when dropdowns used the scrollable div should be removed. 
+            //"dom": "<'row' <'col-md-12'T>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+        });
+
+        
+
+    }
+
+    
+},

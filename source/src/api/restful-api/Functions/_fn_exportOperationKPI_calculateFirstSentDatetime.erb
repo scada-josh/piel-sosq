@@ -1,0 +1,21 @@
+            function calculateFirstSentDatetime($delivery_datetime, $first_sent_datetime) {
+
+	            // if ($delivery_datetime) {
+
+	        			$new = strtotime($delivery_datetime);
+	        			$old = strtotime($first_sent_datetime);
+
+
+	        			if ($new < $old) {
+	        				$result_first_sent = $delivery_datetime;
+	        			} else {
+	        				$result_first_sent = $first_sent_datetime;
+	        			}
+
+	            // } 
+	            // else {
+	            //     $result_first_sent = $first_sent_datetime;
+	            // }
+
+	        return $result_first_sent;
+	    }

@@ -1,0 +1,30 @@
+ShowRangeDate_Basic: function (start, end) {
+	// console.log("ShowRangeDateBasic");
+
+	fn.paramStartDate =  start;
+	fn.paramEndDate = end;
+	
+
+
+	if (fn.strFilterType != "daily") {
+		fn.Routers("daily");
+		fn.strFilterType = "daily";
+		$("#filter-type-label").html("Daily");
+		fn.HeaderFilterDaily(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+	}
+	
+	
+
+
+
+	$("#form_layout_year_select_id").hide(1000);
+  	$("#form_layout_week_select_id").hide(1000);
+  	$("#form_layout_month_select_id").hide(1000);
+  	$("#form_layout_quater_id").hide(1000);
+  	$("#form_layout_halfYear_id").hide(1000);
+
+  	$('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
+  	
+  	fn.HeaderFilterDaily(fn.paramSiteName, start.format('DD/MM/YYYY'), end.format('DD/MM/YYYY'));
+  
+},

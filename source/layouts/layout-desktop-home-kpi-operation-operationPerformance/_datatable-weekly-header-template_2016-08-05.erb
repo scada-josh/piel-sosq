@@ -1,0 +1,59 @@
+        <script id="datatable-weekly-header-template" type="text/x-handlebars-template">
+            
+            <thead>
+                
+                <tr>
+                    {{#each headers}}
+                        {{#if_eq weeklyHeader 'ลำดับ'}}
+                            <th class="" rowspan="3">{{weeklyHeader}}</th>
+                        {{else if_eq weeklyHeader 'รถ'}}
+                            <th class="" rowspan="3">{{weeklyHeader}}</th>
+                        {{else if_eq weeklyHeader 'ทะเบียนรถ'}}
+                            <th class="" rowspan="3">{{weeklyHeader}}</th>
+                        {{else if_eq weeklyHeader 'Average'}}
+                            <th class="" rowspan="2" colspan="2">{{weeklyHeader}}</th>
+                        {{else}}
+                            <th class="" colspan="2">{{weeklyHeader.yearNo}}</th>
+                        {{/if_eq}}
+                    {{/each}}
+                </tr>
+                <tr>
+                    {{#each headers}}
+                        {{#if_eq weeklyHeader 'ลำดับ'}}
+                           <!--  <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'รถ'}}
+                            <!-- <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'ทะเบียนรถ'}}
+                            <!-- <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'Average'}}
+                            <!-- <th class="" rowspan="2">{{weeklyHeader}}</th> -->
+                        {{else}}
+                            <th class="" colspan="2">{{weeklyHeader.weekNo}}</th>
+                        {{/if_eq}}
+                    {{/each}}
+                </tr>
+                <tr>
+                    {{#each headers}}
+                        {{#if_eq weeklyHeader 'ลำดับ'}}
+                           <!--  <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'รถ'}}
+                            <!-- <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'ทะเบียนรถ'}}
+                            <!-- <th class="">{{weeklyHeader}}</th> -->
+                        {{else if_eq weeklyHeader 'Average'}}
+                           <!--  <th class="">{{weeklyHeader}}</th> -->
+                           <th>Box</th>
+                           <th>Drop</th>
+                        {{else}}
+                            <th>Box</th>
+                            <th>Drop</th>
+                        {{/if_eq}}
+                    {{/each}}
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+
+        
+    </script>
+    

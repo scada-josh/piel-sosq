@@ -1,0 +1,9 @@
+              $sheetCount = $objPHPExcel->getSheetCount();
+              /* Create Worksheet พร้อมกำหนดชื่อ */
+              $objPHPExcel_ITEM_HIS_DF_Worksheet = new \PHPExcel_Worksheet($objPHPExcel, $tmpJobNo);
+              $objPHPExcel->addSheet($objPHPExcel_ITEM_HIS_DF_Worksheet, $sheetCount);
+              $objPHPExcel_ITEM_HIS_DF_Worksheet->setTitle($tmpJobNo);
+
+              /* กำหนดให้เป็น ActiveWorkSheet */
+              // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+              $objPHPExcel->setActiveSheetIndex($sheetCount);

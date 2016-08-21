@@ -1,0 +1,58 @@
+  $("#ionRangeByMonth").ionRangeSlider({
+    type: "double",
+    values: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug", "Sep", "Oct", "Nov", "Dec"],
+    grid: true,
+    onStart: function (data) {
+      // console.log(data);
+
+        var start_month_val = data.from_value;
+        var end_month_val = data.to_value;
+
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+
+        var start_date_of_month = moment().year(valueSelected).months(data.from).startOf('month');
+        var end_date_of_month = moment().year(valueSelected).months(data.to).endOf("month");
+
+        fn.ShowRangeMonthly(start_date_of_month, end_date_of_month, start_month_val, end_month_val, valueSelected);
+    },
+    onChange: function (data) {
+      // console.log(data);
+    },
+    onFinish: function (data) {
+
+        var start_month_val = data.from_value;
+        var end_month_val = data.to_value;
+
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+
+        var start_date_of_month = moment().year(valueSelected).months(data.from).startOf('month');
+        var end_date_of_month = moment().year(valueSelected).months(data.to).endOf("month");
+
+        fn.ShowRangeMonthly(start_date_of_month, end_date_of_month, start_month_val, end_month_val, valueSelected);
+    },
+    onUpdate: function (data) {
+
+        var start_month_val = data.from_value;
+        var end_month_val = data.to_value;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+        var start_date_of_month = moment().year(valueSelected).months(data.from).startOf('month');
+        var end_date_of_month = moment().year(valueSelected).months(data.to).endOf("month");
+
+        fn.ShowRangeMonthly(start_date_of_month, end_date_of_month, start_month_val, end_month_val, valueSelected);
+    }
+  });
+
+  // Saving it's instance to variable
+  fn.objIonRangeByMonthly = $("#ionRangeByMonth").data("ionRangeSlider");

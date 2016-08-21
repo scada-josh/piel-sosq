@@ -1,0 +1,24 @@
+ShowRangeQuater: function (startDateOfQuater, endDateOfQuater, startQuaterVal, endQuaterVal, year) {
+	
+
+	// console.log("start date : " + start.format('MM/DD/YYYY'));
+	// console.log("end date : " + end.format('MM/DD/YYYY'));
+
+	// fn.paramStartDate =  start.format('MM/DD/YYYY');
+	// fn.paramEndDate = end.format('MM/DD/YYYY');
+
+	fn.paramStartDate =  startDateOfQuater;
+	fn.paramEndDate = endDateOfQuater;
+	
+	// console.log('ShowRangeDate');
+	// console.log("site name : " + fn.paramSiteName);
+	// console.log("start date : " + fn.paramStartDate);
+	// console.log("end date : " + fn.paramEndDate);
+
+  	$('#reportrange span').html(startDateOfQuater.format('DD/MM/YYYY') + ' - ' + endDateOfQuater.format('DD/MM/YYYY'));
+
+  	// fn.HeaderFilter(fn.paramSiteName, start.format('DD/MM/YYYY'), end.format('DD/MM/YYYY'));
+  	fn.HeaderFilterQuater(fn.paramSiteName, startQuaterVal, endQuaterVal, year);
+  
+  
+},

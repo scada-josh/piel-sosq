@@ -1,0 +1,35 @@
+DatatableOperationKPI_FF: function () {
+	// console.log('DatatableOperationKPI_FF');
+    
+
+
+
+    //------------------------ datatableOperationKPI -----------------------//
+    if (jQuery().dataTable) {
+ 
+        datatableOperationKPI_FF = $('#datatableOperationKPI_FF').DataTable( {
+            // ajax:           "../../../../../api/restful-api/KpiManager/getOperationKPI_FF.json",
+            // deferRender:    true,
+            // scrollY:        200,
+            // scrollX:        true,
+            // scrollCollapse: true,
+            // scroller:       true
+            scrollY:        "300px",
+            scrollX:        true,
+            scrollCollapse: true,
+            paging:         false,
+            fixedColumns:   {
+                leftColumns: 1,
+                rightColumns: 1
+            }
+        } );
+     
+        new $.fn.dataTable.FixedColumns( datatableOperationKPI_FF );
+
+
+
+
+
+    }
+    
+},

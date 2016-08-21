@@ -1,0 +1,15 @@
+GetAbsolutePath: function () {
+	// console.log('GetAbsolutePath');
+
+	console.log("hostname : " + document.location.hostname);
+	console.log("host : " + document.location.host);
+	console.log("pathname : " + document.location.pathname);
+	var newURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
+	console.log("url :" + newURL);
+
+
+    var loc = window.location;
+    var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
+    return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
+    
+},

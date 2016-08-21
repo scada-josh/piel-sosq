@@ -1,0 +1,332 @@
+DatatableOperationKPI: function () {
+	// console.log('DatatableOperationKPI');
+    var dataSet = [];
+    var objVehicleType = {};
+    var valJSONColTable = [];
+
+    function datatableOperationKPIRender(result) {
+        // console.log(result);
+
+        valJSONColTable = [];
+
+
+
+        for (var i=0; i < result.rows.length; i++ ) {
+
+            var tmpDataSet = [];
+
+            var tmpDropCount = 0;
+            var dropAverage = 0;
+
+            var tmpBoxCount = 0;
+            var boxAverage = 0;
+
+            // console.log(result.rows[i].id);
+            // console.log(result.rows[i].vehicle_licence);
+
+            tmpDataSet.push(result.rows[i].id);
+            // tmpDataSet.push(result.rows[i].vehicle_type);
+            tmpDataSet.push(result.rows[i].vehicle_licence);
+
+            objVehicleType[result.rows[i].vehicle_licence] = result.rows[i].vehicle_type;
+
+            // console.log(result.rows[i].details);
+
+            for (var j=0; j < result.rows[i].details.length; j++ ) {
+
+                // console.log(result.rows[i].details[j].job_date);
+                // console.log(result.rows[i].details[j].drop_success);
+                // console.log(result.rows[i].details[j].box_success);
+
+                tmpDataSet.push(result.rows[i].details[j].drop_success);
+                tmpDataSet.push(result.rows[i].details[j].box_success);
+
+                tmpDropCount = tmpDropCount + parseInt(result.rows[i].details[j].drop_success);
+                tmpBoxCount = tmpBoxCount + parseInt(result.rows[i].details[j].box_success);
+            }
+
+            // Average column
+            tmpDataSet.push(numeral(tmpDropCount/j).format('0.00'));
+            tmpDataSet.push(numeral(tmpBoxCount/j).format('0.00'));
+
+            dataSet.push(tmpDataSet);
+
+
+
+             
+        }
+
+        // dataSet = [
+        //     [ "1", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
+        //     [ "2", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
+        //     [ "3", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
+        //     [ "4", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
+        //     [ "5", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ]
+        // ];
+
+        console.log(dataSet);
+        console.log(valJSONColTable);
+
+
+
+            // for (var k=0; k < dataSet.length; k++ ) {
+             
+            //       valJSONColTable.push({
+            //                 "sTitle": dataSet[k],
+            //                 "aTargets": [k],
+            //                 "mRender": function ( data, type, row ) {
+
+            //                     var tmpRender;
+
+            //                     if (data < 2) {
+            //                         tmpRender = "<b>" + data + "</b>";
+            //                     } else {
+            //                         tmpRender = data;
+            //                     }
+
+            //                     return tmpRender;
+            //                 },
+            //                 "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+            //                     if (sData > 35) { 
+            //                         $(nTd).css('background-color', '#00ab4e').css('color', '#000').css('font-weight', 'bold'); 
+            //                     } 
+            //                     // else if (sData == '45') { 
+            //                     //     $(nTd).css('background-color', '#BDE5F8').css('font-weight', 'bold').css('color', '#009'); 
+            //                     // } else { 
+            //                     //     $(nTd).css('font-weight', 'bold').css('background-color', '#FFBABA').css('color', '#D8000C'); 
+            //                     // }
+            //                 } 
+            //     });
+                  
+            // }
+
+
+              // valJSONColTable.push({
+              //           "render": function ( data, type, row ) {
+ 
+              //               var tmpRender;
+
+              //               if (data < 2) {
+              //                   tmpRender = "<b>" + data + "</b>";
+              //               } else {
+              //                   tmpRender = data;
+              //               }
+
+              //               return tmpRender;
+              //           },
+              //           "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+              //               if (sData > 35) { 
+              //                   $(nTd).css('background-color', '#00ab4e').css('color', '#000').css('font-weight', 'bold'); 
+              //               } 
+              //           },
+              //           "targets": 3
+              //       });
+
+
+
+
+        // $('#datatableOperationKPI').dataTable(dataSet);
+        datatableOperationKPI.clear().draw();
+        datatableOperationKPI.rows.add(dataSet); // Add new data
+        datatableOperationKPI.columns.adjust().draw(); // Redraw the DataTable
+        $('.dataTables_processing', $('#datatableOperationKPI').closest('.dataTables_wrapper')).hide();
+
+        console.log(valJSONColTable);
+
+    }
+
+
+
+    //------------------------ datatableOperationKPI -----------------------//
+    if (jQuery().dataTable) {
+ 
+        datatableOperationKPI = $('#datatableOperationKPI').DataTable( {
+            "processing": true,
+            "ajax": {
+                "url": "../../../../../api/restful-api/KpiManager/getOperationKPI.json",
+                "type": "GET",
+                "dataSrc": "rows",
+                "success": function(data) {
+                    // console.log(data);
+
+                        datatableOperationKPIRender(data);
+                     // $('#datatableOperationKPI').dataTable(json);
+                },
+                "error": function(jqXHR, textStatus, errorThrown){
+                    alert('init error: ' + textStatus);
+                }
+            },
+            // "aLengthMenu": [
+            //         [5, 10, 15, 25, 50, 100, -1],
+            //         [5, 10, 15, 25, 50, 100, "All"]
+            //     ],
+            // "iDisplayLength": 5,
+            // "oLanguage": {
+            //         "sLengthMenu": "_MENU_ Records per page",
+            //         "sInfo": "_START_ - _END_ of _TOTAL_",
+            //         "sInfoEmpty": "0 - 0 of 0",
+            //         "oPaginate": {
+            //             "sPrevious": "Prev",
+            //             "sNext": "Next"
+            //         }
+            // },
+            // "scroller":       true,
+            "deferRender":    true,
+            "scrollX":        true,
+            "scrollY":        '50vh',
+            "scrollCollapse": true,
+            "paging":         false,
+        //     "fixedColumns":   {
+        //     "leftColumns": 2
+        // },
+            // "aoColumnDefs": [
+            //         {
+            //             'bSortable': true,
+            //             "bAutoWidth": true,
+            //             'aTargets': [0]
+            //         }
+            // ],
+            // "data": dataSet,
+            "aaData": dataSet,
+            // "aoColumnDefs": valJSONColTable,
+            "aoColumnDefs": [
+                    {
+                        'bSortable': true,
+                        // "bAutoWidth": true,
+                        "sWidth": "50px",
+                        'aTargets': [0]
+                    },{
+                        'bSortable': true,
+                        // "bAutoWidth": true,
+                        "render": function ( data, type, row ) {
+                            
+                            
+
+                            // console.log(objVehicleType[data]);
+                            
+                            var tmpRender;
+
+                            tmpRender = "<div style = 'width:110px'>"
+
+                            if (objVehicleType[data] == 'Motorcycle') {
+                                tmpRender = tmpRender + "<i class='fa fa-motorcycle'></i>&nbsp;" + data;
+                                // tmpRender = "<i class='fa fa-motorcycle'> " + data + "</i>";
+                            } else if(objVehicleType[data] == 'Pickup') {
+                                tmpRender = tmpRender + "<i class='fa fa-truck'></i> " + data;
+                                // tmpRender = "<i class='fa fa-truck'> " + data + "</i>" ;
+                            } else {
+                                tmpRender = tmpRender + data;
+                            }
+
+                            tmpRender = tmpRender + "</div>";
+
+                            return tmpRender;
+                        },
+                        "targets": [1]
+                    },{
+                        'bSortable': true,
+                        "render": function ( data, type, row ) {
+ 
+                            var tmpRender;
+
+                            if (data < 2) {
+                                tmpRender = "<b>" + data + "</b>";
+                            } else {
+                                tmpRender = data;
+                            }
+
+                            return tmpRender;
+                        },
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            if (sData > 1000) { 
+                                $(nTd).css('background-color', '#00ab4e').css('color', '#000').css('font-weight', 'bold'); 
+                            } 
+                        },
+                        "targets": [-1, -2]
+                    },{
+                        'bSortable': true,
+                        "bAutoWidth": false,
+                        "render": function ( data, type, row ) {
+ 
+                            var tmpRender;
+
+                            if (data < 2) {
+                                tmpRender = "<b>" + data + "</b>";
+                            } else {
+                                tmpRender = data;
+                            }
+
+                            return tmpRender;
+                        }, "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            if (sData > 35) { 
+                                $(nTd).css('background-color', '#00ab4e').css('color', '#000').css('font-weight', 'bold'); 
+                            } 
+                        },
+                        "targets": '_all'
+                    },{ 
+                        "sClass": "DatatableOperationKPI-col-01", 
+                        "aTargets": [0] 
+                    },{ 
+                        "sClass": "DatatableOperationKPI-col-02", 
+                        "aTargets": [1] 
+                    },{ 
+                        "sClass": "DatatableOperationKPI-common", 
+                        "aTargets": '_all'
+                    }
+            ],"footerCallback": function ( row, data, start, end, display ) {
+
+                var api = this.api(), data, total, pageTotal;
+
+                    // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                    i : 0;
+                };
+
+                // console.log(data.length);
+
+                for (var i=2; i < (dataSet.length*2 + 4); i++ ) {
+                    // Total over all pages
+                    total = api.column(i).data().reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+
+                        // Total over this page
+                    pageTotal = api.column( i, { page: 'current'} ).data().reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 );
+
+                        // Update footer
+                    $( api.column( i ).footer() ).html(
+                        // '$'+pageTotal +' ( $'+ total +' total)'
+                        numeral(pageTotal).format('0,0.00')
+                    );
+                }
+
+
+
+            },
+            "order" : [], //disable default sorting, eg sorting on 1st column
+            scrollY:        "300px",
+            scrollX:        true,
+            scrollCollapse: true,
+            paging:         false,
+            fixedColumns:   true
+        });
+
+        // datatableOperationKPI.columns( '.sum' ).every( function () {
+        //     var sum = this
+        //     .data()
+        //     .reduce( function (a,b) {
+        //         return a + b;
+        //     } );
+
+        //     $( this.footer() ).html( 'Sum: '+sum );
+        // } );
+
+
+    }
+    
+},

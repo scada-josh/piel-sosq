@@ -1,0 +1,52 @@
+    /**
+     *
+     * @apiName Logout
+     * @apiGroup Permission Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /permissionManager/logout/ Log out
+     * @apiDescription คำอธิบาย : ในส่วนนี้จะมีหน้าที่ Log out เพื่อออกจากระบบ
+     *
+     */
+
+    function logout($app) {
+
+
+    /* ************************* */
+    /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+    /* ************************* */
+    $headers = $app->request->headers;
+    $ContetnType = $app->request->headers->get('Content-Type');
+
+    /**
+    * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+    * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+    */
+    if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8")) {
+
+        $request = $app->request();
+        $result = json_decode($request->getBody());
+
+        /* receive request */
+        // $postUserName = $result->userName;
+        // $postPassWord = $result->passWord;
+
+
+    } else if ($ContetnType == "application/x-www-form-urlencoded"){
+
+        //$userID = $app->request()->params('userID_param');
+        //$userID = $app->request()->post('userID_param');
+    }
+
+
+    //$_SESSION = array();
+    //session_unregister("userName"); // ลบบางตัวที่ใช้งาน
+    session_destroy();                  // ลบทั้งหมด
+
+    $return_m = array("msg" => "Good bye - user logout.");
+    
+    $app->response()->header("Content-Type", "application/json");
+    echo json_encode($return_m);
+
+
+    };

@@ -1,0 +1,66 @@
+                      <div class="search-page search-content-3">
+                                <div class="row" id="canvas-mainInfo">
+                                    <div class="col-lg-3">
+                                            <%= partial "partials/_form_search_filter" %>
+                                    </div>
+                                    <div class="col-lg-9">
+
+                                    <div class="portlet light " id="tabContentID">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class="fa fa-car font-green"></i>
+                                                <span class="caption-subject font-green bold uppercase">Operations</span>
+                                            </div>
+                                            <div class="actions">
+
+                                                <div class="btn-group">
+                                                    <a class="btn green-haze btn-outline btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"> 
+                                                        <i class="fa fa-bar-chart"></i>
+                                                        กราฟ
+                                                        <i class="fa fa-angle-down"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu pull-right">
+                                                        <li>
+                                                            <a data-scroll href="#canvas-chartDropPerformance"> Drop Performance</a>
+                                                        </li>
+                                                        <li class="divider"> </li>
+                                                        <li>
+                                                            <a data-scroll href="#canvas-chartBoxSentPerformance">Box Sent Performance</a>
+                                                        </li>
+                                                        <li class="divider"> </li>
+                                                        <li>
+                                                            <a data-scroll href="#canvas-chartPercentEPOD">% EPOD</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                 &nbsp;
+                                                <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                                    <i class="icon-cloud-download"></i>
+                                                </a>
+                                                <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#" data-original-title="" title="" id="dailyKPIOperationContentID"> 
+                                                </a>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="portlet-body">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active">
+                                                    <a href="#tab_1_1" data-toggle="tab"> Daily KPI report </a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content" >
+                                                <div class="tab-pane fade active in" id="tab_1_1">
+                                                    <%= partial "partials/tabs/_tab_1_1_content" %>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+

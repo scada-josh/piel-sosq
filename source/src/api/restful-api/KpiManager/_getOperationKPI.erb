@@ -1,0 +1,166 @@
+    /**
+     *
+     * @apiName GetOperationKPI
+     * @apiGroup KPI Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /kpiManager/getOperationKPI/  Get operation KPI
+     * @apiDescription คำอธิบาย : ในส่วนนี้จะเรียก WebService getOperationKPI
+     *
+     */
+
+    function getOperationKPI($app, $client) {
+
+        /* ************************* */
+        /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+        /* ************************* */
+        $headers = $app->request->headers;
+        $ContetnType = $app->request->headers->get('Content-Type');
+
+        /**
+        * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+        * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+        */
+
+        if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8") ) {
+
+            $request = $app->request();
+            $result = json_decode($request->getBody());
+
+            /* receive request */
+            $postStartDate = $result->startDate;              /* รูปแบบ เดือน/วัน/ปี */
+            $postEndDate = $result->endDate;               /* รูปแบบ เดือน/วัน/ปี */
+            $postSiteName = $result->siteName;
+
+            // $postStartDate = "05/30/2016";              /* รูปแบบ เดือน/วัน/ปี */
+            // $postEndDate = "05/30/2016";                /* รูปแบบ เดือน/วัน/ปี */
+            // $postSiteName = "bc";
+
+
+        } else if (($ContetnType == "application/x-www-form-urlencoded") || ($ContetnType == "application/x-www-form-urlencoded; charset=UTF-8")){
+
+            //$userID = $app->request()->params('userID_param');
+            //$userID = $app->request()->post('userID_param');
+
+            // $postStartDate = $app->request()->post('startDate');            /* รูปแบบ เดือน/วัน/ปี */
+            // $postEndDate = $app->request()->post('endDate');               /* รูปแบบ เดือน/วัน/ปี */
+            // $postEndDate = $app->request()->post('siteName'); 
+
+        } 
+
+
+
+
+        $error = $client->getError();
+        if ($error) {
+            echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
+        }
+
+        /* ************************* */
+        /* เริ่มกระบวนการเชื่อมต่อ Web Service */
+        /* ************************* */
+
+        $result = $client->call('getOperationKPI', array("startDate" => $postStartDate,
+                                                         "endDate" => $postEndDate,
+                                                         "siteName" => $postSiteName));
+        $mydata = json_decode($result["getOperationKPIResult"],true);
+
+        $reports = array();
+        $reports_details = array();
+
+        /* initial variable Partial */
+        <%= partial "/KpiManager/getOperationKPI/_initial_variable" %>
+
+        for ($i=0; $i < count($mydata["array"]); $i++) { 
+
+            if (!$tmpJobNo) {
+                $tmpJobDate = $mydata["array"][$i]['JobDate'];
+                $tmpJobNo = $mydata["array"][$i]['JobNo'];
+
+                $tmpSection = $mydata["array"][$i]['section'];
+                $tmpSupervisor = $mydata["array"][$i]['Supervisor'];
+                $tmpVehicleType = $mydata["array"][$i]['VehicleType'];
+                $tmpVehicleLicence = $mydata["array"][$i]['VehicleLicence'];
+                $tmpDriverName = $mydata["array"][$i]['DriverName'];
+                // $tmpBill = $mydata["array"][$i]['DocNo'];
+                $tmpDestination = $mydata["array"][$i]['destination'];
+                $tmpDropAll = 1;
+            }
+
+            <%= partial "/KpiManager/getOperationKPI/_working_with_last_record" %>
+
+            if ($tmpJobNo != $mydata["array"][$i]['JobNo']) {
+
+                $j++;
+
+                // $reports[] = array(
+                //         "id" => $j,
+                //         "job_date" => $tmpJobDate,
+                //         "job_no" => $tmpJobNo,
+                //         "section" => $mydata["array"][$i]['section'],
+                //         "supervisor" => $mydata["array"][$i]['Supervisor'],
+                //         "vehicle_licence" => $tmpVehicleLicence,
+                //         "vehicle_type" => $mydata["array"][$i]['VehicleType'],
+                //         "driver_name" => $mydata["array"][$i]['DriverName'],
+                //         "drop_all" => $tmpDropAll,
+                //         "drop_success" => $tmpDropSuccess,
+                //         "box_all" => $tmpBoxAll,
+                //         "box_success" => $tmpBoxSuccess,
+                //         "bill_count" => $tmpBillCount,
+                //         "bill_closed_with_epod_count" => $tmpBillClosedWithEPODCount,
+                //         "bill_closed_after_6pm_count" => $tmpBillClosedAfter6pmCount,
+                //         "details" => $reports_details
+                //     );
+
+                $reports[] = array(
+                        "id" => $j,
+                        "job_date" => $tmpJobDate,
+                        "job_no" => $tmpJobNo,
+                        "section" => $tmpSection,
+                        "supervisor" => $tmpSupervisor,
+                        "vehicle_licence" => $tmpVehicleLicence,
+                        "vehicle_type" => $tmpVehicleType,
+                        "driver_name" => $tmpDriverName,
+                        "drop_all" => $tmpDropAll,
+                        "drop_success" => $tmpDropSuccess,
+                        "box_all" => $tmpBoxAll,
+                        "box_success" => $tmpBoxSuccess,
+                        "bill_count" => $tmpBillCount,
+                        "bill_closed_with_epod_count" => $tmpBillClosedWithEPODCount,
+                        "bill_closed_after_6pm_count" => $tmpBillClosedAfter6pmCount,
+                        "details" => $reports_details
+                    );
+
+                /* prepare data for new JobNo Partial */
+                <%= partial "/KpiManager/getOperationKPI/_prepare_data_for_new_job_no" %>
+
+
+            } else {
+
+                /* summary data for current JobNo Partial */
+                <%= partial "/KpiManager/getOperationKPI/_prepare_data_for_current_job_no" %>
+
+            }
+
+        }
+
+        $rowCount = count($mydata["array"]);
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        $resultText = "success";
+
+        $reportResult = array("result" =>  $resultText, 
+                              "start_date" => $postStartDate,
+                              "end_date" => $postEndDate,
+                              "site_name" => $postSiteName,
+                              "ws_records_count" => $rowCount, 
+                              "info_records_count" => $j, 
+                              "rows" => $reports,
+                              "content-type" => $ContetnType);
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+
+    };

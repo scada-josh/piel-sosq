@@ -1,0 +1,45 @@
+                var total_col16;
+                var pageTotal_col16;
+
+                // Total over all pages
+                if (api.column(16).data().length){
+                    total_col16 = api
+                        .column(16)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                } else {
+                    total_col16 = 0
+                }
+
+                total_col16 = numeral(total_col16).format('0,0');
+
+                 // Total over this page
+
+                 if (api.column(16).data().length){
+                    pageTotal_col16 = api
+                    .column( 16, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 ) 
+                } else { 
+                    pageTotal_col16 = 0;
+                };
+
+                // pageTotal_col16 = numeral(pageTotal_col16).format('0,0.00');
+
+                if (api.column(16, { page: 'current'} ).data().length) {
+                    pageTotal_col16 = numeral(pageTotal_col16/api.column(16, { page: 'current'} ).data().length).format('0,0.00');
+                } else {
+                    pageTotal_col16 = 0;
+                }
+                
+
+                // Update footer
+                $( api.column( 16 ).footer() ).html(
+                    pageTotal_col16 + "&nbsp;%"
+                );
+
+                

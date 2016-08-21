@@ -1,0 +1,160 @@
+  $('#btnFilterInfo').on('click', function() {
+        // console.log('btnFilterInfo');
+
+
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/fn_Apps/btnFilterInfo_click_handler/_prepare_ajax_param" %>
+
+          $.ajax({
+            "url": "../../../../../api/restful-api/kpiManager/getOperationKpiSummary/", 
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": JSON.stringify(tmpData),
+            "success": function(result){
+                console.log(result);
+
+                // var tempRowResults = result.rows;
+                // var result_EPOD = JSON.search(tempRowResults, '//*[ delivery_type = "Non-EPOD"]//*[job_date = "2016-06-01"]');
+                // console.log(result_EPOD); 
+
+                // var snapshot = Defiant.getSnapshot(tempRowResults);
+                // // Snapshot search - this is more than 100 times faster than 'regular search'
+                // var result_EPOD = JSON.search(snapshot, '//*[ delivery_type = "Non-EPOD"]//*[job_date = "2016-06-01"]');
+                // console.log(result_EPOD); 
+
+                // var persons = {
+                //     "person": [
+                //         {
+                //             "name": "Peter",
+                //             "age": 43,
+                //             "sex": "male"
+                //         }, {
+                //             "name": "Zara",
+                //             "age": 65,
+                //             "sex": "female"
+                //         }
+                //       ]
+                //    };
+
+                // var result = $.grep(persons.person, function(element, index) {
+                //    return (element.name === 'Peter');
+                // });
+                // alert(result[0].age);
+
+                var result_EPOD = JSON.search(result.rows, '//*[ delivery_type = "Non-EPOD"]//*[job_date = "2016-06-01"]');
+                console.log(result_EPOD);   
+
+
+
+
+                var resultDataTableHeaderTemplate = Handlebars.compile($("#dataTable-header-Template").html());
+                  var context = fn.ConvertToContext(result);
+                      context = {
+                        headers: [ 
+                          { dateHeader: 'ลำดับ' },
+                          { dateHeader: 'ทะเบียนรถ' },
+                          { dateHeader: '01/06/2016' },
+                          { dateHeader: '02/06/2016' },
+                          { dateHeader: '03/06/2016' },
+                          { dateHeader: '04/06/2016' },
+                          { dateHeader: '05/06/2016' },
+                          { dateHeader: '06/06/2016' },
+                          { dateHeader: '07/06/2016' },
+                          { dateHeader: '08/06/2016' },
+                          { dateHeader: '09/06/2016' },
+                          { dateHeader: '10/06/2016' },
+                          { dateHeader: '11/06/2016' },
+                          { dateHeader: '12/06/2016' },
+                          { dateHeader: '13/06/2016' },
+                          { dateHeader: '14/06/2016' },
+                          { dateHeader: '15/06/2016' },
+                          { dateHeader: '16/06/2016' },
+                          { dateHeader: '17/06/2016' },
+                          { dateHeader: '18/06/2016' },
+                          { dateHeader: '19/06/2016' },
+                          { dateHeader: '20/06/2016' },
+                          { dateHeader: '21/06/2016' },
+                          { dateHeader: '22/06/2016' },
+                          { dateHeader: '23/06/2016' },
+                          { dateHeader: '24/06/2016' },
+                          { dateHeader: '25/06/2016' },
+                          { dateHeader: '26/06/2016' },
+                          { dateHeader: '27/06/2016' },
+                          { dateHeader: '28/06/2016' },
+                          { dateHeader: '29/06/2016' },
+                          { dateHeader: '30/06/2016' },
+                          { dateHeader: 'Average' }
+                        ]
+                      };
+                   // var context = {
+                   //      headers: [ 
+                   //        { dateHeader: 'ลำดับ' },
+                   //        { dateHeader: 'ทะเบียนรถ' },
+                   //        { dateHeader: '01/06/2016' },
+                   //        { dateHeader: '02/06/2016' },
+                   //        { dateHeader: '03/06/2016' },
+                   //        { dateHeader: '04/06/2016' },
+                   //        { dateHeader: '05/06/2016' },
+                   //        { dateHeader: '06/06/2016' },
+                   //        { dateHeader: '07/06/2016' },
+                   //        { dateHeader: '08/06/2016' },
+                   //        { dateHeader: '09/06/2016' },
+                   //        { dateHeader: '10/06/2016' },
+                   //        { dateHeader: '11/06/2016' },
+                   //        { dateHeader: '12/06/2016' },
+                   //        { dateHeader: '13/06/2016' },
+                   //        { dateHeader: '14/06/2016' },
+                   //        { dateHeader: '15/06/2016' },
+                   //        { dateHeader: '16/06/2016' },
+                   //        { dateHeader: '17/06/2016' },
+                   //        { dateHeader: '18/06/2016' },
+                   //        { dateHeader: '19/06/2016' },
+                   //        { dateHeader: '20/06/2016' },
+                   //        { dateHeader: '21/06/2016' },
+                   //        { dateHeader: '22/06/2016' },
+                   //        { dateHeader: '23/06/2016' },
+                   //        { dateHeader: '24/06/2016' },
+                   //        { dateHeader: '25/06/2016' },
+                   //        { dateHeader: '26/06/2016' },
+                   //        { dateHeader: '27/06/2016' },
+                   //        { dateHeader: '28/06/2016' },
+                   //        { dateHeader: '29/06/2016' },
+                   //        { dateHeader: '30/06/2016' },
+                   //        { dateHeader: 'Average' }
+                   //      ]
+                   //    };
+                  // $("#datatableOperationKPI").html(resultDataTableHeaderTemplate(context));
+
+
+
+
+                  $('#datatableOperationKPI').html(resultDataTableHeaderTemplate(context)).promise().done(function(){
+                    fn.DatatableOperationKPI();
+                    fn.DatatableOperationKPI_Click_Handler();
+
+                    fn.arrAverageBox_EPOD = [12, 9, 10, 11, 10, 11, 12, 10, 13, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+                    fn.arrAverageDrop_EPOD = [8, 9, 10, 13, 11, 10, 12, 10, 10, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+                    fn.arrAverageBox_NonEPOD = [8, 9, 10, 14, 10, 12, 12, 10, 12, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+                    fn.arrAverageDrop_NonEPOD = [8, 9, 10, 15, 10, 10, 12, 10, 10, 11, 9, 12, 11, 10, 9, 11, 13, 13, 12];
+
+                    fn.SparklineBarAverageBoxEpod(fn.arrAverageBox_EPOD);
+                    fn.SparklineBarAverageDropEpod(fn.arrAverageDrop_EPOD);
+
+                    fn.SparklineBarAverageBoxNonEpod(fn.arrAverageBox_NonEPOD);
+                    fn.SparklineBarAverageDropNonEpod(fn.arrAverageDrop_NonEPOD);
+
+
+
+                  });
+
+            },
+            "error": function(jqXHR, textStatus, errorThrown){
+              console.log('textStatus: ' + textStatus);
+              // console.log('ierrorThrown: ' + errorThrown);
+            }
+          });
+
+  
+
+
+  });

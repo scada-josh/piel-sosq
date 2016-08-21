@@ -1,0 +1,44 @@
+// Apps
+Apps: function () {
+	console.log('Apps');
+
+
+          var tmpData = {
+              "startDate" : "", 
+              "endDate" : "", 
+              "siteName" : ""
+          }
+
+          $.ajax({
+            "url": "../../../api/restful-api/kpiManager/getOperationKpiSummary/", 
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": JSON.stringify(tmpData),
+            "success": function(result){
+                // console.log(result);
+
+
+                var result_EPOD = JSON.search(result.rows, '//*[ delivery_type = "Non-EPOD"]//*[job_date = "2016-06-01"]');
+                console.log(result_EPOD);    
+
+
+
+            },
+            "error": function(jqXHR, textStatus, errorThrown){
+              console.log('textStatus: ' + textStatus);
+              // console.log('ierrorThrown: ' + errorThrown);
+            }
+          });
+
+
+
+
+ 
+
+
+
+
+
+	
+}

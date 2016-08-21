@@ -1,0 +1,46 @@
+                /* Count Bill is closed after 6 PM, EPOD only */
+                $current_job_date_time_formattedDate = "";
+                $current_job_date_time_unixTimestamp = "";
+                $death_line_date_time_formattedDate = "";
+                $death_line_date_time_unixTimestamp = "";
+                $delivery_date_time_formattedDate = "";
+                $delivery_date_time_unixTimestamp = "";
+                if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+
+                    if ($mydata["array"][$i]['JobDate']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_jobDate = new DateTime($mydata["array"][$i]['JobDate'], new DateTimeZone($tz));
+                        $current_job_date_time_formattedDate = $d_jobDate->format('Y-m-d H:i:s'); 
+                        $current_job_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60;
+                        $death_line_date_time_unixTimestamp = $d_jobDate->getTimestamp() + 7*60*60 + 18*60*60;
+                        $dt_death_line = new DateTime("@$death_line_date_time_unixTimestamp");  // convert UNIX timestamp to PHP DateTime
+                        $death_line_date_time_formattedDate = $dt_death_line->format('Y-m-d H:i:s');
+                    } 
+
+                    if ($mydata["array"][$i]['DeliveryDateTime']) {
+                        $tz = 'Asia/Bangkok';
+                        $d_deliveryDate = new DateTime($mydata["array"][$i]['DeliveryDateTime'], new DateTimeZone($tz));
+                        $delivery_date_time_formattedDate = $d_deliveryDate->format('Y-m-d H:i:s'); 
+                        $delivery_date_time_unixTimestamp = $d_deliveryDate->getTimestamp() + 7*60*60;
+                    } 
+
+                    if ($delivery_date_time_unixTimestamp > $death_line_date_time_unixTimestamp) {
+
+                        if ($tmpBill != $mydata["array"][$i]['DocNo']) {
+                            if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                                $tmpBillClosedAfter6pmCount++;
+                            }
+
+                            // $tmpBillAndUserUpdate = ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate']);
+
+                        } else {
+
+                            if ($tmpBillAndUserUpdate != ($mydata["array"][$i]['DocNo']."_".$mydata["array"][$i]['UserUpdate'])) {
+                                if (strpos($mydata["array"][$i]['UserUpdate'], 'mb') !== false) {
+                                    $tmpBillClosedAfter6pmCount++;
+                                }
+                            }
+                        }
+                    }
+                    
+                }

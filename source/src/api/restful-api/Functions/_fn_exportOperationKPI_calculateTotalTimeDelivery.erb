@@ -1,0 +1,19 @@
+        function calculateTotalTimeDelivery($start_datetime, $maximum_delivery_datetime) {
+
+        	if ($start_datetime && $maximum_delivery_datetime) {
+
+        		$tmpStart = new DateTime($start_datetime);
+        		$tmpMaximumDelivery   = new DateTime($maximum_delivery_datetime);
+
+        		$tmpInterval = $tmpStart->diff($tmpMaximumDelivery);
+
+	            $result_calculateTotalTimeDelivery = $tmpInterval->format('%H:%i:%s');
+
+	        } else if(!$start_datetime && $maximum_delivery_datetime){
+	        	$result_calculateTotalTimeDelivery = "N/A";
+	        } else {
+	        	$result_calculateTotalTimeDelivery = "N/A";
+	        }
+
+	        return $result_calculateTotalTimeDelivery;
+	    }

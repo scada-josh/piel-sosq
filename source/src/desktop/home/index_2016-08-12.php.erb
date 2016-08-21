@@ -1,0 +1,74 @@
+---
+title: "MIS - Home"
+layout: "layout-desktop-home"
+
+
+baseURL: "/iel-mis/build/src/desktop/home/"
+loginURL: "../Login/index.php"
+homeURL: "./"
+imageURL: "../../../images"
+
+pageTitle: " Dashboard"
+pageSubTitle: "dashboard & statistics"
+
+
+dashboard_isActive: "active"
+dashboard_href: "./"
+
+kpi_operation_operationPerformance_isActive: ""
+kpi_operation_operationPerformance_href: "./menu-kpi/menu-operation/menu-operation-performance/"
+
+
+
+
+---
+        <!-- BEGIN HEADER -->
+        <div class="page-header">
+
+            <!-- BEGIN HEADER TOP -->
+            <%= partial "common-partials/_page-header-top" %>
+
+            <!-- BEGIN HEADER MENU -->
+            <%= partial "common-partials/_page-header-menu" %>
+
+        </div>
+        <!-- END HEADER -->
+
+        <!-- BEGIN CONTAINER -->
+        <div class="page-container">
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+                <!-- BEGIN CONTENT BODY -->
+
+                <!-- BEGIN HEADER MENU -->
+                <%= partial "partials/_page-head" %>
+
+                <!-- BEGIN PAGE CONTENT BODY -->
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        <!-- PAGE BREADCRUMBS -->
+                        <%= partial "partials/_page-breadcrumb" %>
+
+                        <!-- BEGIN PAGE CONTENT INNER -->
+                        <div class="page-content-inner">
+
+                            <%= partial "partials/_content" %>
+                            <%= partial "partials/_DropPerformance" %>
+                            <%= partial "partials/_BoxSentPerformance" %>
+                            <%= partial "partials/_PercentEPOD" %>
+                          
+                        </div>
+                        <!-- END PAGE CONTENT INNER -->
+                    </div>
+                </div>
+                <!-- END PAGE CONTENT BODY -->
+                <!-- END CONTENT BODY -->
+            </div>
+            <!-- END CONTENT -->
+            
+        </div>
+        <!-- END CONTAINER -->
+
+        <!-- FOOTER -->
+        <%= partial "common-partials/_footer" %>

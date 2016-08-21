@@ -1,0 +1,27 @@
+// Apps
+Apps: function () {
+	// console.log('Apps');
+
+	// Form filter handler
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_form_filter_initial" %>
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_form_filter_dropdown_daily_filter_click_handler" %>
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_form_filter_dropdown_weekly_filter_click_handler" %>
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_form_filter_dropdown_monthly_filter_click_handler" %>
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_form_filter_dropdown_quater_filter_click_handler" %>
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_form_filter_dropdown_half-year_filter_click_handler" %>
+
+    
+    // btnFilterInfo click handler
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_btnFilterInfo_click_handler" %>
+
+
+    // Site (center) selected handler
+    <%= partial js_dir + "/javascript-desktop-home-kpi-op001/partials/fn_Apps/_site_selected_handler" %>
+
+    
+    $('#button-logout').bind('click', function(){
+    	fn.Logout();
+    });
+
+
+}

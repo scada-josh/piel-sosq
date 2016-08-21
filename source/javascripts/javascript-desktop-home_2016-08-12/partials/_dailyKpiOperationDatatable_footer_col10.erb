@@ -1,0 +1,19 @@
+ 
+                // Total column-10 over this page
+                var total_col10;
+                // Total over all pages
+                if (api.column(10).data().length){
+                    total_col10 = api
+                        .column(10)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                } else {
+                    total_col10 = 0
+                }
+
+                $( api.column( 10 ).footer() ).html(
+                    numeral(total_col10).format('0,0.00') + '&bpsp;%'
+                );
+

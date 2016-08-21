@@ -1,0 +1,46 @@
+    function datatableOperationKPI_Weekly_Render(result) {
+    	// console.log(result);
+
+        var i = 0;
+        var j = 0;
+
+        for (var i=0; i < result.rows.length; i++ ) {
+
+            var tmpDataSet = [];
+
+            var tmpDropCount = 0;
+            var dropAverage = 0;
+
+            var tmpBoxCount = 0;
+            var boxAverage = 0;
+
+            tmpDataSet.push(parseInt(result.rows[i].id));
+            tmpDataSet.push(result.rows[i].vehicle_type);
+            tmpDataSet.push(result.rows[i].vehicle_licence);
+
+            var k = 0;
+            for (var j=0; j < result.rows[i].details.length; j++ ) {
+
+                tmpDataSet.push(result.rows[i].details[j].box);
+                tmpDataSet.push(result.rows[i].details[j].drop);
+
+                tmpDropCount = tmpDropCount + parseInt(result.rows[i].details[j].drop);
+                tmpBoxCount = tmpBoxCount + parseInt(result.rows[i].details[j].box);
+            }
+
+            tmpDataSet.push(numeral(tmpDropCount/j).format('0.00'));
+            tmpDataSet.push(numeral(tmpBoxCount/j).format('0.00'));
+
+            dataSet.push(tmpDataSet);
+
+        }
+
+        // console.log('DataSet');
+        // console.log(dataSet);
+
+        datatableOperationKPI_Weekly.clear().draw();
+        datatableOperationKPI_Weekly.rows.add(dataSet); // Add new data
+        datatableOperationKPI_Weekly.columns.adjust().draw(); // Redraw the DataTable
+        $('.dataTables_processing', $('#datatableOperationKPI_Weekly').closest('.dataTables_wrapper')).hide();
+
+    }

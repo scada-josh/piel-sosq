@@ -1,0 +1,29 @@
+	$('#dropdown_weekly_filter_id').on('click', function() {
+      	// console.log('dropdown_weekly_filter_id');
+
+
+            if (fn.strFilterType != "weekly") {
+                  fn.Routers("weekly");
+                  fn.strFilterType = "weekly";
+                  // fn.HeaderFilter(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+                  
+                  // console.log(fn.objIonRangeByWeek);
+                  // UPDATE - updates slider to any new values
+                  fn.objIonRangeByWeekly.update({
+                          from: fn.last_weekly_from,
+                          to: fn.last_weekly_to
+                  });
+                  // RESET - reset slider to it's first values
+                  // fn.objIonRangeByWeek.reset();
+            }
+
+            $("#filter-type-label").html("Weekly");
+
+      	$("#form_layout_year_select_id").show(1000);
+      	$("#form_layout_week_select_id").show(1000);
+      	$("#form_layout_month_select_id").hide(1000);
+      	$("#form_layout_quater_id").hide(1000);
+      	$("#form_layout_halfYear_id").hide(1000);
+
+
+	});

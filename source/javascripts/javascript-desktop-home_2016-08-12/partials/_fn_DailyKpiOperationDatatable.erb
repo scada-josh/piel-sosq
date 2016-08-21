@@ -1,0 +1,77 @@
+DailyKpiOperationDatatable: function () {
+	// console.log('DailyKpiOperationDatatable');
+
+     //------------------------ dailyKpiOperationDatatable -----------------------//
+    if (jQuery().dataTable) {
+ 
+       // var optionSelected = $('#station_selected_id').find("option:selected");
+       // var valueSelected  = optionSelected.val();
+       // var textSelected   = optionSelected.text();
+       // var dateSelected = $('#dateSelected').val();
+
+       // if (!textSelected) {
+       //      textSelected = "bc";
+       // }
+
+       // if (!dateSelected) {
+       //      dateSelected = "05/30/2016";
+       // }
+
+
+
+        dailyKpiOperationDatatable = $('#dailyKpiOperationDatatable').DataTable( {
+            "processing": true,
+            "ajax": {
+                "url": "../../api/restful-api/kpiManager/getOperationKPI/",
+                "type": "POST",
+                "dataType": "json",
+                "contentType": "application/json",
+                "data": function( d ) {
+                  return JSON.stringify({"startDate" : ($('#dateSelected').val()) ? $('#dateSelected').val() : "05/30/2016", 
+                                         "endDate" : ($('#dateSelected').val()) ? $('#dateSelected').val() : "05/30/2016", 
+                                         "siteName" : ($('#station_selected_id').find("option:selected").text()) ? $('#station_selected_id').find("option:selected").text() : "bc"
+                                       });
+                },
+                "dataSrc": "rows",
+                "beforeSend" : function()    {           
+                    // console.log("beforeSend");
+                },
+                // "success": function(data) {
+                //     console.log(data);
+                // },
+                "error": function(jqXHR, textStatus, errorThrown){
+                    // console.log('textStatus: ' + textStatus);
+                    // console.log('ierrorThrown: ' + errorThrown);
+                }
+            },
+            "aLengthMenu": [
+                    [5, 10, 15, 25, 50, 100, -1],
+                    [5, 10, 15, 25, 50, 100, "All"]
+                ],
+            "iDisplayLength": 5,
+            "oLanguage": {
+                    "sLengthMenu": "_MENU_ Records per page",
+                    "sInfo": "_START_ - _END_ of _TOTAL_",
+                    "sInfoEmpty": "0 - 0 of 0",
+                    "oPaginate": {
+                        "sPrevious": "Prev",
+                        "sNext": "Next"
+                    }
+            },
+            <%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_columnDefs" %>
+            <%= partial js_dir + "/javascript-desktop-home/partials/_dailyKpiOperationDatatable_footer" %>
+
+            // scroller extension: http://datatables.net/extensions/scroller/
+            // scrollY:        ($("#tabContentID").height()-150),
+            // deferRender:    true,
+            scroller:       true,
+            deferRender:    true,
+            scrollX:        true,
+            scrollY:        '50vh',
+            scrollCollapse: true,
+            "order" : [[0, 'asc']] //disable default sorting, eg sorting on 1st column
+            
+        });
+    }
+    
+},

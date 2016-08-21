@@ -1,0 +1,126 @@
+    $("#ionRangeByHalfYear").ionRangeSlider({
+      type: "double",
+      // min: 0,
+      // from: 1,
+      // to: 2,
+      // max_interval: 2,
+      values: ["1st-half","2nd-half"],
+      grid: true,
+      onStart: function (data) {
+        // console.log(data);
+
+        var start_half_year_val = data.from_value;
+        var end_half_year_val = data.to_value;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+        var start_date_of_half_year = moment().year(valueSelected).startOf('year');
+        var end_date_of_half_year = moment().year(valueSelected).endOf("year");
+
+        var tmp_start_date_of_half_year;
+        var tmp_end_date_of_half_year;
+
+        if ((data.from == 0) && (data.to == 0)) {
+            tmp_start_date_of_half_year = start_date_of_half_year;
+            tmp_end_date_of_half_year = end_date_of_half_year.subtract(6, 'months');
+        } else if ((data.from == 0) && (data.to == 1)) {
+            tmp_start_date_of_half_year = start_date_of_half_year;
+            tmp_end_date_of_half_year = end_date_of_half_year;
+            
+        } else if ((data.from == 1) && (data.to == 1)) {
+            tmp_start_date_of_half_year = start_date_of_half_year.add(6, 'months');
+            tmp_end_date_of_half_year = end_date_of_half_year;
+            
+        }
+
+        fn.ShowRangeHalfYear(tmp_start_date_of_half_year, tmp_end_date_of_half_year, start_half_year_val, end_half_year_val, valueSelected);
+      },
+      onChange: function (data) {
+        // console.log(data);
+      },
+      onFinish: function (data) {
+        // console.log(data);
+
+        var start_half_year_val = data.from_value;
+        var end_half_year_val = data.to_value;
+
+
+        // console.log("from : " + data.from);
+        // console.log("to : " + data.to);
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+
+        var start_date_of_half_year = moment().year(valueSelected).startOf('year');
+        var end_date_of_half_year = moment().year(valueSelected).endOf("year");
+
+        var tmp_start_date_of_half_year;
+        var tmp_end_date_of_half_year;
+
+        if ((data.from == 0) && (data.to == 0)) {
+            tmp_start_date_of_half_year = start_date_of_half_year;
+            tmp_end_date_of_half_year = end_date_of_half_year.subtract(6, 'months');
+        } else if ((data.from == 0) && (data.to == 1)) {
+            tmp_start_date_of_half_year = start_date_of_half_year;
+            tmp_end_date_of_half_year = end_date_of_half_year;
+            
+        } else if ((data.from == 1) && (data.to == 1)) {
+            tmp_start_date_of_half_year = start_date_of_half_year.add(6, 'months');
+            tmp_end_date_of_half_year = end_date_of_half_year;
+            
+        }
+
+
+        // start_year = start_year.add(6, 'months');
+
+        // if (data.to == 0) {
+        //     start_year = start_year;
+        // } else {
+        //     start_year = start_year.subtract(6, 'months');
+        // }
+
+
+        // console.log(start_year.format('DD/MM/YYYY'));
+        // console.log(end_year.format('DD/MM/YYYY'));
+        // fn.ShowRangeDate(tmpStart_year, tmpEnd_year);
+        fn.ShowRangeHalfYear(tmp_start_date_of_half_year, tmp_end_date_of_half_year, start_half_year_val, end_half_year_val, valueSelected);
+      },
+      onUpdate: function (data) {
+        // console.log(data);
+        var start_half_year_val = data.from_value;
+        var end_half_year_val = data.to_value;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+        var start_date_of_half_year = moment().year(valueSelected).startOf('year');
+        var end_date_of_half_year = moment().year(valueSelected).endOf("year");
+
+        var tmp_start_date_of_half_year;
+        var tmp_end_date_of_half_year;
+
+        if ((data.from == 0) && (data.to == 0)) {
+            tmp_start_date_of_half_year = start_date_of_half_year;
+            tmp_end_date_of_half_year = end_date_of_half_year.subtract(6, 'months');
+        } else if ((data.from == 0) && (data.to == 1)) {
+            tmp_start_date_of_half_year = start_date_of_half_year;
+            tmp_end_date_of_half_year = end_date_of_half_year;
+            
+        } else if ((data.from == 1) && (data.to == 1)) {
+            tmp_start_date_of_half_year = start_date_of_half_year.add(6, 'months');
+            tmp_end_date_of_half_year = end_date_of_half_year;
+            
+        }
+
+        fn.ShowRangeHalfYear(tmp_start_date_of_half_year, tmp_end_date_of_half_year, start_half_year_val, end_half_year_val, valueSelected);
+      }
+    });
+
+  // Saving it's instance to variable
+  fn.objIonRangeByHalfYear = $("#ionRangeByHalfYear").data("ionRangeSlider");
+    

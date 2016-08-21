@@ -1,0 +1,28 @@
+            /* **** Sub Menu - 01 *** */
+            $reports_sub_menu_01 = array();
+
+            $results_sub_menu_level_01_title = $db->menu_tb->select('DISTINCT sub_menu_level_01_title')->where("main_menu_title = ?", $result["main_menu_title"]);
+
+            foreach ($results_sub_menu_level_01_title as $result_sub_menu_level_01_title) {
+                $result_sub_menu_level_01_leaf = $db->menu_tb->where("sub_menu_level_01_title = ?", $result_sub_menu_level_01_title["sub_menu_level_01_title"])->fetch();
+
+
+                if ($result_sub_menu_level_01_title["sub_menu_level_01_title"]) {
+                    <%= partial "/MenuManager/partials/listMenu/_reports_sub_menu_02" %>
+
+                    if ($result_sub_menu_level_01_leaf["sub_menu_level_01_leaf"] == "FALSE") {
+                        $reports_sub_menu_01[] = array(
+                            "sub_menu_level_01_title" => $result_sub_menu_level_01_title["sub_menu_level_01_title"],
+                            "sub_menu_level_01_url" =>  $result_sub_menu_level_01_leaf["sub_menu_level_01_url"],
+                            "sub_menu_level_01_leaf" =>  $result_sub_menu_level_01_leaf["sub_menu_level_01_leaf"]
+                        );
+                    } else {
+                        $reports_sub_menu_01[] = array(
+                            "sub_menu_level_01_title" => $result_sub_menu_level_01_title["sub_menu_level_01_title"],
+                            "sub_menu_level_01_url" =>  $result_sub_menu_level_01_leaf["sub_menu_level_01_url"],
+                            "sub_menu_level_01_leaf" =>  $result_sub_menu_level_01_leaf["sub_menu_level_01_leaf"],
+                            "sub_menu_level_02" =>  $reports_sub_menu_02
+                            );
+                    }
+                }
+            }

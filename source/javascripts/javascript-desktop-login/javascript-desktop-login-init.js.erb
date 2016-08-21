@@ -1,0 +1,38 @@
+(function ($) {
+    "use strict";
+ 
+    ///////////////////////////////////////////////////// Your
+    // var venueAddress = "Grand Place, 1000, Brussels"; // Venue
+
+    var IMAGE_PATH = "../../../images";
+    
+    /////////////////////////////////////////////////// Adress
+ 
+    function Login() {
+        alert("Login");
+    }
+
+
+    var fn = {
+
+        // Launch Functions
+        Launch: function () {
+            fn.HandleLogin();
+            fn.Apps();
+        },
+        // Login Handler
+        <%= partial js_dir + "/javascript-desktop-login/partials/_fn_HandleLogin" %>
+        // Common Partials
+        <%= partial js_dir + "/common-partials/_fn_GetAbsolutePath" %>
+ 		// Apps
+        <%= partial js_dir + "/javascript-desktop-login/partials/_fn_Apps" %>
+
+    };
+ 
+    $(document).ready(function () {
+        fn.Launch();
+    });
+ 
+})(jQuery);
+
+

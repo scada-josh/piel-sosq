@@ -1,0 +1,15 @@
+HeaderFilterQuater: function (paramSiteName, paramStartQuaterVal, paramEndQuaterVal, paramYear) {
+	// console.log("HeaderFilter");
+
+	if (paramSiteName) {
+	  	$("#site-name-label-" + fn.strFilterType).html(paramSiteName);
+	} else {
+		$("#site-name-label-" + fn.strFilterType).html("-");
+	}
+
+
+	if(fn.strFilterType == "quater") {
+		$("#date-range-selected-label-" + fn.strFilterType).html(paramStartQuaterVal + "/" + paramYear + " - " + paramEndQuaterVal + "/" + paramYear);
+	} 
+  
+},

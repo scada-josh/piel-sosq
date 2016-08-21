@@ -1,0 +1,102 @@
+---
+title: "MIS - Home"
+layout: "layout-desktop-home-kpi-operation-operationPerformance"
+
+baseURL: "/iel-mis/build/src/desktop/home/menu-kpi/menu-operation/menu-operation-performance/"
+loginURL: "../../../../Login/index.php"
+homeURL: "../../../"
+imageURL: "../../../../../../images"
+
+pageTitle: " KPI"
+pageSubTitle: "Operation"
+
+
+dashboard_isActive: ""
+dashboard_href: "../../../"
+
+kpi_operation_operationPerformance_isActive: "active"
+kpi_operation_operationPerformance_href: "./"
+
+
+---
+
+<div class="page-wrapper">
+    <div class="page-wrapper-row">
+        <div class="page-wrapper-top">
+
+            <!-- BEGIN HEADER -->
+            <div class="page-header">
+
+                <!-- BEGIN HEADER TOP -->
+                <%= partial partials_desktop_home + "/common-partials/_page-header-top" %>
+
+                <!-- BEGIN HEADER MENU -->
+                <%= partial partials_desktop_home + "/common-partials/_page-header-menu" %>
+
+            </div>
+            <!-- END HEADER -->
+
+        </div>
+    </div>
+
+    <div class="page-wrapper-row full-height">
+        <div class="page-wrapper-middle">
+
+            <!-- BEGIN CONTAINER -->
+            <div class="page-container">
+                <!-- BEGIN CONTENT -->
+                <div class="page-content-wrapper">
+                    <!-- BEGIN CONTENT BODY -->
+
+                    <!-- BEGIN HEADER MENU -->
+                    <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_page-head" %>
+
+                    <!-- BEGIN PAGE CONTENT BODY -->
+                    <div class="page-content">
+                        <div class="container-fluid">
+
+                            <!-- PAGE BREADCRUMBS -->
+                            <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_page-breadcrumb" %>
+
+                            <!-- BEGIN PAGE CONTENT INNER -->
+                            <div class="page-content-inner">
+
+                                <div class="row">
+                                        <div class="col-md-4 ">
+
+                                        <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_portlet_form_layout" %>
+                                        </div>
+                                        <div class="col-md-8 " id="infomation-portlet">
+
+                                        
+                                        <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_portlet_datatable_operation_kpi_daily" %>
+                                        <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_portlet_datatable_operation_kpi_weekly" %>
+                                        <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_portlet_datatable_operation_kpi_monthly" %>
+                                        <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_portlet_datatable_operation_kpi_quater" %>
+                                        <%= partial partials_desktop_home_kpi_operation_operationPerformance + "/partials/_portlet_datatable_operation_kpi_half-year" %>
+
+                                        
+                                        </div>
+                                </div>
+
+                            </div>
+                            <!-- END PAGE CONTENT INNER -->
+                        </div>
+                    </div>
+                    <!-- END PAGE CONTENT BODY -->
+                    <!-- END CONTENT BODY -->
+                </div>
+                <!-- END CONTENT -->
+            </div>
+            <!-- END CONTAINER -->
+
+        </div>
+    </div>
+
+    <div class="page-wrapper-row">
+        <div class="page-wrapper-bottom">
+            <!-- FOOTER -->
+            <%= partial partials_desktop_home + "/common-partials/_footer" %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+                                    <div class="tabbable-custom nav-justified">
+                                                <ul class="nav nav-tabs nav-justified">
+                                                    <li class="active">
+                                                        <a href="#tab_average_epod" data-toggle="tab"> EPOD </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#tab_average_nonEpod" data-toggle="tab"> Non-EPOD </a>
+                                                    </li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="tab_average_epod">
+                                                        <%= partial kpi_op001_dir + "/partials/_tab_average_epod" %>
+                                                    </div>
+                                                    <div class="tab-pane" id="tab_average_nonEpod">
+                                                        <!-- TAB - Average Non EPOD -->
+                                                        <%= partial kpi_op001_dir + "/partials/_tab_average_nonEpod" %>
+
+                                                    </div>
+                                                </div>
+                                            </div>

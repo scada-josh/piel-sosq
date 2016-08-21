@@ -1,0 +1,83 @@
+    /**
+     *
+     * @apiName ExportExcelTemplate
+     * @apiGroup Test Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /testManager/exportExcelTemplate/ Export excel - template
+     * @apiDescription คำอธิบาย : ในส่วนนี้เป็นเทมเพล็ตสำหรับการสร้าง Export Excel Template
+     *
+     */
+
+    function exportExcelTemplate($app, $objPHPExcel) {
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการสร้าง Excel file */
+        /* ************************* */
+
+        $sheetCount = $objPHPExcel->getSheetCount();
+
+        /* Create Worksheet พร้อมกำหนดชื่อ */
+        $objPHPExcel_ITEM_HIS_DF_Worksheet = new \PHPExcel_Worksheet($objPHPExcel, 'ITEM_HIS_DF');
+        $objPHPExcel->addSheet($objPHPExcel_ITEM_HIS_DF_Worksheet, $sheetCount);
+        $objPHPExcel_ITEM_HIS_DF_Worksheet->setTitle('ITEM_HIS_DF');
+
+        /* กำหนดให้เป็น ActiveWorkSheet */
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $objPHPExcel->setActiveSheetIndex($sheetCount);
+
+        $col = 0;
+        $row = 1;
+        $value = "Josh-00";
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+        $col = 1;
+        $row = 1;
+        $value = "Josh-11";
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $value);
+
+        // Set document properties
+        $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+                                     ->setLastModifiedBy("Maarten Balliauw")
+                                     ->setTitle("Office 2007 XLSX Test Document")
+                                     ->setSubject("Office 2007 XLSX Test Document")
+                                     ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                                     ->setKeywords("office 2007 openxml php")
+                                     ->setCategory("Test result file");
+
+
+        // Redirect output to a client’s web browser (Excel5)
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="01simple.xls"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $date = new DateTime();
+        // $fileName = 'Quickload_for_MODBUS('.$paramFastToolsDestination.')'.'_'.date("Y-m-d").'_'.$date->getTimestamp().'.xls';
+        $fileName = 'Test.xls';
+        $filePath = '../../../files/'.$fileName;
+        $objWriter->save($filePath);
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        $resultText = "success";
+
+        $reportResult = array("result" =>  $resultText,
+                              "filename" => $fileName,
+                              "path" => url()."/iel-mis/build/files/".$fileName);
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+
+    };

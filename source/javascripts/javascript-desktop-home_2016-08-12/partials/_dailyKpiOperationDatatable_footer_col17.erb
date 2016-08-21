@@ -1,0 +1,37 @@
+                var total_col17;
+                var pageTotal_col17;
+
+                // Total over all pages
+                if (api.column(17).data().length){
+                    total_col17 = api
+                        .column(17)
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                } else {
+                    total_col17 = 0
+                }
+
+                total_col17 = numeral(total_col17).format('0,0');
+
+                 // Total over this page
+
+                 if (api.column(17).data().length){
+                    pageTotal_col17 = api
+                    .column( 17, { page: 'current'} )
+                    .data()
+                    .reduce( function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0 ) 
+                } else { 
+                    pageTotal_col17 = 0;
+                };
+
+                
+                
+
+                // Update footer
+                $( api.column( 17 ).footer() ).html(
+                    pageTotal_col17
+                );

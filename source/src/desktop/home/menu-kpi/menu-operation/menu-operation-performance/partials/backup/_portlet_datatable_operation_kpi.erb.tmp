@@ -1,0 +1,32 @@
+                                    <div class="portlet light ">
+                                        <div class="portlet-title">
+                                            <div class="caption font-dark">
+                                                <i class="icon-settings font-dark"></i>
+                                                <span class="caption-subject bold uppercase">Box</span>
+                                            </div>
+                                            <div class="tools"> </div>
+                                        </div>
+                                        <div class="portlet-body">
+
+                                            <table class="table table-striped table-bordered table-hover" width="100%" id="datatableOperationKPI">
+                                                <thead>
+                                                    <tr>
+                                                       <!--  <th class="all">Box</th>
+                                                        <th class="">Average</th> -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                            
+
+
+
+                                        </div>
+                                    </div>
+                                    

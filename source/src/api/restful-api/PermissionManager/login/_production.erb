@@ -1,0 +1,29 @@
+        $error = $client_mis->getError();
+        if ($error) {
+            echo "<h2>Constructor error</h2><pre>" . $error . "</pre>";
+        }
+
+        /* ************************* */
+        /* เริ่มกระบวนการเชื่อมต่อ Web Service */
+        /* ************************* */
+
+        $result_auth = $client_mis->call('GetTrustAccountAuthVerify', array("strAccount" => $postUserName,
+                                                                              "strPassword" => $postPassWord,
+                                                                              "strProgVersion" => ""));
+        // $report_result_auth = json_decode($result_auth["GetTrustAccountAuthVerifyResult"],true);
+        $report_result_auth = $result_auth["GetTrustAccountAuthVerifyResult"];
+
+
+        $check_auth = strpos($report_result_auth, "ERR");
+
+        if ($check_auth === false) {
+
+            $result_account_info = $client_mis->call('GetAccountCollectionInfoJSON', array("strUsrID" => substr($report_result_auth,-6)));
+            $report_result_details = json_decode($result_account_info["GetAccountCollectionInfoJSONResult"],true);
+
+            $result = "success";
+        } else {
+
+            $result = "failure";
+            $report_result_details = $report_result_auth;
+        }

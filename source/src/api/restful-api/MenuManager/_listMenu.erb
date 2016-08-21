@@ -1,0 +1,92 @@
+    /**
+     *
+     * @apiName ListMenu
+     * @apiGroup Menu Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /menuManager/listMenu/ List Menu
+     * @apiDescription คำอธิบาย : ในส่วนนี้ทำหน้าสร้างรายการเมนูตามสิทธิ์การเข้าใช้งานระบบ
+     *
+     */
+
+    function listMenu($app, $pdo, $db) {
+
+        /* ************************* */
+        /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+        /* ************************* */
+        $headers = $app->request->headers;
+        $ContetnType = $app->request->headers->get('Content-Type');
+
+        /**
+        * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+        * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+        */
+        if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8")) {
+
+            $request = $app->request();
+            $result = json_decode($request->getBody());
+
+            /* receive request */
+            $postActiveMenu = $result->active_menu;
+            $postBaseURL = $result->baseURL;
+
+
+        } else if ($ContetnType == "application/x-www-form-urlencoded"){
+
+            //$userID = $app->request()->params('userID_param');
+            //$userID = $app->request()->post('userID_param');
+        }
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการเชื่อมต่อฐานข้อมูล MySQL */
+        /* ************************* */
+        $reports = array();
+        $id = 0;
+
+
+        $results = $db->menu_tb->select('DISTINCT main_menu_url');
+
+        foreach ($results as $result) {
+            $result_main_menu_detail = $db->menu_tb->where("main_menu_url = ?", $result["main_menu_url"])->fetch();
+
+            <%= partial "/MenuManager/partials/listMenu/_reports_sub_menu_01" %>
+
+            if ($result_main_menu_detail["main_menu_leaf"] == "FALSE") {
+                $reports[] = array(
+                    "main_menu_active" => ($result_main_menu_detail["main_menu_title"] == $postActiveMenu)? "active" : "",
+                    "main_menu_title" => $result_main_menu_detail["main_menu_title"],
+                    "main_menu_url" => $result_main_menu_detail["main_menu_url"],
+                    "main_menu_leaf" => $result_main_menu_detail["main_menu_leaf"]
+                    );
+            } else {
+                $reports[] = array(
+                    "main_menu_active" => ($result_main_menu_detail["main_menu_title"] == $postActiveMenu)? "active" : "",
+                    "main_menu_title" => $result_main_menu_detail["main_menu_title"],
+                    "main_menu_url" => $result_main_menu_detail["main_menu_url"],
+                    "main_menu_leaf" => $result_main_menu_detail["main_menu_leaf"],
+                    "sub_menu_level_01" => $reports_sub_menu_01
+                    );
+            }
+
+        }
+
+        $rowCount = count($results);
+
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        $resultText = "success";
+
+        $reportResult = array("result" =>  $resultText, 
+                              "count" => $rowCount, 
+                              "baseURL" => $postBaseURL,
+                              "rows" => $reports);
+        
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+
+    };

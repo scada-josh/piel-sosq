@@ -1,0 +1,13 @@
+function array_find_deep($array, $search){
+    $i = 0;
+    $j = 0;
+
+
+    for ($i=0; $i < count($array); $i++) { 
+        if ($search == $array[$i][0]) {
+            return $i;
+        }
+    }
+	
+    return false;
+}

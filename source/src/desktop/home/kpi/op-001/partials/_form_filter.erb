@@ -1,0 +1,151 @@
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-filter font-dark"></i>
+                                    <span class="caption-subject bold font-dark uppercase"> Filter </span>
+                                    <span class="caption-helper">
+                                        <span class="hidden-xs" id="filter-type-label"> Daily</span>
+                                    </span>
+                                </div>
+                                <div class="actions">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown"> Advanced filter
+                                            <i class="fa fa-angle-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li>
+                                                <a href="javascript:;" id="dropdown_daily_filter_id">
+                                                    <i class="fa fa-filter"></i> Daily 
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" id="dropdown_weekly_filter_id">
+                                                    <i class="fa fa-filter"></i> Weekly 
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" id="dropdown_monthly_filter_id">
+                                                    <i class="fa fa-filter"></i> Monthly 
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" id="dropdown_quater_filter_id">
+                                                    <i class="fa fa-filter"></i> Quater 
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" id="dropdown_half_year_filter_id"> 
+                                                    <i class="fa fa-filter"></i> Half Year 
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="portlet-body form">
+                                <!-- BEGIN FORM-->
+                                <form action="#" class="horizontal-form">
+                                    <div class="form-body">
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>ศูนย์ : </label>
+                                                    <select class="form-control" id="center_selected_id"> 
+                                                        <option value="#" selected="">เลือกศูนย์</option>
+                                                        <option value="3">ศูนย์ภาคกลาง</option>
+                                                        <option value="8">DZ</option>
+                                                        <option value="11">ศูนย์นครสวรรค์</option>
+                                                        <option value="12">ศูนย์แพร่</option>
+                                                        <option value="13">ศูนย์พิษณุโลก</option>
+                                                        <option value="14">ศูนย์เชียงใหม่</option>
+                                                        <option value="15">ศูนย์โคราช</option>
+                                                        <option value="16">ศูนย์ขอนแก่น</option>
+                                                        <option value="17">ศูนย์อุบลฯ</option>
+                                                        <option value="18">ศูนย์ชุมพร</option>
+                                                        <option value="19">ศูนย์สุราษฎร์ฯ</option>
+                                                        <option value="20">ศูนย์หาดใหญ่</option>
+                                                        <option value="21">เบ็ทเทอร์</option>
+                                                        <option value="24">รถรับสินค้า</option>
+                                                        <option value="25">ยานพาหนะ</option>
+                                                        <option value="27">ศูนย์ภูเก็ต</option>
+                                                        <option value="29">BC</option>
+                                                        <option value="30">รถส่งสินค้า</option>
+                                                        <option value="33">ไบโอฟาร์ม</option> 
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Date Range :</label>
+                                                    <div id="reportrange" class="btn default">
+                                                        <i class="fa fa-calendar"></i> &nbsp;
+                                                        <span> </span>
+                                                        <b class="fa fa-angle-down"></b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr/>
+
+                                        <div class="row" id="form_layout_year_select_id">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Select year : </label><br/>
+                                                    <select class="form-control" id="year_selected_id"> 
+                                                        <option value="2010">2010</option>
+                                                        <option value="2011">2011</option>
+                                                        <option value="2012">2012</option>
+                                                        <option value="2013">2013</option>
+                                                        <option value="2014">2014</option>
+                                                        <option value="2015">2015</option>
+                                                        <option value="2016" selected="true">2016</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="form_layout_week_select_id">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Weekly : </label>
+                                                     <input type="text" id="ionRangeByWeek" name="example_name" value="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="form_layout_month_select_id">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Month : </label>
+                                                     <input type="text" id="ionRangeByMonth" name="example_name" value="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="form_layout_quater_id">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Quater : </label>
+                                                     <input type="text" id="ionRangeByQuater" name="example_name" value="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="form_layout_halfYear_id">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Half Year : </label>
+                                                     <input type="text" id="ionRangeByHalfYear" name="example_name" value="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button class="btn green bold uppercase btn-block" id="btnFilterInfo">Filter</button>
+                                        <div class="search-filter-divider bg-grey-steel"></div>
+                                    </div>
+                                </form>
+                                <!-- END FORM-->
+                            </div>
+                        </div>

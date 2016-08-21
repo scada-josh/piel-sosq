@@ -1,0 +1,86 @@
+    /**
+     *
+     * @apiName Login
+     * @apiGroup Permission Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /permissionManager/login/ Log in
+     * @apiDescription คำอธิบาย : ในส่วนนี้จะมีหน้าที่ Log in เพื่อเข้าสู่ระบบ
+     *
+     */
+
+    function login($app, $client_mis, $key) {
+
+
+    /* ************************* */
+    /* เริ่มกระบวนการรับค่าพารามิเตอร์จากส่วนของ Payload ซึ่งอยู่ในรูปแบบ JSON */
+    /* ************************* */
+    $headers = $app->request->headers;
+    $ContetnType = $app->request->headers->get('Content-Type');
+
+    /**
+    * apidoc @apiSampleRequest, iOS RESTKit use content-type is "application/json"
+    * Web Form, Advance REST Client App use content-type is "application/x-www-form-urlencoded"
+    */
+    if (($ContetnType == "application/json") || ($ContetnType == "application/json; charset=utf-8")) {
+
+        $request = $app->request();
+        $result = json_decode($request->getBody());
+
+        /* receive request */
+        $postUserName = $result->userName;
+        $postPassWord = $result->passWord;
+
+
+    } else if ($ContetnType == "application/x-www-form-urlencoded"){
+
+        // $postUserName = $app->request()->params('userName');
+        // $postPassWord = $app->request()->post('passWord');
+        
+        $postUserName = $app->request()->params('userName');
+        $postPassWord = $app->request()->params('passWord');
+    }
+
+
+    /* ********************************* */
+    /* เริ่มกระบวนการเชื่อมต่อ Web Service */
+    /* ********************************* */
+
+    <% if config[:phase_environment] == "Development" %>
+
+        /*  Partial : Localhost */
+        <%= partial "/PermissionManager/login/_development" %>
+
+    <% elsif config[:phase_environment] == "Test" %>
+
+        /*  Partial : Localhost */
+        <%= partial "/PermissionManager/login/_development" %>
+
+    <% elsif config[:phase_environment] == "Production" %>
+
+        /*  Partial : Localhost */
+        <%= partial "/PermissionManager/login/_production" %>
+
+    <% end %>
+
+
+    /*  Partial : about JWT */
+    <%= partial "/PermissionManager/login/_jwt" %>
+
+
+
+    /* ********************* */
+    /* เริ่มกระบวนการส่งค่ากลับ */
+    /* ********************* */
+    $tmpRedirectURL = "../home/";
+
+    $return_msg = array("result" => $result, 
+                        "details" => $report_result_details,
+                        "redirectURL" => $tmpRedirectURL,
+                        "token" => $jwt);
+    
+    $app->response()->header("Content-Type", "application/json");
+    echo json_encode($return_msg);
+
+
+    };

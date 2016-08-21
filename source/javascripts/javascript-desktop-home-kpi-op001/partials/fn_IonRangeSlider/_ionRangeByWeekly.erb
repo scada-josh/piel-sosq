@@ -1,0 +1,61 @@
+  $("#ionRangeByWeek").ionRangeSlider({
+    type: "double",
+    min: 1,
+    max: 52,
+    grid: true,
+    prettify: function (num) {
+        
+        return "Week-" + num;
+    },
+    onStart: function (data) {
+
+        var start_week_no = data.min;
+        var end_week_no = data.max;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+        var start_week = moment().year(valueSelected).week(data.from+1).startOf('week');
+        var end_week = moment().year(valueSelected).week(data.to+1).endOf('week');
+
+        fn.ShowRangeWeekly(start_week, end_week, start_week_no, end_week_no, valueSelected);
+    },
+    onChange: function (data) {
+        // console.log(data);
+    },
+    onFinish: function (data) {
+
+        var start_week_no = data.from;
+            fn.last_weekly_from = start_week_no;
+        var end_week_no = data.to;
+            fn.last_weekly_to = end_week_no;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+        var start_week = moment().year(valueSelected).week(data.from+1).startOf('week');
+        var end_week = moment().year(valueSelected).week(data.to+1).endOf('week');
+
+        fn.ShowRangeWeekly(start_week, end_week, start_week_no, end_week_no, valueSelected);
+    },
+    onUpdate: function (data) {
+        // console.log(data);
+
+        var start_week_no = data.from;
+        var end_week_no = data.to;
+
+        var optionSelected = $('#year_selected_id').find("option:selected");
+        var valueSelected  = optionSelected.val();
+        var textSelected   = optionSelected.text();
+
+        var start_week = moment().year(valueSelected).week(data.from+1).startOf('week');
+        var end_week = moment().year(valueSelected).week(data.to+1).endOf('week');
+
+        fn.ShowRangeWeekly(start_week, end_week, start_week_no, end_week_no, valueSelected);
+    }
+  });
+
+  // Saving it's instance to variable
+  fn.objIonRangeByWeekly = $("#ionRangeByWeek").data("ionRangeSlider");

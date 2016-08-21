@@ -1,0 +1,110 @@
+---
+imageURL: "../images"
+---
+
+/* How to use Images as Radio buttons */
+/* https://gist.github.com/rcotrina94/7828886 */
+/* http://jsfiddle.net/La8wQ/313/ */
+/* http://jsfiddle.net/La8wQ/10/ */
+
+.cc-selector input {
+    margin:0;
+    padding:0;
+    -webkit-appearance:none !important;
+       -moz-appearance:none !important;
+            appearance:none !important;
+}
+
+.inter-express-logistics{
+	/*background-image:url(http://i.imgur.com/lXzJ1eB.png);*/
+	background-image:url('<%= current_page.data.imageURL + "/iel-mis/assets/login/inter-express-logistics.png" %>');
+  width: 128px;
+	
+}
+.inter-express-home-delivery{
+	/*background-image:url(http://i.imgur.com/SJbRQF7.png);*/
+	background-image:url('<%= current_page.data.imageURL + "/iel-mis/assets/login/inter-express-home-delivery.png" %>');
+  width: 128px;
+}
+
+.cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none !important;
+       -moz-filter: none !important;
+            filter: none !important;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;
+    height:33px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.3) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.3) grayscale(1) opacity(.7);
+            filter: brightness(1.3) grayscale(1) opacity(.7);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+
+
+/* Extras */
+a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}
+
+
+
+
+.cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.cc-selector-2 input{
+    position:absolute;
+    z-index:999;
+}
+
+.visa{background-image:url('<%= current_page.data.imageURL + "/iel-mis/assets/login/inter-express-logistics.png" %>');}
+.mastercard{background-image:url('<%= current_page.data.imageURL + "/iel-mis/assets/login/inter-express-home-delivery.png" %>');}
+
+.cc-selector-2 input:active +.drinkcard-cc, .cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector-2 input:checked +.drinkcard-cc, .cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;height:70px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+            filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+/* Extras */
+a:visited{color:#888}
+a{color:#444;text-decoration:none;}
+p{margin-bottom:.3em;}
+

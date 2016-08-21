@@ -1,0 +1,110 @@
+DatatableOperationKPI: function () {
+	// console.log('DatatableOperationKPI');
+    var dataSet = [];
+    var dataSet_aoColumns = [];
+    var objVehicleType = {};
+    var valJSONColTable = [];
+
+    function datatableOperationKPIRender(result) {
+        // console.log(result);
+
+        valJSONColTable = [];
+
+
+
+        for (var i=0; i < result.rows.length; i++ ) {
+
+            var tmpDataSet = [];
+
+            var tmpDropCount = 0;
+            var dropAverage = 0;
+
+            var tmpBoxCount = 0;
+            var boxAverage = 0;
+
+            // console.log(result.rows[i].id);
+            // console.log(result.rows[i].vehicle_licence);
+
+            tmpDataSet.push(result.rows[i].id);
+            // tmpDataSet.push(result.rows[i].vehicle_type);
+            tmpDataSet.push(result.rows[i].vehicle_licence);
+
+            objVehicleType[result.rows[i].vehicle_licence] = result.rows[i].vehicle_type;
+
+            // console.log(result.rows[i].details);
+
+            for (var j=0; j < result.rows[i].details.length; j++ ) {
+
+                // console.log(result.rows[i].details[j].job_date);
+                // console.log(result.rows[i].details[j].drop_success);
+                // console.log(result.rows[i].details[j].box_success);
+
+                tmpDataSet.push(result.rows[i].details[j].drop_success);
+                tmpDataSet.push(result.rows[i].details[j].box_success);
+
+                tmpDropCount = tmpDropCount + parseInt(result.rows[i].details[j].drop_success);
+                tmpBoxCount = tmpBoxCount + parseInt(result.rows[i].details[j].box_success);
+            }
+
+            // Average column
+            tmpDataSet.push(numeral(tmpDropCount/j).format('0.00'));
+            tmpDataSet.push(numeral(tmpBoxCount/j).format('0.00'));
+
+            dataSet.push(tmpDataSet);
+
+        }
+
+
+        // $('#datatableOperationKPI').dataTable(dataSet);
+        datatableOperationKPI.clear().draw();
+        datatableOperationKPI.rows.add(dataSet); // Add new data
+        datatableOperationKPI.columns.adjust().draw(); // Redraw the DataTable
+        $('.dataTables_processing', $('#datatableOperationKPI').closest('.dataTables_wrapper')).hide();
+
+        console.log(valJSONColTable);
+
+    }
+
+
+
+    //------------------------ datatableOperationKPI -----------------------//
+    if (jQuery().dataTable) {
+ 
+
+        datatableOperationKPI = $('#datatableOperationKPI').DataTable( {
+            "processing": true,
+            "ajax": {
+                "url": "../../../../../api/restful-api/KpiManager/getOperationKPI.json",
+                "type": "GET",
+                "dataSrc": "rows",
+                "success": function(data) {
+                    // console.log(data);
+
+                    datatableOperationKPIRender(data);
+                     // $('#datatableOperationKPI').dataTable(json);
+                 },
+                 "error": function(jqXHR, textStatus, errorThrown){
+                    alert('init error: ' + textStatus);
+                 }
+             },
+             deferRender:    true,
+            scrollY:        "300px",
+            scrollX:        true,
+            scrollCollapse: true,
+            paging:         false,
+            // fixedColumns:   true,
+            // "aoColumnDefs": valJSONColTable,
+            data: dataSet,
+            fixedColumns:   {
+                leftColumns: 2
+            }
+
+        } );
+
+        new $.fn.dataTable.FixedColumns( datatableOperationKPI );
+
+
+
+    }
+    
+},

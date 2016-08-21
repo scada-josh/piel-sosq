@@ -1,0 +1,6 @@
+    /* เชื่อมต่อ MySQL บนเครื่อง 192.168.0.35/TestPHP/ */
+    $dsn = "mysql:dbname=mis_web_db;host=localhost;charset=UTF8";
+    $username = "root";
+    $password = "admiN";
+    $pdo = new PDO($dsn, $username, $password);
+    $db = new NotORM($pdo);

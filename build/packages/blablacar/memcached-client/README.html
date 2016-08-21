@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Middleman</title>
+
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+
+    <link href="../../../stylesheets/site.css" rel="stylesheet" type="text/css" />
+    <script src="../../../javascripts/all.js" type="text/javascript"></script>
+  </head>
+
+  <body class="packages packages_blablacar packages_blablacar_memcached-client packages_blablacar_memcached-client_README">
+    <h1 id="blablacar-memcached-wrapper">Blablacar Memcached Wrapper</h1>
+
+<p><a href="https://travis-ci.org/blablacar/memcached-client"><img alt="Build Status" src="https://travis-ci.org/blablacar/memcached-client.png" /></a></p>
+
+<p>This library provides a simple Memcached connection wrapper.</p>
+
+<h2 id="installation">Installation</h2>
+
+<p>The recommended way to install this library is through
+<a href="http://getcomposer.org/">Composer</a>. Require the <code>blablacar/memcached-client</code>
+package into your <code>composer.json</code> file:</p>
+
+<p><code>json
+{
+    "require": {
+        "blablacar/memcached-client": "@stable"
+    }
+}
+</code></p>
+
+<p><strong>Protip:</strong> you should browse the
+<a href="https://packagist.org/packages/blablacar/memcached-client"><code>blablacar/memcached-client</code></a>
+page to choose a stable version to use, avoid the <code>@stable</code> meta constraint.</p>
+
+<h2 id="usage">Usage</h2>
+
+<p>Create a Client and you're done!</p>
+
+<p><code>php
+$client = new \Blablacar\Memcached\Client();
+$client-&gt;addServer('127.0.0.1', 11211);
+$client-&gt;set('foobar', 42); // Return 1
+</code></p>
+
+<h2 id="license">License</h2>
+
+<p>Blablacar Memcached client is released under the MIT License. See the bundled
+LICENSE file for details.</p>
+
+  </body>
+</html>

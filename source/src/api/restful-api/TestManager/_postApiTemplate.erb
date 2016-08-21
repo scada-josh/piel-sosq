@@ -1,0 +1,24 @@
+    /**
+     *
+     * @apiName PostApiTemplate
+     * @apiGroup Test Manager
+     * @apiVersion 0.1.0
+     *
+     * @api {post} /testManager/postApiTemplate/ Post API template
+     * @apiDescription คำอธิบาย : ในส่วนนี้เป็นเทมเพล็ตสำหรับการสร้าง POST - API Template
+     *
+     */
+
+    function postApiTemplate($app) {
+
+
+        /* ************************* */
+        /* เริ่มกระบวนการส่งค่ากลับ */
+        /* ************************* */
+        $reportResult = array("msg" => "สวัสดี");
+ 
+        $app->response()->header("Content-Type", "application/json");
+        echo json_encode($reportResult);
+
+
+    };

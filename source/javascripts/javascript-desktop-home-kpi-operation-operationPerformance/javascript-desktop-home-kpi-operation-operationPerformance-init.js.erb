@@ -1,0 +1,120 @@
+(function ($) {
+    "use strict";
+ 
+    ///////////////////////////////////////////////////// Your
+    // var venueAddress = "Grand Place, 1000, Brussels"; // Venue
+
+    // Common Partials : Global Constant
+    <%= partial js_dir + "/common-partials/_var_GlobalConstant" %>
+
+    
+    var API_PATH = "../../../../../api/restful-api";
+    var aciveMenu = "KPI";
+    
+    var boxDatatable;
+    var datatableDrop;
+    var datatableOperationKPI;
+    var datatableOperationKPI_Weekly;
+    var datatableOperationKPI_FF;
+
+    // RESTful Web Service - Parameter
+    var paramStartDate;     /* MM/DD/YYYY */
+    var paramEndDate;       /* MM/DD/YYYY */
+    var paramSiteName;  
+    var paramSiteID;      
+
+    // var dataSet = [];
+    // var dataSet_aoColumns = [];
+    var dataCollections = {}; /* Array 2 dimensions */
+
+    var fAverageBox_EPOD;
+    var fAverageDrop_EPOD;
+    var arrAverageBox_EPOD = [];
+    var arrAverageDrop_EPOD = [];
+    var fAverageBox_NonEPOD;
+    var fAverageDrop_NonEPOD;
+    var arrAverageBox_NonEPOD = [];
+    var arrAverageDrop_NonEPOD = [];
+
+    // var strFilterType = "daily"; /* daily, weekly, monthly, quater, half-year */
+    
+    /////////////////////////////////////////////////// Adress
+ 
+    var fn = {
+ 
+        strFilterType : "daily", /* daily, weekly, monthly, quater, half-year */
+        objIonRangeByWeekly: {},
+        last_weekly_from: 1,
+        last_weekly_to: 52,
+        objIonRangeByMonthly: {},
+        objIonRangeByQuater: {},
+        objIonRangeByHalfYear: {},
+    
+        // Launch Functions
+        Launch: function () {
+            fn.MenuGenerator();
+            fn.Apps();
+            fn.DateRangePicker();
+            fn.IonRangeSlider();
+            // fn.DatatableOperationKPI_FF();
+            // fn.DatatableBox();
+            // fn.DatatableDrop(fn.paramSiteName, fn.paramStartDate, fn.paramEndDate);
+            // fn.DatatableNonEPOD();
+        },
+        
+        // Menu Generator
+        <%= partial js_dir + "/common-partials/_fn_ConvertToContext" %>
+        <%= partial js_dir + "/common-partials/_fn_MenuGenerator" %>
+        // Header Filter
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_HeaderFilter" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_HeaderFilterWeekly" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_HeaderFilterMonthly" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_HeaderFilterQuater" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_HeaderFilterHalfYear" %>
+        // Routers
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_Routers" %>
+        // sparkline
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_SparklineBarAverageBoxEpod" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_SparklineBarAverageDropEpod" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_SparklineBarAverageBoxNonEpod" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_SparklineBarAverageDropNonEpod" %>
+        // Datatable
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableBox" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableDrop" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableNonEPOD" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableOperationKPI" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableOperationKPI_Click_Handler" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableOperationKPI_Weekly" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ShowJobNoDetail" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableOperationKPI_ConvertToContext" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DatatableOperationKPI_Weekly_ConvertToContext" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_GetArrDates" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ConsumeDailyInformation" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ConsumeWeeklyInformation" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ConsumeMonthlyInformation" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ConsumeQuaterInformation" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ConsumeHalfYearInformation" %>
+        // IonRangeSlider
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_IonRangeSlider" %>
+        // Advanced Form Filter
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_AdvancedFormFilterManagement" %>
+        // Date Range Picker
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ShowRangeDate" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ShowRangeWeekly" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ShowRangeMonthly" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ShowRangeQuater" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ShowRangeHalfYear" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_ShowRangeDate_Basic" %>
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_DateRangePicker" %>
+ 		// Apps
+        <%= partial js_dir + "/javascript-desktop-home-kpi-operation-operationPerformance/partials/_fn_Apps" %>
+
+    };
+ 
+    $(document).ready(function () {
+        fn.Launch();
+    });
+ 
+})(jQuery);
+
+

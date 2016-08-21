@@ -1,0 +1,17 @@
+ShowRangeDate: function (start, end) {
+	// console.log("ShowRangeDate");
+
+	// console.log(start);
+	// console.log(end);
+	
+	fn.paramStartDate =  start;
+	fn.paramEndDate = end;
+	
+  	$('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
+
+  	fn.HeaderFilterDaily(fn.paramSiteName, start.format('DD/MM/YYYY'), end.format('DD/MM/YYYY'));
+
+
+  
+  
+},
